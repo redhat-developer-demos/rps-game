@@ -35,7 +35,7 @@ public class UserGenerator {
     }
 
     static  {
-        try(final InputStream nameInputStream = UserGenerator.class.getClassLoader().getResourceAsStream("names")) {
+        try(final InputStream nameInputStream = UserGenerator.class.getClassLoader().getResourceAsStream("names.txt")) {
             if (nameInputStream == null) {
                 throw new IOException("names list not found");
             }
