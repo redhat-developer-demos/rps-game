@@ -1,5 +1,6 @@
 package org.acme.game;
 
+import org.acme.Team;
 import org.acme.detector.Shape;
 
 import jakarta.enterprise.context.ApplicationScoped;

@@ -41,6 +41,9 @@ public class GameResource {
     @ConfigProperty(name = "roshambo.number-of-rounds")
     int numberOfRounds;
 
+    @ConfigProperty(name = "roshambo.manual-rounds")
+    boolean manualRounds;
+
     @Channel("next-round") Multi<String> nextRoundStream;
 
     @Inject
@@ -67,7 +70,7 @@ public class GameResource {
     @Path("/init")
     public Configuration configuration() {
         Configuration conf = new Configuration(roundTimeInSeconds.getSeconds(), timeBetweenRoundsInSeconds.getSeconds(), numberOfRounds);
-        logger.infof("App Configured with Round Time: %d - Time Between Rounds: %d - Number of Rounds: %d", conf.roundTimeInSeconds, conf.roundTimeInSeconds, conf.numberOfRounds);
+        logger.infof("App Configured with Round Time: %d - Time Between Rounds: %d - Number of Rounds: %d - Manual next Round: %s", conf.roundTimeInSeconds, conf.roundTimeInSeconds, conf.numberOfRounds, manualRounds);
         return conf;
     }
 
@@ -80,6 +83,7 @@ public class GameResource {
         return user;
     }
 
+    // Bean validation team number
     @POST
     @Path("/detect/shot/{team}/{userId}")
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
@@ -95,8 +99,8 @@ public class GameResource {
     }
 
     @POST
-    @Path("/detect/button/{team}/{userId}")
-    public ShotResult click(@PathParam("userId") int userId, @PathParam("team") int team, String shape) {
+    @Path("/detect/button/{team}/{userId}/{shape}")
+    public ShotResult click(@PathParam("userId") int userId, @PathParam("team") int team, @PathParam("shape") String shape) {
         long responseTime = calculateResponseTime();
         
         Shape valueOfShape = Shape.valueOf(shape);

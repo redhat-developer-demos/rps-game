@@ -1,7 +1,7 @@
 package org.acme.detector;
 
 public enum Shape {
-    ROCK, PAPER,SCISSORS;
+    ROCK, PAPER, SCISSORS;
 
     public int wins(Shape shape) {
         

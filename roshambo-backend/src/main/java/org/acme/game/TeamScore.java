@@ -1,5 +1,7 @@
 package org.acme.game;
 
+import org.acme.Team;
+
 public class TeamScore {
     
     private int team1 = 0;
@@ -25,5 +27,12 @@ public class TeamScore {
     public int getTeam2() {
         return team2;
     }
+
+    @Override
+    public String toString() {
+        return "team1 -> " + team1 + " team2 -> " + team2;
+    }
+
+    
 
 }
