@@ -1,0 +1,151 @@
+---
+openapi: 3.0.3
+info:
+  title: roshambo-backend API
+  version: 1.0.0-SNAPSHOT
+paths:
+  /admin/game/start:
+    get:
+      tags:
+      - Admin Resource
+      responses:
+        "200":
+          description: OK
+  /game/assign:
+    get:
+      tags:
+      - Game Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /game/detect/button/{team}/{userId}:
+    post:
+      tags:
+      - Game Resource
+      parameters:
+      - name: team
+        in: path
+        required: true
+        schema:
+          format: int32
+          type: integer
+      - name: userId
+        in: path
+        required: true
+        schema:
+          format: int32
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShotResult'
+  /game/detect/shot/{team}/{userId}:
+    post:
+      tags:
+      - Game Resource
+      parameters:
+      - name: team
+        in: path
+        required: true
+        schema:
+          format: int32
+          type: integer
+      - name: userId
+        in: path
+        required: true
+        schema:
+          format: int32
+          type: integer
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              format: binary
+              type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShotResult'
+  /game/init:
+    get:
+      tags:
+      - Game Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Configuration'
+  /game/stream:
+    get:
+      tags:
+      - Game Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            text/event-stream:
+              schema:
+                type: array
+                items:
+                  type: string
+components:
+  schemas:
+    Configuration:
+      type: object
+      properties:
+        roundTimeInSeconds:
+          format: int64
+          type: integer
+        timeBetweenRoundsInSeconds:
+          format: int64
+          type: integer
+        numberOfRounds:
+          format: int32
+          type: integer
+    Shape:
+      enum:
+      - ROCK
+      - PAPER
+      - SCISSORS
+      type: string
+    ShotResult:
+      type: object
+      properties:
+        timeInMillis:
+          format: int64
+          type: integer
+        shape:
+          $ref: '#/components/schemas/Shape'
+    User:
+      type: object
+      properties:
+        id:
+          format: int32
+          type: integer
+        name:
+          type: string
+        team:
+          format: int32
+          type: integer
+  securitySchemes:
+    SecurityScheme:
+      type: http
+      description: Authentication
+      scheme: basic
