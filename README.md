@@ -20,8 +20,8 @@ Before you begin, you will need to have the following installed:
 
 - Clone the repository to your local machine.
 - Navigate to the root directory of the project.
-- Install frontend dependencies using `npm install`.
-- Install backend dependencies using `mvn install`.
+- Install frontend dependencies using `npm install` in the frontend directory.
+- Install backend dependencies using `mvn install` in the backend directory.
 - Start the Quarkus backend using `./mvnw quarkus:dev`.
 - Start the React development server using `npm run dev`.
 - Visit http://localhost:5173 in your web browser to view the application.
