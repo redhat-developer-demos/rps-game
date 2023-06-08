@@ -54,4 +54,11 @@ public class TeamStatistic {
         paper.increment();
     }
 
+    @Override
+    public String toString() {
+        return "[rocks=" + rocks + ", scissors=" + scissors + ", paper=" + paper + "]";
+    }
+
+    
+
 }

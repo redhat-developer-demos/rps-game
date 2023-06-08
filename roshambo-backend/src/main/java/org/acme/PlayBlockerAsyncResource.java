@@ -6,11 +6,13 @@ import static org.quartz.TriggerBuilder.newTrigger;
 import java.time.Duration;
 import java.util.Date;
 
+import org.acme.dto.CurrentRoundInformationDTO;
 import org.acme.dto.ResultDescriptionDTO;
 import org.acme.dto.ServerSideEventDTO;
-import org.acme.dto.ServerSideEventMessage;
+import org.acme.dto.TeamScoreDTO;
 import org.acme.game.ResultDescription;
 import org.acme.game.ScoreInformation;
+import org.acme.game.TeamScore;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
@@ -45,6 +47,9 @@ public class PlayBlockerAsyncResource {
     @ConfigProperty(name = "roshambo.number-of-rounds")
     int numberOfRounds;
 
+    @ConfigProperty(name = "roshambo.manual-rounds")
+    boolean manualRounds;
+
     @Inject
     Scheduler quartz;
 
@@ -65,11 +70,14 @@ public class PlayBlockerAsyncResource {
         // Send results with the event
         this.sendEndOfTimeRound(winner);
         // Check if end game
-        if (stillRoundsToPlay()) {
+
+        if (!manualRounds && stillRoundsToPlay()) {
             this.controlStart();
         } else {
-            this.scoreInformation.reset();
-            this.sendEndOfGame();
+            if (!stillRoundsToPlay()) {
+                this.scoreInformation.reset();
+                this.sendEndOfGame(this.scoreInformation.getTeamScore());
+            }
         }
     }
 
@@ -114,25 +122,24 @@ public class PlayBlockerAsyncResource {
     // SSE event
     public void sendStartRound() {
         logger.info("Sending Start Round");
-        this.sendToGamers(new ServerSideEventDTO("enable", new ServerSideEventMessage(){}));
+        this.sendToGamers(new ServerSideEventDTO("enable", CurrentRoundInformationDTO.of(this.roundTimeInSeconds, this.scoreInformation.getCurrentRound() + 1)));
     }
 
     // SSE event
     public void sendEndOfTimeRound(ResultDescription winner) {
-        logger.info("Sending Stop Round");
+        logger.infof("Sending Stop Round with results %s", winner);
         this.sendToGamers(new ServerSideEventDTO("disable", ResultDescriptionDTO.of(winner)));
     }
 
     // SSE event
-    public void sendEndOfGame() {
+    public void sendEndOfGame(TeamScore teamScore) {
         logger.info("Sending End Of Game");
-        this.sendToGamers(new ServerSideEventDTO("end", new ServerSideEventMessage(){}));
+        this.sendToGamers(new ServerSideEventDTO("end", TeamScoreDTO.of(teamScore)));
     }
 
     void sendToGamers(ServerSideEventDTO serverSideEventDTO) {
         Jsonb jsonb = JsonbBuilder.create();
         String result = jsonb.toJson(serverSideEventDTO);
-        System.out.println("sending: " + result);
         nextRoundStream.send(result);
     }
 

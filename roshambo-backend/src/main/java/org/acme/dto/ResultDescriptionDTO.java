@@ -1,8 +1,8 @@
 package org.acme.dto;
 
+import org.acme.Team;
 import org.acme.game.ResultDescription;
 import org.acme.game.ShapeCount;
-import org.acme.game.Team;
 
 public class ResultDescriptionDTO implements ServerSideEventMessage {
     

@@ -1,6 +1,5 @@
 package org.acme.game;
 
-import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.io.BufferedReader;

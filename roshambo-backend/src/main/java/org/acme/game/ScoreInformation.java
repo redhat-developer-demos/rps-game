@@ -3,6 +3,7 @@ package org.acme.game;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.acme.Team;
 import org.acme.detector.Shape;
 import org.jboss.logging.Logger;
 
@@ -35,13 +36,17 @@ public class ScoreInformation {
 
         final Team winner = roshamboChart.winner(winner1.getShape(), winner2.getShape());
 
-        logger.infof("Winner Team1: %s - Winner Team2: %s - The Team Winner: ", winner1, winner2, winner);
+        logger.infof("Winner Team1: %s - Winner Team2: %s - The Team Winner is: %s", winner1, winner2, winner);
         teamScore.score(winner);
-        return new ResultDescription(winner, winner1, winner2);
+        return new ResultDescription(winner, winner1, winner2, teamScore);
     }
 
     public ShapeCount winner(int team) {
-        return currentStats.getOrDefault(currentStats, new TeamStatistic()).winner();
+        return currentStats.getOrDefault(team, new TeamStatistic()).winner();
+    }
+
+    public TeamScore getTeamScore() {
+        return teamScore;
     }
 
     public void setStartRoundTime(long startRoundTime) {
@@ -69,6 +74,11 @@ public class ScoreInformation {
         clearStats();
         this.teamScore.reset();
         this.currentRound = 0;
+    }
+
+    @Override
+    public String toString() {
+        return "ScoreInformation [currentStats=" + currentStats + "]";
     }
 
     @Inject
