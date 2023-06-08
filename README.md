@@ -44,4 +44,4 @@ If you'd like to contribute, please fork the repository and use a feature branch
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE.md file for details.
+This project is licensed under the Apache License 2.0 - see the LICENSE.md file for details.
