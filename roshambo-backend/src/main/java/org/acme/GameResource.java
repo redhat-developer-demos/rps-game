@@ -14,6 +14,8 @@ import io.quarkus.runtime.Startup;
 import io.smallrye.mutiny.Multi;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -87,7 +89,7 @@ public class GameResource {
     @POST
     @Path("/detect/shot/{team}/{userId}")
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
-    public ShotResult shot(@PathParam("userId") int userId, @PathParam("team") int team, byte[] image) {
+    public ShotResult shot(@PathParam("userId") int userId, @Min(1) @Max(2) @PathParam("team") int team, byte[] image) {
         long responseTime = calculateResponseTime();
         
         final Shape shape = shapeDetectorService.detect(image);
@@ -100,7 +102,7 @@ public class GameResource {
 
     @POST
     @Path("/detect/button/{team}/{userId}/{shape}")
-    public ShotResult click(@PathParam("userId") int userId, @PathParam("team") int team, @PathParam("shape") String shape) {
+    public ShotResult click(@PathParam("userId") int userId, @Min(1) @Max(2) @PathParam("team") int team, @PathParam("shape") String shape) {
         long responseTime = calculateResponseTime();
         
         Shape valueOfShape = Shape.valueOf(shape);
