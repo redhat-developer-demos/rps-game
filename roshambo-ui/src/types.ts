@@ -1,36 +1,30 @@
 
-export type GameStateNotReady = {
-  ready: false
-}
+// export type GameStateBase = {
+//   ready: boolean
 
-export type GameStateReady = {
-  ready: true,
-  config: GameRestAPI.Config
-  user: GameRestAPI.UserAssignment
-}
+//   // Retrieved on startup by an init call
+//   config?: Config
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
-export namespace GameRestAPI {
-  export type UserAssignment = {
-    id: number
-    name: string
-    team: 1|2
-  }
+//   // Retrieved on startup by an assign call
+//   user?: UserAssignment
 
-  export type Config = {
-    numberOfRounds: number,
-    roundTimeInSeconds: number,
-    timeBetweenRoundsInSeconds: number
-  }
+//   // This data is updated by SSE "end" and "disable" events
+//   scores?: ScoreData
 
-  export enum Shape {
-    Rock = 'ROCK',
-    Paper = 'PAPER',
-    Scissors = 'SCISSORS'
-  }
+//   // This data is set whenever the SSE sends an "enable" events
+//   roundInfo?: SSEContentEnable
+  
+//   // This data is updated by SSE "disable" events
+//   lastResult?: SSEContentDisable
+// }
 
-  export type ShotResult = {
-    timeInMillis: number,
-    shape: Shape
-  }
-}
+// export interface GameStateNotReady extends GameStateBase {
+//   ready: false
+// }
+
+// export interface GameStateReady extends GameStateBase {
+//   ready: true,
+//   config: Config
+//   user: UserAssignment
+//   scores: ScoreData
+// }
