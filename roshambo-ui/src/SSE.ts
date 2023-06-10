@@ -6,7 +6,7 @@ import log from 'barelog'
 export default function getEventSource () {
   return multicast(new Observable<SSE<unknown>>(observer => {
     function createEventSource () {
-      const es = new EventSource('http://localhost:8080/game/stream')
+      const es = new EventSource('/game/stream')
 
       es.addEventListener('open', (event) => {
         log('SSE "open" event', event)
