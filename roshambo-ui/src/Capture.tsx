@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { GameRestAPI } from './types';
+import { SSEContentEnable, Shape, ShotResult } from './Api';
 
 function isMobileDevice () {
   return navigator.userAgent.match(/ipod|ipad|iphone|android/gi)
@@ -8,6 +8,7 @@ function isMobileDevice () {
 type CaptureComponentProps = {
   userId: number
   team: number
+  roundInfo: SSEContentEnable
 }
 
 const Capture: React.FunctionComponent<CaptureComponentProps> = (props) => {
@@ -15,9 +16,9 @@ const Capture: React.FunctionComponent<CaptureComponentProps> = (props) => {
   const videoRef = useRef<HTMLVideoElement|null>(null);
   const canvasRef = useRef<HTMLCanvasElement|null>(null);
   const [imageData, setImageData] = useState<string>()
-  const [move, setMove] = useState<GameRestAPI.Shape>();
+  const [move, setMove] = useState<Shape>();
   const [ request, setRequest ] = useState<Promise<Response>>()
-  const [ response, setResponse ] = useState<GameRestAPI.ShotResult>()
+  const [ response, setResponse ] = useState<ShotResult>()
 
   useEffect(() => {
     getVideoStream()
@@ -75,7 +76,7 @@ const Capture: React.FunctionComponent<CaptureComponentProps> = (props) => {
       _request
         .then((res) => res.json())
         .then(json => setResponse(json))
-        .catch((err) => {
+        .catch(() => {
           // TODO
         })
 
@@ -99,9 +100,9 @@ const Capture: React.FunctionComponent<CaptureComponentProps> = (props) => {
         <canvas hidden={imageData ? false : true} ref={canvasRef}></canvas>
         <br />
         <br />
-        <button onClick={() => setMove(GameRestAPI.Shape.Rock)} >🪨</button>
-        <button onClick={() => setMove(GameRestAPI.Shape.Paper)} >🧻</button>
-        <button onClick={() => setMove(GameRestAPI.Shape.Scissors)} >✂️</button>
+        <button onClick={() => setMove(Shape.Rock)} >🪨</button>
+        <button onClick={() => setMove(Shape.Paper)} >🧻</button>
+        <button onClick={() => setMove(Shape.Scissors)} >✂️</button>
         <br />
         <br />
         <button hidden={move === undefined} onClick={submitMove}>Submit Move</button>
