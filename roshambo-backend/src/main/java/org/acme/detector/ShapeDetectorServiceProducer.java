@@ -14,12 +14,12 @@ public class ShapeDetectorServiceProducer {
     @Inject
     Logger logger;
 
-    @Produces
+    /**@Produces
     @IfBuildProfile("prod")
     public ShapeDetectorService mlShapeDetectorService() {
         logger.info("Production mode using ML Shape detector");
-        return null;
-    }
+        return new MLShapeDetectorService();
+    }**/
 
     @Produces
     @DefaultBean
