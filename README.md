@@ -12,16 +12,16 @@ These instructions will get you a copy of the project up and running on your loc
 
 Before you begin, you will need to have the following installed:
 
-- Node.js and npm
-- Java Development Kit (JDK)
+- Node.js (v18 or v20) and npm
+- Java Development Kit (v17)
 - Maven
 
 ### Installing
 
 - Clone the repository to your local machine.
 - Navigate to the root directory of the project.
-- Install frontend dependencies using `npm install` in the frontend directory.
-- Install backend dependencies using `mvn install` in the backend directory.
+- Install frontend dependencies using `npm install` in the frontend directory (`roshambo-frontend`).
+- Install backend dependencies using `mvn install` in the backend directory (`roshambo-backend`).
 - Start the Quarkus backend using `./mvnw quarkus:dev`.
 - Start the React development server using `npm run dev`.
 - Visit http://localhost:5173 in your web browser to view the application.
@@ -31,6 +31,7 @@ Before you begin, you will need to have the following installed:
 - [React](https://react.dev) - The web framework used
 - [TypeScript](https://www.typescriptlang.org) - The main language for the frontend
 - [Quarkus](https://quarkus.io) - Used for the backend
+- [Tailwind CSS](https://tailwindcss.com) - Used for styling
 
 ## Contributing
 
