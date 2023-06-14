@@ -12,14 +12,6 @@ import jakarta.ws.rs.core.MediaType;
 @Path("/dashboard")
 public class DashboardResource {
     
-    @Channel("status") Multi<String> statusStream;
-
-    @GET
-    @Path("/stream")
-    @Produces(MediaType.SERVER_SENT_EVENTS)
-    @RestStreamElementType(MediaType.APPLICATION_JSON)
-    public Multi<String> stream() {
-        return statusStream;
-    }
+    
 
 }
