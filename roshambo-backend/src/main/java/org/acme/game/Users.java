@@ -1,6 +1,7 @@
 package org.acme.game;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.acme.User;
@@ -20,6 +21,12 @@ public class Users {
 
     public Set<User> getUsers() {
         return users;
+    }
+
+    public Optional<User> findUserById(int id) {
+        return users.stream()
+            .filter(u -> u.id == id)
+            .findFirst();
     }
 
 }

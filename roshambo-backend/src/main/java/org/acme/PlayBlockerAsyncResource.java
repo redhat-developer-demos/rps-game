@@ -11,9 +11,11 @@ import org.acme.dto.ResultDescriptionDTO;
 import org.acme.dto.ServerSideEventDTO;
 import org.acme.dto.ServerSideEventMessage;
 import org.acme.dto.TeamScoreDTO;
+import org.acme.dto.TopChartDTO;
 import org.acme.game.ResultDescription;
 import org.acme.game.ScoreInformation;
 import org.acme.game.TeamScore;
+import org.acme.game.UsersInformation;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
@@ -53,11 +55,17 @@ public class PlayBlockerAsyncResource {
     @ConfigProperty(name = "roshambo.manual-rounds")
     boolean manualRounds;
 
+    @ConfigProperty(name = "roshambo.top-players")
+    int topPlayers;
+
     @Inject
     Scheduler quartz;
 
     @Inject
     ScoreInformation scoreInformation;
+
+    @Inject
+    UsersInformation userInformation;
 
     @Inject
     State state;
@@ -76,6 +84,7 @@ public class PlayBlockerAsyncResource {
         scoreInformation.newRound();
         // Send results with the event
         this.sendEndOfTimeRound(winner);
+        this.sendTopPlayers();
         this.state.stop();
         // Check if end game
 
@@ -149,16 +158,26 @@ public class PlayBlockerAsyncResource {
         this.sendToAdmin(new ServerSideEventDTO("end", new ServerSideEventMessage() {}));
     }
 
+    // SSE event
+    private void sendTopPlayers() {
+        logger.info("Sending Top Players");
+        this.sendToAdmin(new ServerSideEventDTO("top", TopChartDTO.of(userInformation.bestUsers(topPlayers))));
+    }
+
     void sendToAdmin(ServerSideEventDTO serverSideEventDTO) {
-        Jsonb jsonb = JsonbBuilder.create();
-        String result = jsonb.toJson(serverSideEventDTO);
-        statusStream.send(result);
+        if (statusStream.hasRequests()) {
+            Jsonb jsonb = JsonbBuilder.create();
+            String result = jsonb.toJson(serverSideEventDTO);
+            statusStream.send(result);
+        }
     }
 
     void sendToGamers(ServerSideEventDTO serverSideEventDTO) {
-        Jsonb jsonb = JsonbBuilder.create();
-        String result = jsonb.toJson(serverSideEventDTO);
-        nextRoundStream.send(result);
+        if (nextRoundStream.hasRequests()) {
+            Jsonb jsonb = JsonbBuilder.create();
+            String result = jsonb.toJson(serverSideEventDTO);
+            nextRoundStream.send(result);
+        }
     }
 
     public static class SendStartRound implements Job {

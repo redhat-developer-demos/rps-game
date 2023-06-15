@@ -2,7 +2,11 @@ package org.acme.game;
 
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.acme.User;
 
@@ -26,6 +30,30 @@ public class UsersInformation {
 
     public void increasePlayedTime(int userId, Duration playedTime) {
         this.playedTimes.computeIfPresent(userId, (k, v) -> v.plus(playedTime));
+        this.playedTimes.computeIfAbsent(userId, k -> playedTime);
     }
 
+    public List<User> bestUsers(int top) {
+        return playedTimes.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.<Integer, Duration>comparingByValue())
+                    .limit(top)
+                    .map(e -> this.findUserById(e.getKey()))
+                    .collect(Collectors.toList());
+    }
+
+    Duration getPlayedTimesById(int id) {
+        return playedTimes.get(id);
+    }
+
+    User findUserById(int id) {
+        Optional<User> user = currentUsers
+            .values()
+            .stream()
+            .map(u -> u.findUserById(id))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .findAny();
+        return user.get();
+    }
 }
