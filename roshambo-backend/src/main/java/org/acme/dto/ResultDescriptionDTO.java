@@ -1,6 +1,9 @@
 package org.acme.dto;
 
+import java.util.List;
+
 import org.acme.Team;
+import org.acme.User;
 import org.acme.game.ResultDescription;
 import org.acme.game.ShapeCount;
 
