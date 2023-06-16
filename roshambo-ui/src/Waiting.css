@@ -1,0 +1,27 @@
+.spinner-5 {
+  margin: auto;
+  width: 50px;
+  aspect-ratio: 1;
+  display: grid;
+  border:4px solid #0000;
+  border-radius: 50%;
+  border-right-color: #25b09b;
+  animation: s5 1s infinite linear;
+}
+.spinner-5::before,
+.spinner-5::after {    
+  content: "";
+  grid-area: 1/1;
+  margin: 2px;
+  border: inherit;
+  border-radius: 50%;
+  animation: s5 2s infinite;
+}
+.spinner-5::after {
+  margin: 8px;
+  animation-duration: 3s;
+}
+
+@keyframes s5{ 
+  100%{transform: rotate(1turn)}
+}
