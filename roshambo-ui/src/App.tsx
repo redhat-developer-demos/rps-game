@@ -5,6 +5,8 @@ import { useActor } from '@xstate/react';
 import { StateMachineContext } from './StateMachineProvider';
 import Capture from './Capture';
 import log from 'barelog'
+import Waiting from './Waiting';
+import MoveProcessed from './MoveProcessed';
 
 function App() {
   const [ state ] = useActor(useContext(StateMachineContext))
@@ -12,17 +14,25 @@ function App() {
   
   log('current state machine state:', state.value)
 
-  if (state.value === 'READY') {
-    content = <InstructionsPage></InstructionsPage>
+  switch (state.value) {
+    case 'READY':
+      content = <InstructionsPage username={state.context.user.name}></InstructionsPage>
+      break
+    case 'PLAY':
+      content = <Capture
+        roundInfo={state.context.roundInfo}
+        userId={state.context.user.id}
+        team={state.context.user.team}/>
+      break
+    case 'PAUSED':
+      content = <Waiting message={state.context.waitingMessage}/>
+      break
+    case 'MOVE_RESULT':
+      content = <MoveProcessed data={state.context.processedMoveResponse} />
+      break
+    default:
+      break
   }
-
-  if (state.value === 'PLAY') {
-    content = <Capture
-      roundInfo={state.context.roundInfo}
-      userId={state.context.user.id}
-      team={state.context.user.team}/>
-  }
-
 
   // if (ctx.ready) {
   //   if (ctx.roundInfo) {
@@ -47,7 +57,6 @@ function App() {
         <p>Team: <strong>{ state.context.user ? state.context.user.team : '...' }</strong></p>
       </div>
       <div>
-        <h1>Rock, Paper, Scissors!</h1>
         {content}
       </div>
     </>

@@ -1,5 +1,5 @@
 import { assign, createMachine, interpret } from "xstate";
-import { UserAssignment, Config, SSEContentEnable, SSEContentDisable, SSEContentEnd } from "./Api";
+import { UserAssignment, Config, SSEContentEnable, SSEContentDisable, SSEContentEnd, MoveProcessResponse } from "./Api";
 
 export default function getStateMachine() {
     // Types are generated using the XState VScode plugin!
@@ -19,6 +19,8 @@ export default function getStateMachine() {
         user: UserAssignment,
         config: Config,
         roundInfo: SSEContentEnable
+        waitingMessage: string
+        processedMoveResponse: MoveProcessResponse
         // TODO: add extra context, such as results returned by API/SSE
       },
       // The events this machine handles
@@ -26,6 +28,8 @@ export default function getStateMachine() {
         | { type: 'INIT_ERROR' }
         | { type: 'GET_CONFIG_AND_USER_ASSIGNMENT' }
         | { type: 'CONFIG_RETRIEVED'; config: string }
+        | { type: 'PAUSE'; data: string }
+        | { type: 'MOVE_PROCESSED'; data: MoveProcessResponse }
         | { type: 'ENABLE'; data: SSEContentEnable }
         | { type: 'DISABLE'; data: SSEContentDisable }
         | { type: 'END'; data: SSEContentEnd }
@@ -55,12 +59,38 @@ export default function getStateMachine() {
       'PLAY': {
         on: {
           'DISABLE': {
-            // TODO: may need to use a "WAIT" state instead, since we'll
+            // TODO: may need to use a "PAUSED" state instead, since we'll
             // have a waiting period in between rounds and it doesn't make
             // sense to show the READY screen instructions again
             target: 'READY'
+          },
+          'PAUSE': {
+            target: 'PAUSED',
+            actions: 'setWaitingMessage'
           }
         }
+      },
+      'PAUSED': {
+        // TODO: events that change from paused back to gameplay etc
+        on: {
+          'DISABLE': {
+            target: 'READY'
+          },
+          'MOVE_PROCESSED': {
+            target: 'MOVE_RESULT',
+            actions: 'setProcessedMoveResponse'
+          }
+        }
+      },
+      'MOVE_RESULT': {
+        on: {
+          // The move result screen shows the result of backend processing of
+          // the image that the user uploaded
+          'ENABLE': {
+            actions: 'setRoundInfo',
+            target: 'PLAY'
+          }
+        },
       }
     }
   }, {
@@ -81,6 +111,16 @@ export default function getStateMachine() {
       }),
       'setRoundInfo': assign({
         roundInfo: (_context, event) => {
+          return event.data
+        }
+      }),
+      'setWaitingMessage': assign({
+        waitingMessage: (_context, event) => {
+          return event.data
+        }
+      }),
+      setProcessedMoveResponse: assign({
+        processedMoveResponse: (_context, event) => {
           return event.data
         }
       })

@@ -30,6 +30,11 @@ export type ScoreData = {
   team2Score: number
 }
 
+export type MoveProcessResponse = {
+  shape: Shape,
+  timeInMillis: number
+}
+
 export enum Shape {
   Rock = 'ROCK',
   Paper = 'PAPER',
