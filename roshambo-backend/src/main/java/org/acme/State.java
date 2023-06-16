@@ -34,6 +34,14 @@ public class State {
         this.manualRounds = manualRounds;
     }
 
+    public StateGame getStatus() {
+        return status;
+    }
+
+    public boolean isManualRounds() {
+        return manualRounds;
+    }
+
     public enum StateGame {
         START, STOP, END, INIT
     }

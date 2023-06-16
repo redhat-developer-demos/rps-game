@@ -79,11 +79,11 @@ public class GameResource {
 
     @GET
     @Path("/init")
-    public Configuration configuration() {
+    public Initialization configuration() {
         state.setManualRounds(manualRounds);
         Configuration conf = new Configuration(roundTimeInSeconds.getSeconds(), timeBetweenRoundsInSeconds.getSeconds(), numberOfRounds);
         logger.infof("App Configured with Round Time: %d - Time Between Rounds: %d - Number of Rounds: %d - Manual next Round: %s", conf.roundTimeInSeconds, conf.roundTimeInSeconds, conf.numberOfRounds, manualRounds);
-        return conf;
+        return new Initialization(conf, state);
     }
 
   
