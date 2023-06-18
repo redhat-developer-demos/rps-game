@@ -34,22 +34,6 @@ function App() {
       break
   }
 
-  // if (ctx.ready) {
-  //   if (ctx.roundInfo) {
-  //     content = <Capture team={ctx.user.team} userId={ctx.user.id} />
-  //   } else if (ctx.lastResult) {
-  //     // content =
-  //   }
-  //   // content = (
-  //   //   <Routes>
-  //   //     <Route path="/instructions" element={<InstructionsPage />} />
-  //   //     <Route path="/capture" element={<Capture team={ctx.user.team} userId={ctx.user.id} />} />
-  //   //     <Route path="/results" element={<Results />} />
-  //   //     <Route path="/" element={<HomePage />} />
-  //   //   </Routes>
-  //   // )
-  // }
-
   return (
     <>
       <div className='user-info'>
