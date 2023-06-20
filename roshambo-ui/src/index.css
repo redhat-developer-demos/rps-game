@@ -19,12 +19,10 @@
 }
 
 body {
-  padding: 1.5em;
   display: flex;
   place-items: center;
   min-width: 100vw;
   min-height: 100vh;
-  overflow: hidden;
 }
 
 @media (prefers-color-scheme: light) {
