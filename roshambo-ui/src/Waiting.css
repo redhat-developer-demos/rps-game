@@ -1,4 +1,4 @@
-.spinner-5 {
+/* .spinner-5 {
   margin: auto;
   width: 50px;
   aspect-ratio: 1;
@@ -24,4 +24,91 @@
 
 @keyframes s5{ 
   100%{transform: rotate(1turn)}
+}
+
+.rps-icon {
+  width: 30vw;
+  margin: 0 auto;
+  animation-name: spin;
+  animation-duration: 5000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear; 
+}
+
+@keyframes spin {
+  from {
+    transform:rotate(0deg);
+  }
+  to {
+    transform:rotate(360deg);
+  }
+} */
+
+.waiting {
+  position: relative;
+  height: 30vh;
+}
+
+.float {
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  filter: invert(1);
+}
+
+.float.rock {
+  animation-duration: 1s;
+  animation-name: float-rock;
+}
+
+.float.scissors {
+  animation-duration: 2s;
+  animation-name: float-scissors;
+}
+
+.float.paper {
+  animation-duration: 1.5s;
+  animation-name: float-paper;
+}
+
+
+img.float {
+  width: 18vw;
+}
+
+img.rock {
+  position: absolute;
+  top: 13vh;
+  right: 14vw;
+}
+
+img.scissors {
+  position: absolute;
+  top: 26vh;
+  right: 34vw;
+}
+
+img.paper {
+  position: absolute;
+  top: 14vh;
+  left: 15vw;
+}
+
+@keyframes float-rock {
+  0% { transform: translate(35px,  0px) rotate(-55deg); }
+  50%  { transform: translate(-15px, 10px) rotate(-85deg); }
+  70%  { transform: translate(-15px, 10px) rotate(-85deg); }
+  100%   { transform: translate(35px, 0px) rotate(-55deg); }   
+}
+
+@keyframes float-paper {
+  0% { transform: translate(0px,  0px) rotate(-25deg); }
+  50%  { transform: translate(0px, 0px) rotate(25deg); }
+  100%   { transform: translate(0px, 0px) rotate(-25deg); }   
+}
+
+@keyframes float-scissors {
+  0% { transform: translate(0,  0px) rotate(-30deg); }
+  33%  { transform: translate(0, 8px) rotate(22deg); }
+  66%  { transform: translate(0, 8px) rotate(22deg); }
+  100%   { transform: translate(0, 0px) rotate(-30deg); }   
 }
