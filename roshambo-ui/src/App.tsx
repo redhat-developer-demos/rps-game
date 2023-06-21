@@ -16,16 +16,7 @@ function App() {
 
   switch (state.value) {
     case 'READY':
-      // content = <InstructionsPage username={state.context.user.name}></InstructionsPage>
-      // content = <Waiting message='Intialising...'></Waiting>
-      // content = <Capture
-      //   roundInfo={state.context.roundInfo}
-      //   userId={state.context.user.id}
-      //   team={state.context.user.team}/>
-      content = <Capture
-        roundInfo={state.context.roundInfo}
-        userId={state.context.user.id}
-        team={state.context.user.team}/>
+      content = <InstructionsPage username={state.context.user.name}></InstructionsPage>
       break
     case 'PLAY':
       content = <Capture
