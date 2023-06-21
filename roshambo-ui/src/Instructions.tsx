@@ -14,8 +14,8 @@ const InstructionsPage: React.FunctionComponent<InstructionsComponentProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-screen items-center justify-center py-4 px-4">
-      <div className="flex flex-col items-center justify-center space-y-6">
+    <div className="h-screen items-center justify-center py-4 px-4">
+      <div className="flex flex-col justify-start space-y-6">
         <h1 className="text-6xl font-bold tracking-wide">Rock, Paper, Scissors</h1>
         <p className="text-lg">
           An interactive game powered by{' '}
@@ -60,7 +60,7 @@ const InstructionsPage: React.FunctionComponent<InstructionsComponentProps> = ({
         )}
       </div>
 
-      <div className="fixed bottom-10">
+      <div className="fixed" style={{width: '60vw', left: '50%', transform: 'translate(-50%, -50%)'}}>
         <div className="flex justify-center">
           <button
             className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded"
