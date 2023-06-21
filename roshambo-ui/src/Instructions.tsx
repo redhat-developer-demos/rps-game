@@ -36,23 +36,6 @@ const InstructionsPage: React.FunctionComponent<InstructionsComponentProps> = ({
           <p className="mb-7">
             Use your camera or select an emoji to make your move. The TensorFlow ML model will process the image, and the team's most popular move will be selected against the other team!
           </p>
-          {/* <div className="grid grid-cols-3 gap-4">
-            <div className="flex flex-col items-center">
-              <span className="text-4xl">🪨</span>
-              <span className="font-semibold">Rock</span>
-              <span className="text-xs">Defeats Scissors</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-4xl">📄</span>
-              <span className="font-semibold">Paper</span>
-              <span className="text-xs">Defeats Rock</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-4xl">✂️</span>
-              <span className="font-semibold">Scissors</span>
-              <span className="text-xs">Defeats Paper</span>
-            </div>
-          </div> */}
         </div>
 
         <div className="flex items-center justify-center space-x-2 mt-4">
