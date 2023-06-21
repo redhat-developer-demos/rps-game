@@ -13,9 +13,9 @@ const Waiting: React.FunctionComponent<{ message?: string }> = ({ message }) => 
       {/* https://codepen.io/t_afif/pen/yLMXBRL */}
       {/* <div className="spinner-5"></div> */}
       
-      <img className='float sway rock' src={rockIcon} alt="rock icon" />
-      <img className='float sway paper' src={paperIcon} alt="paper icon" />
-      <img className='float sway scissors' src={scissorsIcon} alt="scissors icon" />
+      <img className='float rock' src={rockIcon} alt="rock icon" />
+      <img className='float paper' src={paperIcon} alt="paper icon" />
+      <img className='float scissors' src={scissorsIcon} alt="scissors icon" />
     </div>
   );
 }
