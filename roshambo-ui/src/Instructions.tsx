@@ -1,56 +1,92 @@
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
+import GameRules from './GameRules';
+
 type InstructionsComponentProps = {
   username: string
 }
-import explainerImg from './assets/explainer.png'
+
 const InstructionsPage: React.FunctionComponent<InstructionsComponentProps> = ({ username }) => {
+  const [showRules, setShowRules] = useState(false);
+
+  const closeModal = () => {
+    setShowRules(false);
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center space-y-6 py-6 px-4 min-h-screen">
-      <div className="flex flex-col items-center space-y-4 py-6">
-        <h1 className="text-4xl font-bold tracking-wide">Rock, Paper, Scissors</h1>
-        {/* <h2 className="text-4xl font-bold tracking-wide">Welcome, {username}!</h2> */}
-        <p className="text-lg">Powered by <a href="https://www.redhat.com/en/technologies/cloud-computing/openshift/openshift-data-science" target="_blank" rel="noreferrer" className="underline text-red-600">Red Hat OpenShift Data Science</a></p>
+    <div className="flex flex-col h-screen items-center justify-center py-4 px-4">
+      <div className="flex flex-col items-center justify-center space-y-6">
+        <h1 className="text-6xl font-bold tracking-wide">Rock, Paper, Scissors</h1>
+        <p className="text-lg">
+          An interactive game powered by{' '}
+          <a
+            href="https://www.redhat.com/en/technologies/cloud-computing/openshift/openshift-data-science"
+            target="_blank"
+            rel="noreferrer"
+            className="underline text-red-600"
+          >
+            Red Hat OpenShift Data Science
+          </a>
+        </p>
+
+        <hr className="border-gray-400 w-full max-w-2xl my-6" />
+
+        <div className="text-white">
+          <p className="text-2xl font-semibold mb-4">Instructions:</p>
+          <p className="mb-7">
+            Use your camera or select an emoji to make your move. The TensorFlow ML model will process the image, and the team's most popular move will be selected against the other team!
+          </p>
+          <div className="grid grid-cols-3 gap-4">
+            <div className="flex flex-col items-center">
+              <span className="text-4xl">🪨</span>
+              <span className="font-semibold">Rock</span>
+              <span className="text-xs">Defeats Scissors</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-4xl">📄</span>
+              <span className="font-semibold">Paper</span>
+              <span className="text-xs">Defeats Rock</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-4xl">✂️</span>
+              <span className="font-semibold">Scissors</span>
+              <span className="text-xs">Defeats Paper</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-center space-x-2 mt-4">
+          <div className="progress-wheel"></div>
+          <p className="text-1xl font-bold">Get ready... The game will begin soon!</p>
+        </div>
+
+        <hr className="border-gray-400 w-full max-w-2xl my-6" />
+
+        {showRules && ReactDOM.createPortal(
+          <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex justify-center items-center" onClick={closeModal}>
+            <div className="bg-white p-4 rounded-lg">
+              <GameRules />
+              <div className="flex justify-center mt-4">
+                <button className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded" onClick={closeModal}>
+                  Back
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
       </div>
-      <hr className="border-gray-400 w-full max-w-lg my-6"/>
-      <div className="w-full grid grid-cols-1 gap-4 bg-white bg-opacity-25 p-4">
-        <p className="text-lg font-semibold">Game Rules</p>
-        <img src={explainerImg} style={{width: '35w', margin: '0 auto'}} alt="" />
-        <p>Rock beats scissors. Scissors beats paper. Paper beats rock.</p>
-        {/* <div className="flex items-center justify-center space-x-2 p-3 rounded-lg shadow-lg text-gray-700 text-lg font-semibold max-w-lg mx-auto">
-          <span className="text-5xl">🗿</span>
-          <p>Rock crushes Scissors</p>
-        </div>
-        <div className="flex items-center justify-center space-x-2 p-3 rounded-lg shadow-lg text-gray-700 text-lg font-semibold max-w-lg mx-auto">
-          <span className="text-5xl">📜</span>
-          <p>Paper covers Rock</p>
-        </div>
-        <div className="flex items-center justify-center space-x-2 p-3 rounded-lg shadow-lg text-gray-700 text-lg font-semibold max-w-lg mx-auto">
-          <span className="text-5xl">✂️</span>
-          <p>Scissors cut Paper</p>
-        </div> */}
-      </div>
-      <hr className="border-gray-400 w-full max-w-lg my-6"/>
-      <div className="w-full p-4 rounded-lg bg-white bg-opacity-25 text-gray-800">
-        <p className="text-lg font-semibold">Let's get started!</p>
-        <p>Make your move with your camera or simply select an emoji.</p>
-        <p className="text-lg font-semibold mt-4">Here's what each emoji means:</p>
-        <div className="flex justify-center items-center space-x-2 mt-2">
-          <span className="text-4xl">🗿</span>
-          <span>=</span>
-          <span>Fist</span>
-        </div>
-        <div className="flex justify-center items-center space-x-2 mt-2">
-          <span className="text-4xl">📜</span>
-          <span>=</span>
-          <span>Open hand</span>
-        </div>
-        <div className="flex justify-center items-center space-x-2 mt-2">
-          <span className="text-4xl">✂️</span>
-          <span>=</span>
-          <span>Peace sign</span>
+
+      <div className="fixed bottom-10">
+        <div className="flex justify-center">
+          <button
+            className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded"
+            onClick={() => setShowRules(true)}
+          >
+            Show Game Rules
+          </button>
         </div>
       </div>
-      <p className="text-lg font-bold">Get ready... The game will begin soon!</p>
     </div>
   );
 }

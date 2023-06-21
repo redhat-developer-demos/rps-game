@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource/red-hat-display": "^5.0.3",
     "@xstate/fsm": "^2.0.1",
     "@xstate/react": "^3.2.2",
     "barelog": "^0.2.0",

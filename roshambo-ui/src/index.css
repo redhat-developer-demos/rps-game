@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Red Hat Display', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: bold;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -42,5 +42,23 @@ body {
   }
   button {
     background-color: #f9f9f9;
+  }
+}
+
+.progress-wheel {
+  width: 24px;
+  height: 24px;
+  border: 4px solid #ccc;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }

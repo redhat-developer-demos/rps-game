@@ -7,6 +7,7 @@ import Capture from './Capture';
 import log from 'barelog'
 import Waiting from './Waiting';
 import MoveProcessed from './MoveProcessed';
+import "@fontsource/red-hat-display";
 
 function App() {
   const [ state ] = useActor(useContext(StateMachineContext))
@@ -31,7 +32,7 @@ function App() {
       content = <MoveProcessed data={state.context.processedMoveResponse} />
       break
     case 'INITIAL':
-      content = <Waiting message='Intialising...'></Waiting>
+      content = <Waiting message='Initializing...'></Waiting>
       break
     default:
       break
