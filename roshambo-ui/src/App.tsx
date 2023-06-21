@@ -32,7 +32,7 @@ function App() {
       content = <MoveProcessed data={state.context.processedMoveResponse} />
       break
     case 'INITIAL':
-      content = <Waiting message='Initializing...'></Waiting>
+      content = <Waiting message='Initializing'></Waiting>
       break
     default:
       break
