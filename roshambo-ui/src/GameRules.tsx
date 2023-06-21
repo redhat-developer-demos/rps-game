@@ -25,7 +25,7 @@ const GameRules: React.FC = () => {
       </div>
 
       {show && ReactDOM.createPortal(
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex justify-center items-center" onClick={handleCloseModal}>
+        <div className="fixed inset-0 text-black bg-gray-900 bg-opacity-75 flex justify-center items-center" onClick={handleCloseModal}>
           <div className="bg-white p-4 rounded-lg">
             <div className="flex flex-col items-center justify-center space-y-6 bg-white bg-opacity-25 p-8 rounded-lg">
               <p className="text-3xl font-bold">Game Rules</p>
