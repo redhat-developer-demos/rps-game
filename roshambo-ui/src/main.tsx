@@ -5,7 +5,7 @@ import './index.css'
 import StateMachineContextProvider from './StateMachineProvider.tsx'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <div className='bg-slate-950'>
+  <div className='bg-gray-800'>
     <React.StrictMode>
       <StateMachineContextProvider>
           <App />

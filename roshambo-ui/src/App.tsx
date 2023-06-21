@@ -17,7 +17,15 @@ function App() {
   switch (state.value) {
     case 'READY':
       // content = <InstructionsPage username={state.context.user.name}></InstructionsPage>
-      content = <Waiting message='Intialising...'></Waiting>
+      // content = <Waiting message='Intialising...'></Waiting>
+      // content = <Capture
+      //   roundInfo={state.context.roundInfo}
+      //   userId={state.context.user.id}
+      //   team={state.context.user.team}/>
+      content = <Capture
+        roundInfo={state.context.roundInfo}
+        userId={state.context.user.id}
+        team={state.context.user.team}/>
       break
     case 'PLAY':
       content = <Capture
@@ -39,8 +47,8 @@ function App() {
   }
 
   return (
-    <div className='p-5 text-white text-xl container'>
-      <div className='user-info bg-red-600 text-white p-4 flex w-full rounded-md border-red-400 border-2'>
+    <div className='p-5 text-white text-xl container' id="app-container">
+      <div className='inset-x-0 p-4 my-2 bg-red-600 text-white flex rounded-md border-red-400 border-2'>
         <p className='flex-1 text-left'><strong>{ state.context.user ? state.context.user.name : '...' }</strong></p>
         <p className='flex-1 text-right'><strong>Team #{ state.context.user ? state.context.user.team : '...' }</strong></p>
       </div>

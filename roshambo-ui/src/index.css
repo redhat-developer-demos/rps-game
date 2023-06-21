@@ -18,6 +18,13 @@
   -webkit-text-size-adjust: 100%;
 }
 
+@media only screen and (min-width: 600px)  {
+  #app-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+}
+
 body {
   display: flex;
   place-items: center;
