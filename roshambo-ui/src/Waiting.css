@@ -51,64 +51,60 @@
 
 .float {
   animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
+  animation-timing-function: linear;
   filter: invert(1);
 }
 
 .float.rock {
-  animation-duration: 1s;
+  animation-duration: 6s;
   animation-name: float-rock;
 }
 
 .float.scissors {
-  animation-duration: 2s;
+  animation-duration: 6s;
   animation-name: float-scissors;
 }
 
 .float.paper {
-  animation-duration: 1.5s;
+  animation-duration: 6s;
   animation-name: float-paper;
 }
 
 
 img.float {
-  width: 18vw;
-}
-
-img.rock {
+  width: 64px;
+  transform-origin: 32px 32px;
   position: absolute;
-  top: 13vh;
-  right: 14vw;
-}
-
-img.scissors {
-  position: absolute;
-  top: 26vh;
-  right: 34vw;
-}
-
-img.paper {
-  position: absolute;
-  top: 14vh;
-  left: 15vw;
+  top: 17.5vh;
+  display: block;
+  margin: auto;
+  left: 0;
+  right: 0;
 }
 
 @keyframes float-rock {
-  0% { transform: translate(35px,  0px) rotate(-55deg); }
-  50%  { transform: translate(-15px, 10px) rotate(-85deg); }
-  70%  { transform: translate(-15px, 10px) rotate(-85deg); }
-  100%   { transform: translate(35px, 0px) rotate(-55deg); }   
+  from {
+    transform: rotate(0deg) translate(150px);
+  }
+  to {
+    transform: rotate(360deg) translate(150px);
+  }
 }
 
 @keyframes float-paper {
-  0% { transform: translate(0px,  0px) rotate(-25deg); }
-  50%  { transform: translate(0px, 0px) rotate(25deg); }
-  100%   { transform: translate(0px, 0px) rotate(-25deg); }   
+  from {
+    transform: rotate(120deg) translate(150px);
+  }
+  to {
+    transform: rotate(480deg) translate(150px);
+  }
 }
 
 @keyframes float-scissors {
-  0% { transform: translate(0,  0px) rotate(-30deg); }
-  33%  { transform: translate(0, 8px) rotate(22deg); }
-  66%  { transform: translate(0, 8px) rotate(22deg); }
-  100%   { transform: translate(0, 0px) rotate(-30deg); }   
+  from {
+    transform: rotate(240deg) translate(150px);
+  }
+  to {
+    transform: rotate(600deg) translate(150px);
+  } 
 }

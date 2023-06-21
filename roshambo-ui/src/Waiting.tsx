@@ -7,15 +7,17 @@ import paperIcon from './assets/paper.png'
 
 const Waiting: React.FunctionComponent<{ message?: string }> = ({ message }) => {
   return (
-    <div className='waiting'>
-      <h2 className='pb-2 text-slate-900 text-xl mb-4'>{ message }</h2>
+    <div className='waiting items-center'>
 
       {/* https://codepen.io/t_afif/pen/yLMXBRL */}
       {/* <div className="spinner-5"></div> */}
       
-      <img className='float rock' src={rockIcon} alt="rock icon" />
-      <img className='float paper' src={paperIcon} alt="paper icon" />
-      <img className='float scissors' src={scissorsIcon} alt="scissors icon" />
+      <div className="animation h-3/6 relative top-1/3 w-full">
+        <img className='float rock' src={rockIcon} alt="rock icon" />
+        <img className='float paper' src={paperIcon} alt="paper icon" />
+        <img className='float scissors' src={scissorsIcon} alt="scissors icon" />
+      </div>
+      <h2 className='text-white relative top-32 w-full text-center text-xl'>{ message }</h2>
     </div>
   );
 }
