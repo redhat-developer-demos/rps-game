@@ -10,6 +10,7 @@ import shapeRock from './assets/rock.png'
 import shapeScissors from './assets/scissors.png'
 import shapePaper from './assets/paper.png'
 import VideoCaptureComponent from './CaptureVideo';
+import GameRules from './GameRules';
 
 type CaptureComponentProps = {
   userId: number
@@ -96,7 +97,10 @@ const Capture: React.FunctionComponent<CaptureComponentProps> = (props) => {
   return (
     <div className='text-white grid mt-[20vh] content-center'>
       {content}
+      <hr className="border-gray-400 w-full max-w-2xl my-6" />
+      <GameRules />
     </div>
+    
   );
 }
 
