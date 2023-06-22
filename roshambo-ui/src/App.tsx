@@ -7,17 +7,16 @@ import Capture from './Capture';
 import log from 'barelog'
 import Waiting from './Waiting';
 import MoveProcessed from './MoveProcessed';
-import "@fontsource/red-hat-display";
-
 function App() {
   const [ state ] = useActor(useContext(StateMachineContext))
   let content: JSX.Element = (<h2>Loading...</h2>)
   
   log('current state machine state:', state.value)
+  log('current state machine context:', state.context)
 
   switch (state.value) {
     case 'READY':
-      content = <InstructionsPage username={state.context.user.name}></InstructionsPage>
+      content = <InstructionsPage></InstructionsPage>
       break
     case 'PLAY':
       content = <Capture
@@ -39,8 +38,8 @@ function App() {
   }
 
   return (
-    <div className='p-5 text-white text-xl container' id="app-container">
-      <div className='inset-x-0 p-4 my-2 bg-red-600 text-white flex rounded-md border-red-400 border-2'>
+    <div className='p-4 text-white text-xl container' id="app-container">
+      <div className='inset-x-0 p-3 my-2 bg-red-600 text-white flex rounded-md border-red-400 border-2'>
         <p className='flex-1 text-left'><strong>{ state.context.user ? state.context.user.name : '...' }</strong></p>
         <p className='flex-1 text-right'><strong>Team #{ state.context.user ? state.context.user.team : '...' }</strong></p>
       </div>

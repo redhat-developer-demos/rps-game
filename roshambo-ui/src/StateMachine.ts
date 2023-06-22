@@ -1,5 +1,6 @@
 import { assign, createMachine, interpret } from "xstate";
 import { UserAssignment, Config, SSEContentEnable, SSEContentDisable, SSEContentEnd, MoveProcessResponse } from "./Api";
+import { CameraAccessState } from "./Types";
 
 export default function getStateMachine() {
     // Types are generated using the XState VScode plugin!
@@ -21,6 +22,7 @@ export default function getStateMachine() {
         roundInfo: SSEContentEnable
         waitingMessage: string
         processedMoveResponse: MoveProcessResponse
+        cameraAccess: CameraAccessState
         // TODO: add extra context, such as results returned by API/SSE
       },
       // The events this machine handles
@@ -28,6 +30,7 @@ export default function getStateMachine() {
         | { type: 'INIT_ERROR' }
         | { type: 'GET_CONFIG_AND_USER_ASSIGNMENT' }
         | { type: 'CONFIG_RETRIEVED'; config: string }
+        | { type: 'CAMERA_ACCESS', state: CameraAccessState }
         | { type: 'PAUSE'; data: string }
         | { type: 'MOVE_PROCESSED'; data: MoveProcessResponse }
         | { type: 'ENABLE'; data: SSEContentEnable }
@@ -35,6 +38,9 @@ export default function getStateMachine() {
         | { type: 'END'; data: SSEContentEnd }
     },
     initial: 'INITIAL',
+    context: {
+      cameraAccess: CameraAccessState.Unknown
+    } as any, // TODO: Hack...
     states: {
       'INITIAL': {
         invoke: {
@@ -53,6 +59,10 @@ export default function getStateMachine() {
           'ENABLE': {
             actions: 'setRoundInfo',
             target: 'PLAY'
+          },
+          'CAMERA_ACCESS': {
+            actions: 'setCameraAccess',
+            target: 'READY'
           }
         }
       },
@@ -122,6 +132,11 @@ export default function getStateMachine() {
       setProcessedMoveResponse: assign({
         processedMoveResponse: (_context, event) => {
           return event.data
+        }
+      }),
+      setCameraAccess: assign({
+        cameraAccess: (_context, event) => {
+          return event.state
         }
       })
     }

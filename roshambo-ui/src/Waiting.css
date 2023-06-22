@@ -1,48 +1,3 @@
-/* .spinner-5 {
-  margin: auto;
-  width: 50px;
-  aspect-ratio: 1;
-  display: grid;
-  border:4px solid #0000;
-  border-radius: 50%;
-  border-right-color: #25b09b;
-  animation: s5 1s infinite linear;
-}
-.spinner-5::before,
-.spinner-5::after {    
-  content: "";
-  grid-area: 1/1;
-  margin: 2px;
-  border: inherit;
-  border-radius: 50%;
-  animation: s5 2s infinite;
-}
-.spinner-5::after {
-  margin: 8px;
-  animation-duration: 3s;
-}
-
-@keyframes s5{ 
-  100%{transform: rotate(1turn)}
-}
-
-.rps-icon {
-  width: 30vw;
-  margin: 0 auto;
-  animation-name: spin;
-  animation-duration: 5000ms;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear; 
-}
-
-@keyframes spin {
-  from {
-    transform:rotate(0deg);
-  }
-  to {
-    transform:rotate(360deg);
-  }
-} */
 
 .waiting {
   position: relative;
@@ -50,28 +5,12 @@
 }
 
 .float {
+  animation-name: float;
+  animation-duration: 3.5s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
   filter: invert(1);
-}
 
-.float.rock {
-  animation-duration: 6s;
-  animation-name: float-rock;
-}
-
-.float.scissors {
-  animation-duration: 6s;
-  animation-name: float-scissors;
-}
-
-.float.paper {
-  animation-duration: 6s;
-  animation-name: float-paper;
-}
-
-
-img.float {
   width: 64px;
   transform-origin: 32px 32px;
   position: absolute;
@@ -82,29 +21,23 @@ img.float {
   right: 0;
 }
 
-@keyframes float-rock {
+.float.rock {
+  animation-delay: 0s;
+}
+
+.float.scissors {
+  animation-delay: -1s;
+}
+
+.float.paper {
+  animation-delay: -2s;
+}
+
+@keyframes float {
   from {
     transform: rotate(0deg) translate(150px);
   }
   to {
     transform: rotate(360deg) translate(150px);
   }
-}
-
-@keyframes float-paper {
-  from {
-    transform: rotate(120deg) translate(150px);
-  }
-  to {
-    transform: rotate(480deg) translate(150px);
-  }
-}
-
-@keyframes float-scissors {
-  from {
-    transform: rotate(240deg) translate(150px);
-  }
-  to {
-    transform: rotate(600deg) translate(150px);
-  } 
 }

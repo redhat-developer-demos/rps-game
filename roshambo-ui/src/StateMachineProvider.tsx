@@ -16,18 +16,30 @@ const StateMachineContextProvider: React.FunctionComponent<{ children: JSX.Eleme
   // the send function here, and not the service.send to ensure state
   // updates are triggered
   useEffect(() => {
-    getEventSource().subscribe((message) => {
-      log('SM received SSE message', message)
-      if (message.type === SSEType.Enable) {
-        send('ENABLE', message.content as SSEContentEnable)
-      } else if (message.type === SSEType.Disable) {
-        send('DISABLE', message.content as SSEContentDisable)
-      } else if (message.type === SSEType.End) {
-        send('END', message.content as SSEContentEnd)
-      } else {
-        log('received unrecognised SSE type: ', message)
+    getEventSource().subscribe(
+      (message) => {
+        log('SM received SSE message', message)
+        if (message.type === SSEType.Enable) {
+          send({
+            type: 'ENABLE',
+            data: message.content as SSEContentEnable
+          })
+        } else if (message.type === SSEType.Disable) {
+          send('DISABLE', message.content as SSEContentDisable)
+        } else if (message.type === SSEType.End) {
+          send('END', message.content as SSEContentEnd)
+        } else {
+          log('received unrecognised SSE type: ', message)
+        }
+      },
+      (error) => {
+        log('error received from SSE:', error)
+        send({
+          type: 'PAUSE',
+          data: 'Reconnecting'
+        })
       }
-    })
+    )
   }, [send])
 
   return (

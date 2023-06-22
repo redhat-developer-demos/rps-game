@@ -1,16 +1,18 @@
 import './Capture.css'
-import { useContext, useEffect, useRef, useState } from 'react'
-import { SSEContentEnable, Shape, ShotResult } from './Api';
+import { useContext, useState } from 'react'
+import { SSEContentEnable, Shape } from './Api';
 import { useActor } from '@xstate/react';
 import { StateMachineContext } from './StateMachineProvider';
 import { IconContext } from 'react-icons'
-import { FiSend, FiCamera } from 'react-icons/fi';
+import { FiSend } from 'react-icons/fi';
 
 import shapeRock from './assets/rock.png'
 import shapeScissors from './assets/scissors.png'
 import shapePaper from './assets/paper.png'
 import VideoCaptureComponent from './CaptureVideo';
 import GameRules from './GameRules';
+import Countdown from './Countdown';
+import { CameraAccessState } from './Types';
 
 type CaptureComponentProps = {
   userId: number
@@ -19,16 +21,15 @@ type CaptureComponentProps = {
 }
 
 const Capture: React.FunctionComponent<CaptureComponentProps> = (props) => {
-  // TODO: maybe consider extracting video into it's own component
-  const [ , send ] = useActor(useContext(StateMachineContext))
-  const [ videoEnabled, setVideoEnabled ] = useState<boolean>(false);
+  const [ state, send ] = useActor(useContext(StateMachineContext))
+  const [ videoVisible, setVideoVisible ] = useState<boolean>(state.context.cameraAccess === CameraAccessState.Granted);
   const [ move, setMove ] = useState<Shape>();
   const [ request, setRequest ] = useState<Promise<Response>>()
 
   async function submitMove(imageData?: string) {
     if (imageData) {
       alert('Submit move!')
-      setVideoEnabled(false)
+      setVideoVisible(false)
     } else if (move) {
       const _request = fetch(`/game/detect/button/${props.team}/${props.userId}/${move}`, {
         method: 'POST',
@@ -37,7 +38,7 @@ const Capture: React.FunctionComponent<CaptureComponentProps> = (props) => {
       // Show a the waiting/loading screen while API is processing the request
       send({
         type: 'PAUSE',
-        data: 'Processing your move...'
+        data: 'Processing'
       })
 
       setTimeout(() => {
@@ -56,23 +57,23 @@ const Capture: React.FunctionComponent<CaptureComponentProps> = (props) => {
   }
 
   let content!: JSX.Element
-  if (videoEnabled) {
+  if (state.context.cameraAccess === CameraAccessState.Granted) {
     content = (
       <VideoCaptureComponent callback={(data) => submitMove(data)}/>
     )
   } else {
     content = (
-      <div>
+      <div className='mt-12'>
         <div className="grid grid-cols-3 justify-center">
-          <button className={`shape-selector ${move === Shape.Rock ? 'red' : ''}`} onClick={() => setMove(Shape.Rock)} >
+          <button className={`bg-slate-100 shape-selector ${move === Shape.Rock ? 'red' : ''}`} onClick={() => setMove(Shape.Rock)} >
             <img src={shapeRock} alt="rock" />
             <small>Rock</small>
           </button>
-          <button className={`shape-selector ${move === Shape.Paper ? 'red' : ''}`} onClick={() => setMove(Shape.Paper)} >
+          <button className={`bg-slate-100 shape-selector ${move === Shape.Paper ? 'red' : ''}`} onClick={() => setMove(Shape.Paper)} >
             <img src={shapePaper} alt="paper" />
             <small>Paper</small>
           </button>
-          <button className={`shape-selector ${move === Shape.Scissors ? 'red' : ''}`} onClick={() => setMove(Shape.Scissors)} >
+          <button className={`bg-slate-100 shape-selector ${move === Shape.Scissors ? 'red' : ''}`} onClick={() => setMove(Shape.Scissors)} >
             <img src={shapeScissors} alt="scissors" />
             <small>Scissors</small>
           </button>
@@ -80,14 +81,8 @@ const Capture: React.FunctionComponent<CaptureComponentProps> = (props) => {
         <br />
         <button className={`rounded-md m-2 p-4 hover:bg-green-600 bg-green-500 ${move ? 'opacity-100' : 'opacity-50'}`} disabled={move === undefined} onClick={() => submitMove()}>
           <span>Submit Move &nbsp;</span>
-          <IconContext.Provider value={{ style: { display: 'inline' } }}>
+          <IconContext.Provider value={{ className: 'text-white bg-transparent', style: { display: 'inline' } }}>
             <FiSend></FiSend>
-          </IconContext.Provider>
-        </button>
-        <button className={`rounded-md m-2 p-4 hover:bg-green-600 bg-green-500`} onClick={() => setVideoEnabled(true)}>
-          <span>Use Camera &nbsp;</span>
-          <IconContext.Provider value={{ style: { display: 'inline' } }}>
-            <FiCamera></FiCamera>
           </IconContext.Provider>
         </button>
       </div>
@@ -95,9 +90,10 @@ const Capture: React.FunctionComponent<CaptureComponentProps> = (props) => {
   }
 
   return (
-    <div className='text-white grid mt-[20vh] content-center'>
+    <div className='text-white grid mt-6 content-center'>
       {content}
       <hr className="border-gray-400 w-full max-w-2xl my-6" />
+      <Countdown timeInSeconds={props.roundInfo.lengthOfRoundInSeconds}></Countdown>
       <GameRules />
     </div>
     
