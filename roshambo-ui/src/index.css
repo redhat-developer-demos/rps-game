@@ -5,7 +5,7 @@
 :root {
   font-family: 'Red Hat Display', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
-  font-weight: bold;
+  font-weight: normal;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -30,19 +30,6 @@ body {
   place-items: center;
   min-width: 100vw;
   min-height: 100vh;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
 }
 
 .progress-wheel {

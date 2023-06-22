@@ -15,14 +15,16 @@ const VideoCaptureComponent: React.FunctionComponent<VideoCaptureComponentProps>
   const [ stream, setStream ] = useState<MediaStream>()
   
   useEffect(() => {
-    getVideoStream()
+    if (!stream) {
+      getVideoStream()
+    }
 
     return function cleanUpVideoCapture () {
       if (stream) {
         stream.getTracks().forEach(t => t.stop())
       }
     }
-  }, [videoRef])
+  }, [videoRef, stream])
 
   async function getVideoStream () {
     const stream = await navigator.mediaDevices.getUserMedia({
@@ -75,7 +77,7 @@ const VideoCaptureComponent: React.FunctionComponent<VideoCaptureComponentProps>
   }
 
   return (
-    <div className="justify-center -mt-4">
+    <div className="justify-center">
       <p hidden={imageData ? true : false} className='py-4'>Capture your move using the camera!</p>
       <p hidden={imageData ? false : true} className='py-4'>Ready to submit this move?</p>
       <video className="rounded m-auto w-full" hidden={imageData ? true : false} ref={videoRef} autoPlay playsInline muted />
