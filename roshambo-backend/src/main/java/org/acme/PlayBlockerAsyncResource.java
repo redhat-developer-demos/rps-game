@@ -71,7 +71,7 @@ public class PlayBlockerAsyncResource {
     @Inject
     State state;
 
-    @Scheduled(every = "10s")
+    @Scheduled(every = "10s", delay = 5)
     public void heartbeat() {
         this.sendHeartBeat();
     }
