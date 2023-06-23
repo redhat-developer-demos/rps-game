@@ -1,9 +1,8 @@
 import { createContext, useEffect } from "react";
 import getStateMachine from "./StateMachine";
 import { useMachine } from "@xstate/react";
-import getEventSource from "./SSE";
 import log from 'barelog'
-import { SSEType, SSEContentEnable, SSEContentDisable, SSEContentEnd } from "./Api";
+import { SSEType, SSEContentEnable, SSEContentDisable, SSEContentEnd, SSE } from "./Api";
 
 const { service, machine } = getStateMachine()
 
@@ -16,30 +15,117 @@ const StateMachineContextProvider: React.FunctionComponent<{ children: JSX.Eleme
   // the send function here, and not the service.send to ensure state
   // updates are triggered
   useEffect(() => {
-    getEventSource().subscribe(
-      (message) => {
-        log('SM received SSE message', message)
-        if (message.type === SSEType.Enable) {
+    let es!: EventSource
+    let connectionTimeoutTimer!: ReturnType<typeof setTimeout>
+
+    // Establish initial EventSource connectivity
+    setupEventSource()
+
+    function setupEventSource (): EventSource {
+      es = new EventSource('http://localhost:8080/game/stream')
+
+      es.addEventListener('open', (event) => {
+        log('SSE "open" event', event)
+
+        resetConnectionTimeout()
+      })
+      
+      es.addEventListener('error', (event) => {
+        log('SSE "error" event received. Closing connection and reconnecting in 1 second', event)
+        
+        // Remove any existing connection timeout timer
+        clearTimeout(connectionTimeoutTimer)
+        
+        // If the connection isn't closed, close it
+        if (es.readyState !== EventSource.CLOSED) {
+          es.close()
+        }
+
+        // Attempt to reconnect in 1 second
+        setTimeout(() => setupEventSource(), 1000)
+      })
+
+      es.addEventListener('message', parseMessage)
+
+      /**
+       * The backend sends a heartbeat every 10 seconds. If we do not receive
+       * a heartbeat after some time, disconnect and attempt to reconnect.
+       */
+      function resetConnectionTimeout () {
+        log('SSE resetting connection timeout')
+
+        clearTimeout(connectionTimeoutTimer)
+
+        // Establish a new connection timeout
+        connectionTimeoutTimer = setTimeout(() => {
+          log('SSE connection will be closed due to timeout')
+          setupEventSource()
+        }, 12000)
+      }
+
+      function parseMessage (event: MessageEvent) {
+        log('SSE "message" event', event)
+        log('SSE "message" event.data', event.data)
+
+        try {
+          const data = JSON.parse(event.data) as SSE<unknown>
+
+          if (data.type === SSEType.Heartbeat) {
+            log('SEE received "heartbeat"')
+            // Heartbeat is a special message type that we use to determine
+            // if the connection to the backend is healthy. We could simply
+            // reset this upon receiving any message, but the heartbeat is
+            // specifically designed for this.
+            resetConnectionTimeout()
+          } else {
+            processMessage(data)
+          }
+
+        } catch (e) {
+          log('error parsing received event:', event)
+        }
+      }
+
+      return es
+    }
+
+    function processMessage (message: SSE<unknown>) {
+      switch (message.type) {
+        case SSEType.Enable:
           send({
             type: 'ENABLE',
             data: message.content as SSEContentEnable
           })
-        } else if (message.type === SSEType.Disable) {
-          send('DISABLE', message.content as SSEContentDisable)
-        } else if (message.type === SSEType.End) {
-          send('END', message.content as SSEContentEnd)
-        } else {
-          log('received unrecognised SSE type: ', message)
-        }
-      },
-      (error) => {
-        log('error received from SSE:', error)
-        send({
-          type: 'PAUSE',
-          data: 'Reconnecting'
-        })
+          break;
+        case SSEType.Disable:
+          send({
+            type: 'DISABLE',
+            data: message.content as SSEContentDisable
+          })
+          break;
+        case SSEType.End:
+          send({
+            type: 'END',
+            data: message.content as SSEContentEnd
+          })
+          break;
+        default:
+          log('SSE received unrecognised message type: ', message)
+          break;
       }
-    )
+    }
+
+    // Technically this isn't too important since this component is never
+    // really unmounted, but if React strict mode is enabled we'd end up with
+    // two SSE connections, which could get funky...
+    return function cleanUpSSE () {
+      console.log('SSE performing clean up due to component unmounting')
+
+      if (es && es.readyState !== EventSource.CLOSED) {
+        es.close()
+      }
+
+    }
   }, [send])
 
   return (
@@ -48,5 +134,6 @@ const StateMachineContextProvider: React.FunctionComponent<{ children: JSX.Eleme
     </StateMachineContext.Provider>
   );
 }
+
 
 export default StateMachineContextProvider

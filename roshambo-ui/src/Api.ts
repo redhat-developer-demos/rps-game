@@ -49,7 +49,8 @@ export type ShotResult = {
 export enum SSEType {
   Enable = 'enable',
   Disable = 'disable',
-  End = 'end'
+  End = 'end',
+  Heartbeat = 'heartbeat'
 } 
 
 export type SSEContentEnable = {
