@@ -1,3 +1,4 @@
+import './CaptureVideo.css'
 import { useEffect, useRef, useState } from "react";
 
 type VideoCaptureComponentProps = {
