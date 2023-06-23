@@ -14,7 +14,8 @@ const Countdown: React.FunctionComponent<CountdownComponentProps> = ({ timeInSec
         duration={timeInSeconds}
         colors='#EE1111'
         trailColor='rgba(0,0,0,0)'
-        size={90}
+        strokeWidth={8}
+        size={64}
       >
         {
           ({ remainingTime }) => {
