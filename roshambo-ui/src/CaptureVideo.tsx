@@ -81,8 +81,8 @@ const VideoCaptureComponent: React.FunctionComponent<VideoCaptureComponentProps>
     <div className="justify-center">
       <p hidden={imageData ? true : false} className='py-4'>Capture your move using the camera!</p>
       <p hidden={imageData ? false : true} className='py-4'>Ready to submit this move?</p>
-      <video className="rounded m-auto w-full" hidden={imageData ? true : false} ref={videoRef} autoPlay playsInline muted />
-      <canvas className="rounded m-auto w-full" hidden={imageData ? false : true} ref={canvasRef}></canvas>
+      <video className={`rounded m-auto w-full ${isMobileDevice() ? 'flipped' : ''}`} hidden={imageData ? true : false} ref={videoRef} autoPlay playsInline muted />
+      <canvas className={`rounded m-auto w-full ${isMobileDevice() ? 'flipped' : ''}`} hidden={imageData ? false : true} ref={canvasRef}></canvas>
       <button className='rounded bg-red-600 border-solid border-2 border-red-500 px-8 py-3 m-4' hidden={imageData ? true : false} onClick={() => captureMove()}>Capture Move</button>
       <div className="flex justify-center pt-2">
         <button className='rounded bg-orange-600 border-solid border-2 border-orange-500 px-8 py-3 m-4' hidden={imageData ? false : true} onClick={() => discardMove()}>Discard</button>
