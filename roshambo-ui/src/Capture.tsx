@@ -90,7 +90,7 @@ const Capture: React.FunctionComponent<CaptureComponentProps> = (props) => {
   }
 
   return (
-    <div className='text-white grid mt-6 content-center'>
+    <div className='text-white grid mt-4 content-center'>
       {content}
       <hr className="border-gray-400 w-full max-w-2xl my-6" />
       <Countdown timeInSeconds={props.roundInfo.lengthOfRoundInSeconds}></Countdown>
