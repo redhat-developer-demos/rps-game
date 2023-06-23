@@ -1,0 +1,41 @@
+{
+  "name": "bot-players",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "rm -rf build && tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "DOTENV_CONFIG_PATH='.env.local' tsx --require dotenv/config --watch src/index.ts | pino-pretty -t",
+    "start": "node -r dotenv/config build/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@sinclair/typebox": "^0.28.18",
+    "@types/eventsource": "^1.1.11",
+    "@types/humanize-duration": "^3.27.1",
+    "@types/node": "^18.16.18",
+    "fastify-tsconfig": "^1.0.1",
+    "pino-pretty": "^10.0.0",
+    "tsx": "^3.12.7",
+    "typescript": "^5.1.3",
+    "undici": "^5.22.1"
+  },
+  "dependencies": {
+    "@fastify/type-provider-typebox": "^3.2.0",
+    "close-with-grace": "^1.2.0",
+    "delay": "^6.0.0",
+    "dotenv": "^16.3.1",
+    "env-var": "^7.3.1",
+    "eventsource": "^2.0.2",
+    "fastify": "^4.18.0",
+    "fastify-plugin": "^4.5.0",
+    "fluent-json-schema": "^4.1.0",
+    "humanize-duration": "^3.28.0",
+    "observable-fns": "^0.6.1",
+    "pino": "^8.14.1",
+    "xstate": "^4.37.2"
+  }
+}
