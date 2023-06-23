@@ -29,6 +29,7 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 
 import io.quarkus.arc.Arc;
+import io.quarkus.scheduler.Scheduled;
 import io.smallrye.reactive.messaging.annotations.Broadcast;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -69,6 +70,11 @@ public class PlayBlockerAsyncResource {
 
     @Inject
     State state;
+
+    @Scheduled(every = "10s")
+    public void heartbeat() {
+        this.sendHeartBeat();
+    }
 
     public void startRound() {
         this.sendStartRound();
@@ -137,6 +143,10 @@ public class PlayBlockerAsyncResource {
         }
     }
 
+    // SEE event
+    public void sendHeartBeat() {
+        this.sendToGamers(new ServerSideEventDTO("heartbeat", new ServerSideEventMessage() {}));
+    }
     // SSE event
     public void sendStartRound() {
         logger.info("Sending Start Round");
