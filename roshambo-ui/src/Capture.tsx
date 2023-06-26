@@ -22,9 +22,9 @@ type CaptureComponentProps = {
 
 const Capture: React.FunctionComponent<CaptureComponentProps> = (props) => {
   const [ state, send ] = useActor(useContext(StateMachineContext))
-  const [ videoVisible, setVideoVisible ] = useState<boolean>(state.context.cameraAccess === CameraAccessState.Granted);
+  const [ , setVideoVisible ] = useState<boolean>(state.context.cameraAccess === CameraAccessState.Granted);
   const [ move, setMove ] = useState<Shape>();
-  const [ request, setRequest ] = useState<Promise<Response>>()
+  const [ , setRequest ] = useState<Promise<Response>>()
 
   async function submitMove(imageData?: string) {
     if (imageData) {

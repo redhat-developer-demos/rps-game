@@ -6,11 +6,13 @@ export default function getStateMachine() {
     // Types are generated using the XState VScode plugin!
   const machine = createMachine({
     /** @xstate-layout N4IgpgJg5mDOIC5QAoC2BDAxgCwJYDswBKAOgEkA5MgFTIEEAZAYggHtCSCA3VgazBIAzANoAGALqJQAB1axcAF1zspIAB6JRAGhABPTQF8DOtFjyFSAJQCidACIBNJtYp0AQg2tjJSELPlKKr4aCNp6hkY6+KwQcKqmOATEqv6KyviqIQC0ACwAHDr6CFl5AOwkOaUAnACMAGw5NQBMAMwArO31kSAJ5sTkVLSMKXJpQaAhOU2FiDWlbSRNVS05oqI5OXVtpS15ed29SVa2jiMB6ZmIbRskonUt1XVVVaWiry0zCDV5TSTX9Q1mu1OnUDhhEhYSJYAPIAVQodgA+nQAMK0ABq1jOYwywU0nxadXKSxWaw2Wx2eVBRgMQA */
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     tsTypes: {} as import("./StateMachine.typegen").Typegen0,
     predictableActionArguments: true,
     schema: {
       services: {} as {
-        getConfig: {
+        'getConfig': {
           // The data that gets returned from the service
           data: { user: UserAssignment, config: Config };
         };
@@ -38,9 +40,6 @@ export default function getStateMachine() {
         | { type: 'END'; data: SSEContentEnd }
     },
     initial: 'INITIAL',
-    context: {
-      cameraAccess: CameraAccessState.Unknown
-    } as any, // TODO: Hack...
     states: {
       'INITIAL': {
         invoke: {
@@ -105,7 +104,7 @@ export default function getStateMachine() {
     }
   }, {
     services: {
-      getConfig: () => {
+      'getConfig': () => {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
             // TODO remove delay after testing
@@ -129,12 +128,12 @@ export default function getStateMachine() {
           return event.data
         }
       }),
-      setProcessedMoveResponse: assign({
+      'setProcessedMoveResponse': assign({
         processedMoveResponse: (_context, event) => {
           return event.data
         }
       }),
-      setCameraAccess: assign({
+      'setCameraAccess': assign({
         cameraAccess: (_context, event) => {
           return event.state
         }
@@ -142,6 +141,10 @@ export default function getStateMachine() {
     }
   });
 
+  // The next line throws a "Some implementations missing" error. Doesn't seem
+  // to have an effect on runtime, but something to look into...
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const service = interpret(machine)
 
   return { service, machine }

@@ -9,8 +9,11 @@ const { service, machine } = getStateMachine()
 export const StateMachineContext = createContext(service);
 
 const StateMachineContextProvider: React.FunctionComponent<{ children: JSX.Element }> = (props) => {
+  // When built for production, the useMachine line throws an error that a
+  // second parameter is required. Not sure why...
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const [ , send, interpreter ] = useMachine(machine);
-
   // TODO: is this the right place for this? The events need to go thru
   // the send function here, and not the service.send to ensure state
   // updates are triggered
@@ -119,12 +122,13 @@ const StateMachineContextProvider: React.FunctionComponent<{ children: JSX.Eleme
     // really unmounted, but if React strict mode is enabled we'd end up with
     // two SSE connections, which could get funky...
     return function cleanUpSSE () {
-      console.log('SSE performing clean up due to component unmounting')
+      log('SSE performing clean up due to component unmounting')
+
+      clearTimeout(connectionTimeoutTimer)
 
       if (es && es.readyState !== EventSource.CLOSED) {
         es.close()
       }
-
     }
   }, [send])
 
