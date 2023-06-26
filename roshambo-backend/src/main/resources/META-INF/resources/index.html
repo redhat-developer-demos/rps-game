@@ -66,14 +66,20 @@
   <script>
     let progress = null
     let progressTimer = null
+    let topPlayers = null
+    
     const ENDPOINTS = {
       GAME_START: '/admin/game/start',
       GAME_CONTINUE: '/admin/game/continue'
     }
+
+    // ENABLE, DISABLE, END are the event names used for the game UI
+    // These are replaced with different names for admin...
     const SSE_TYPE = {
-      ENABLE: 'enable',
-      DISABLE: 'disable',
-      END: 'end'
+      ENABLE: 'start',
+      DISABLE: 'stop',
+      END: 'end',
+      TOP: 'top'
     }
     const startBtn = document.getElementById('start-btn')
     const nextBtn = document.getElementById('next-btn')
@@ -130,6 +136,14 @@
       }
     }
 
+    async function getCurrentStatus () {
+      const res = await fetch('/game/state')
+      const { status } = await res.json()
+
+      // For some reason the SSE is lowercase but this is uppercase...
+      return status.toLowerCase()
+    }
+
     function processSSE ({ type, content }) {
       log('SSE Type and Content', type, content)
       endProgress()
@@ -142,6 +156,8 @@
       } else if (type === SSE_TYPE.END) {
         nextBtn.setAttribute('disabled', true)
         startBtn.removeAttribute('disabled')
+      } else if (type === SSE_TYPE.TOP) {
+        topPlayers = content.topPlayers
       } else {
         alert(`Received uknown SSE message type "${type}". Check the DevTools console for details.`)
       }
@@ -149,7 +165,7 @@
 
     async function initialiseEventStream() {
       return new Promise((resolve, reject) => {
-        const es = new EventSource('/game/stream')
+        const es = new EventSource('/admin/stream')
 
         es.addEventListener('close', () => {
           alert('Lost connection to server. Reloading the page...')
@@ -181,6 +197,20 @@
 
     (async function main() {
       await initialiseEventStream()
+
+      const startingStatus = await getCurrentStatus()
+      console.log('starting statis', startingStatus)
+      if (startingStatus === SSE_TYPE.DISABLE) {
+        startBtn.setAttribute('disabled', true)
+        nextBtn.removeAttribute('disabled')
+      } else if (startingStatus === SSE_TYPE.ENABLE) {
+        startBtn.setAttribute('disabled', true)
+        nextBtn.setAttribute('disabled', true)
+      } else {
+        startBtn.removeAttribute('disable', true)
+        nextBtn.setAttribute('disable', true)
+      }
+
     })()
   </script>
 </body>
