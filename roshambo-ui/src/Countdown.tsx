@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 import './Countdown.css'
 type CountdownComponentProps = {
