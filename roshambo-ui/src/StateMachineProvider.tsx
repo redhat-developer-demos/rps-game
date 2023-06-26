@@ -25,7 +25,7 @@ const StateMachineContextProvider: React.FunctionComponent<{ children: JSX.Eleme
     setupEventSource()
 
     function setupEventSource (): EventSource {
-      es = new EventSource('http://localhost:8080/game/stream')
+      es = new EventSource('/game/stream')
 
       es.addEventListener('open', (event) => {
         log('SSE "open" event', event)
