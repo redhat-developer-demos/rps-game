@@ -11,7 +11,7 @@ import org.acme.dto.ResultDescriptionDTO;
 import org.acme.dto.ServerSideEventDTO;
 import org.acme.dto.ServerSideEventMessage;
 import org.acme.dto.TeamScoreDTO;
-import org.acme.dto.TopChartDTO;
+import org.acme.dto.ResultsDTO;
 import org.acme.game.ResultDescription;
 import org.acme.game.ScoreInformation;
 import org.acme.game.TeamScore;
@@ -90,7 +90,7 @@ public class PlayBlockerAsyncResource {
         scoreInformation.newRound();
         // Send results with the event
         this.sendEndOfTimeRound(winner);
-        this.sendTopPlayers();
+        this.sendResults(winner);
         this.state.stop();
         // Check if end game
 
@@ -150,14 +150,14 @@ public class PlayBlockerAsyncResource {
     // SSE event
     public void sendStartRound() {
         logger.info("Sending Start Round");
-        this.sendToGamers(new ServerSideEventDTO("enable", CurrentRoundInformationDTO.of(this.roundTimeInSeconds, this.scoreInformation.getCurrentRound() + 1)));
+        this.sendToGamers(new ServerSideEventDTO("start", CurrentRoundInformationDTO.of(this.roundTimeInSeconds, this.scoreInformation.getCurrentRound() + 1)));
         this.sendToAdmin(new ServerSideEventDTO("start", new ServerSideEventMessage() {}));
     }
 
     // SSE event
     public void sendEndOfTimeRound(ResultDescription winner) {
         logger.infof("Sending Stop Round with results %s", winner);
-        this.sendToGamers(new ServerSideEventDTO("disable", ResultDescriptionDTO.of(winner)));
+        this.sendToGamers(new ServerSideEventDTO("stop", ResultDescriptionDTO.of(winner)));
         this.sendToAdmin(new ServerSideEventDTO("stop", new ServerSideEventMessage() {}));
     }
 
@@ -169,9 +169,9 @@ public class PlayBlockerAsyncResource {
     }
 
     // SSE event
-    private void sendTopPlayers() {
-        logger.info("Sending Top Players");
-        this.sendToAdmin(new ServerSideEventDTO("top", TopChartDTO.of(userInformation.bestUsers(topPlayers))));
+    private void sendResults(ResultDescription winner) {
+        logger.info("Sending Results");
+        this.sendToAdmin(new ServerSideEventDTO("results", ResultsDTO.of(userInformation.bestUsers(topPlayers), winner)));
     }
 
     void sendToAdmin(ServerSideEventDTO serverSideEventDTO) {
