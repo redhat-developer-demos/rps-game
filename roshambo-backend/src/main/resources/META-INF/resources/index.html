@@ -4,70 +4,68 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://unpkg.com/chota@latest">
-  <link rel="stylesheet" href="progressjs.min.css">
   <style>
-    :root {
-      --bg-color: #ffffff;
-      --bg-secondary-color: #f3f3f6;
-      --color-primary: #14854F;
-      --color-lightGrey: #d2d6dd;
-      --color-grey: #747681;
-      --color-darkGrey: #3f4144;
-      --color-error: #d43939;
-      --color-success: #28bd14;
-      --grid-maxWidth: 120rem;
-      --grid-gutter: 2rem;
-      --font-size: 1.6rem;
-      --font-color: #333333;
-      --font-family-sans: sans-serif;
-      --font-family-mono: monaco, "Consolas", "Lucida Console", monospace;
-    }
-
-    body.dark {
-      --bg-color: #000;
-      --bg-secondary-color: #131316;
-      --font-color: #f5f5f5;
-      --color-grey: #ccc;
-      --color-darkGrey: #777;
-    }
-
-    button.warn {
-      background-color: orange;
-    }
-
-    .progressjs-theme-blue .progressjs-inner {
-      height: 100vh;
-      background-color: #747681;
-    }
-    .progressjs-progress {
-      z-index: -1 !important;
+    button[disabled] {
+      background: gray;
+      opacity: 0.5;
     }
   </style>
   <title>Roshambo Admin Panel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-  <br>
-  <main class="container">
-    <h1>Roshambo Admin Panel</h1>
-
-    <button id="start-btn" onclick="startGame()" type="button" class="button primary icon">Start Game 🚀</button>
-    <button disabled id="next-btn" onclick="advanceRound()" type="button" class="button warn icon">Advance Round 🚦</button>
-  </main>
-
-  <script src="progress.min.js"></script>
+<body class="bg-slate-900">
+  <div class="grid grid-cols-4">
+    <!-- Left pane -->
+    <div class="col-span-1 p-2 h-screen">
+      <div class="grid grid-rows-2 h-full py-3">
+        <div class="grid grid-rows-2">
+          <h2 class="text-3xl text-white text-center">Roshambo Admin</h2>
+        </div>
+        <div class="flex flex-col align-end justify-end">
+          <div class="flex items-center">
+            <div class="flex-1 ">
+              <h3 class="text-2xl bold text-white text-center">Round Timer</h3>
+              <pre id="countdown" class="flex-1 text-2xl bold text-white text-center">30</pre>
+            </div>
+          </div>
+          <button
+            id="start-btn"
+            onclick="startGame()"
+            type="button"
+            class="grow-0 m-3 bg-green-500 rounded p-3 text-xl primary text-white icon">Start Game 🚀</button>
+          <button
+            disabled
+            id="next-btn"
+            onclick="advanceRound()"
+            type="button"
+            class="grow-0 m-3 bg-orange-500 rounded p-3 text-xl primary text-white icon">Advance Round 🚦</button>
+        </div>
+      </div>
+    </div>
+    <!-- Right pane -->
+    <div class="col-span-3">
+      <div class="grid grid-cols-2">
+        <div class="h-screen p-7">
+          <div class="bg-red-500 h-full text-center w-full rounded">
+            <h2 class="text-white text-2xl pt-3">Team #1</h2>
+            <ul class="text-white text-xl pt-4" id="top-players"></ul>
+          </div>
+        </div>
+        <div class="h-screen p-7">
+          <div class="bg-blue-500 h-full text-center w-full rounded">
+            <h2 class="text-white text-2xl pt-3">Team #2</h2>
+            <ul class="text-white text-xl pt-4" id="top-players"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <script>
-    if (window.matchMedia &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      document.body.classList.add('dark');
-    }
-  </script>
-  <script>
-    let progress = null
-    let progressTimer = null
     let topPlayers = null
-    
+    let gameConfig = null
+    const timerEl = document.getElementById('countdown')
+
     const ENDPOINTS = {
       GAME_START: '/admin/game/start',
       GAME_CONTINUE: '/admin/game/continue'
@@ -122,20 +120,6 @@
       console.log.apply(console, args)
     }
 
-    function startProgress ({ lengthOfRoundInSeconds }) {
-      progress = progressJs().start()
-      progressTimer = setInterval(() => {
-        progressJs().increase(100 / lengthOfRoundInSeconds)
-      }, 1000)
-    }
-
-    function endProgress () {
-      if (progressTimer) {
-        clearInterval(progressTimer)
-        progress.end()
-      }
-    }
-
     async function getCurrentStatus () {
       const res = await fetch('/game/state')
       const { status } = await res.json()
@@ -144,18 +128,58 @@
       return status.toLowerCase()
     }
 
+    async function getConfig () {
+      const res = await fetch('/game/init')
+      const { configuration } = await res.json()
+
+      return configuration
+    }
+
+    function updateCountdown (msTimeElapsed) {
+      const now = Date.now()
+      const { roundTimeInSeconds } = gameConfig
+      const totalRoundTimeMs = roundTimeInSeconds * 1000
+
+      if (typeof msTimeElapsed === 'undefined') {
+        msTimeElapsed = 0
+      }
+      
+      const remainingTimeMs = totalRoundTimeMs - msTimeElapsed
+      if (remainingTimeMs <= 0) {
+        timerEl.innerHTML = roundTimeInSeconds
+        return
+      }
+
+      const remainingTime = (remainingTimeMs / 1000).toFixed(3)
+      timerEl.innerHTML = remainingTime
+      
+      setTimeout(() => {
+        updateCountdown(msTimeElapsed + Math.abs(now - Date.now()))
+      }, Math.round(1000 / 60))
+    }
+
+    function renderTopPlayers() {
+      const el = document.getElementById('top-players')
+
+      topPlayers.forEach(player => {
+        const li = document.createElement('li')
+        li.textContent = player
+        el.appendChild(li)
+      })
+    }
+
     function processSSE ({ type, content }) {
       log('SSE Type and Content', type, content)
-      endProgress()
       
       if (type === SSE_TYPE.ENABLE) {
         nextBtn.setAttribute('disabled', true)
-        startProgress(content)
+        updateCountdown()
       } else if (type === SSE_TYPE.DISABLE) {
         nextBtn.removeAttribute('disabled')
       } else if (type === SSE_TYPE.END) {
         nextBtn.setAttribute('disabled', true)
         startBtn.removeAttribute('disabled')
+        renderTopPlayers()
       } else if (type === SSE_TYPE.TOP) {
         topPlayers = content.topPlayers
       } else {
@@ -189,6 +213,7 @@
             processSSE(JSON.parse(event.data))
           } catch (e) {
             log('Error parsing SSE payload', event)
+            log(e)
           }
         })
       })
@@ -196,10 +221,16 @@
     }
 
     (async function main() {
+      gameConfig = await getConfig()
+
+      // Set the round timer to the backend configured value
+      timerEl.innerHTML = gameConfig.roundTimeInSeconds.toFixed(3)
+
+      // Connect to SSE
       await initialiseEventStream()
 
       const startingStatus = await getCurrentStatus()
-      console.log('starting statis', startingStatus)
+      
       if (startingStatus === SSE_TYPE.DISABLE) {
         startBtn.setAttribute('disabled', true)
         nextBtn.removeAttribute('disabled')
