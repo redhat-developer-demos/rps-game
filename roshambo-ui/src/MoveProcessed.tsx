@@ -15,15 +15,17 @@ const MoveProcessed: React.FunctionComponent<MovedProcessedComponentProps> = ({ 
     [Shape.Scissors]: shapeScissorsUrl
   }
   return (
-    <div className="mt-12">
-      <p className="text-xl text-slate-200">Our model determined that your move was:</p>
-      <br />
-      <div className="text-center mb-4">
-        <img className="inline invert h-24" src={shapes[data.shape]} alt={`${data.shape} icon`} />
+    <div className="h-full flex flex-col py-12">
+      <p className="flex-1 text-xl text-slate-200">Our model determined that your move was:</p>
+      <div className="flex flex-1 items-center align-center text-center">
+        <img className="inline m-auto invert h-24" src={shapes[data.shape]} alt={`${data.shape} icon`} />
       </div>
-      <h2 className="text-4xl capitalize">{ data.shape.toLowerCase() }</h2>
-      <br />
-      <p className="text-xl text-slate-200">The next round will begin soon...</p>
+      <div className="flex flex-1 items-center">
+        <h2 className="w-full text-4xl capitalize">{ data.shape.toLowerCase() }</h2>
+      </div>
+      <div className="flex flex-1 items-end align-end place-items-end">
+        <p className="text-xl w-full text-slate-200">The next round will begin soon...</p>
+      </div>
     </div>
   );
 }
