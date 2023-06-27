@@ -1,5 +1,4 @@
 import './App.css'
-import InstructionsPage from "./Instructions";
 import { useContext } from 'react';
 import { useActor } from '@xstate/react';
 import { StateMachineContext } from './StateMachineProvider';
@@ -7,6 +6,9 @@ import Capture from './Capture';
 import log from 'barelog'
 import Waiting from './Waiting';
 import MoveProcessed from './MoveProcessed';
+import GameRules from './GameRules';
+
+
 function App() {
   const [ state ] = useActor(useContext(StateMachineContext))
   let content: JSX.Element = (<h2>Loading...</h2>)
@@ -16,7 +18,11 @@ function App() {
 
   switch (state.value) {
     case 'READY':
-      content = <InstructionsPage></InstructionsPage>
+      content = <Waiting message='The game will begin soon...'></Waiting>
+      // content = <Capture
+      //   roundInfo={state.context.roundInfo}
+      //   userId={state.context.user.id}
+      //   team={state.context.user.team}/>
       break
     case 'PLAY':
       content = <Capture
@@ -38,13 +44,16 @@ function App() {
   }
 
   return (
-    <div className='p-4 text-white text-xl container' id="app-container">
-      <div className='inset-x-0 p-3 my-2 bg-red-600 text-white flex rounded-md border-red-400 border-2'>
+    <div className='grid grid-rows-6 grid-flow-row gap-4 p-4 text-white container' id="app-container">
+      <div className='row-span-1 items-center inset-x-0 p-3 my-6 bg-red-600 text-white flex rounded-md border-red-400 border-2'>
         <p className='flex-1 text-left'><strong>{ state.context.user ? state.context.user.name : '...' }</strong></p>
         <p className='flex-1 text-right'><strong>Team #{ state.context.user ? state.context.user.team : '...' }</strong></p>
       </div>
-      <div>
+      <div className='row-span-5 -mt-4'>
         {content}
+      </div>
+      <div className="my-6">
+        <GameRules open={true}/>
       </div>
     </div>
   );

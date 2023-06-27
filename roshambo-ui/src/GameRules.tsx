@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import explainerImg from './assets/explainer.png';
 
-const GameRules: React.FC = () => {
-  const [show, setShow] = useState(false);
+const GameRules: React.FC<{ open?: boolean }> = ({ open }) => {
+  const [show, setShow] = useState(open ?? false);
 
   const handleShowRules = () => {
     setShow(true);
@@ -17,7 +17,7 @@ const GameRules: React.FC = () => {
     <>
       <div className="flex justify-center">
         <button
-          className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded"
+          className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 border-red-400 border-2 rounded"
           onClick={handleShowRules}
         >
           Show Game Rules
@@ -38,7 +38,7 @@ const GameRules: React.FC = () => {
             </div>
             <div className="flex justify-center mt-4">
               <button className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded" onClick={handleCloseModal}>
-                Back
+                Close
               </button>
             </div>
           </div>
