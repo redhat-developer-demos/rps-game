@@ -183,7 +183,7 @@
       } else if (type === SSE_TYPE.TOP) {
         topPlayers = content.topPlayers
       } else {
-        alert(`Received uknown SSE message type "${type}". Check the DevTools console for details.`)
+        console.log(`Received uknown SSE message type "${type}". Content was:`, content)
       }
     }
 
