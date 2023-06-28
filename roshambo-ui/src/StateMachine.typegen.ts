@@ -22,6 +22,7 @@
 "setConfig": "done.invoke.(machine).INITIAL:invocation[0]";
 "setProcessedMoveResponse": "MOVE_PROCESSED";
 "setRoundInfo": "ENABLE";
+"setRoundResult": "DISABLE";
 "setWaitingMessage": "PAUSE";
         };
         eventsCausingDelays: {
@@ -33,7 +34,7 @@
         eventsCausingServices: {
           "getConfig": "error.platform.(machine).INITIAL:invocation[0]" | "xstate.init";
         };
-        matchesStates: "INITIAL" | "MOVE_RESULT" | "PAUSED" | "PLAY" | "READY";
+        matchesStates: "INITIAL" | "MOVE_RESULT" | "PAUSED" | "PLAY" | "READY" | "ROUND_RESULT";
         tags: never;
       }
   
