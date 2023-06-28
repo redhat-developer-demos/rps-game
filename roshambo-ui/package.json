@@ -15,6 +15,7 @@
     "@xstate/fsm": "^2.0.1",
     "@xstate/react": "^3.2.2",
     "barelog": "^0.2.0",
+    "observable-fns": "^0.6.1",
     "react": "^18.2.0",
     "react-countdown-circle-timer": "^3.2.1",
     "react-dom": "^18.2.0",
