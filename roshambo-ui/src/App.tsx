@@ -6,11 +6,18 @@ import Capture from './Capture';
 import log from 'barelog'
 import Waiting from './Waiting';
 import MoveProcessed from './MoveProcessed';
-import GameRules from './GameRules';
+import { Navigate } from 'react-router-dom'
 
 
 function App() {
   const [ state ] = useActor(useContext(StateMachineContext))
+
+  if (!state.context.config) {
+    // If the config isn't loaded, then the user probably came directly here
+    // without visiting the instructions page
+    return <Navigate to="/"></Navigate>
+  }
+
   let content: JSX.Element = (<h2>Loading...</h2>)
   
   log('current state machine state:', state.value)
