@@ -67,7 +67,7 @@ const InstructionsPage: React.FunctionComponent = () => {
   const buttonText = CameraAccessTextMap[cameraAccessStatus]
 
   return (
-    <div className="flex min-h-screen place-content-center items-center justify-center py-4 px-4">
+    <div className="flex place-content-center items-center justify-center py-4 px-4">
       <div className="flex h-full flex-col justify-center space-y-6">
         <h1 className="text-3xl font-bold tracking-wide">Rock, Paper, Scissors</h1>
         <p className="text-lg">

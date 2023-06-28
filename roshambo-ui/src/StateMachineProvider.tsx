@@ -113,7 +113,7 @@ const StateMachineContextProvider: React.FunctionComponent<{ children: JSX.Eleme
           })
           break;
         default:
-          log('SSE received unrecognised message type: ', message)
+          log(`SSE received unrecognised message type "${message.type}". Content was:`, message)
           break;
       }
     }

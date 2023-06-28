@@ -22,6 +22,7 @@ export default function getStateMachine() {
         user: UserAssignment,
         config: Config,
         roundInfo: SSEContentEnable
+        roundResult: SSEContentDisable
         waitingMessage: string
         processedMoveResponse: MoveProcessResponse
         cameraAccess: CameraAccessState
@@ -98,8 +99,20 @@ export default function getStateMachine() {
           'ENABLE': {
             actions: 'setRoundInfo',
             target: 'PLAY'
+          },
+          'DISABLE': {
+            actions: 'setRoundResult',
+            target: 'ROUND_RESULT'
           }
         },
+      },
+      'ROUND_RESULT': {
+        on: {
+          'ENABLE': {
+            actions: 'setRoundInfo',
+            target: 'PLAY'
+          }
+        }
       }
     }
   }, {
@@ -120,6 +133,11 @@ export default function getStateMachine() {
       }),
       'setRoundInfo': assign({
         roundInfo: (_context, event) => {
+          return event.data
+        }
+      }),
+      setRoundResult: assign({
+        roundResult: (_context, event) => {
           return event.data
         }
       }),

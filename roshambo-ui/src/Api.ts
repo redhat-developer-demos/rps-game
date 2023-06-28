@@ -47,8 +47,8 @@ export type ShotResult = {
 }
 
 export enum SSEType {
-  Enable = 'enable',
-  Disable = 'disable',
+  Enable = 'start',
+  Disable = 'stop',
   End = 'end',
   Heartbeat = 'heartbeat'
 } 
