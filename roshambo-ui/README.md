@@ -39,3 +39,33 @@ command:
 ```
 npm run dev:ssl -- --host
 ```
+
+## Running with Podman/Docker
+
+Build the backend:
+
+```bash
+cd roshambo-backend
+mvn clean package
+podman build . -f src/main/docker/Dockerfile.jvm -t rps-backend
+```
+
+Run the backend container:
+
+```bash
+podman run --rm -p 8181:8080 --name rps-backend rps-backend
+```
+
+Build the frontend:
+
+```bash
+cd roshambo-ui
+podman build . -t rps-ui
+```
+
+Start the frontend (making sure to pass the backend host):
+
+```bash
+export BACKEND_IP=$(podman inspect --format='{{.NetworkSettings.IPAddress}}' rps-backend)
+podman run --rm -e RPS_BACKEND_HOST="http://$BACKEND_IP:8080" -p 8080:8080 rps-ui
+```
