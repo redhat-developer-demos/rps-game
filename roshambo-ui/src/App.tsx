@@ -44,7 +44,7 @@ function App() {
   }
 
   return (
-    <div className='grid grid-rows-6 grid-flow-row gap-4 p-4 text-white container' id="app-container">
+    <div className='grid grid-rows-6 grid-flow-row p-4 text-white container' id="app-container">
       <div className='row-span-1 items-center inset-x-0 p-3 my-6 bg-red-600 text-white flex rounded-md border-red-400 border-2'>
         <p className='flex-1 text-left'><strong>{ state.context.user ? state.context.user.name : '...' }</strong></p>
         <p className='flex-1 text-right'><strong>Team #{ state.context.user ? state.context.user.team : '...' }</strong></p>
@@ -52,9 +52,9 @@ function App() {
       <div className='row-span-5 -mt-4'>
         {content}
       </div>
-      <div className="my-6">
+      {/* <div className="my-6">
         <GameRules open={true}/>
-      </div>
+      </div> */}
     </div>
   );
 }

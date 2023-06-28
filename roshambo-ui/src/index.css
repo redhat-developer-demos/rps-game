@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 :root {
+  --app-height: 100%;
   font-family: 'Red Hat Display', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: normal;
@@ -25,10 +26,15 @@
   }
 }
 
+html, body {
+  height: var(--app-height);
+}
+
 body {
   display: flex;
   place-items: center;
   min-width: 100vw;
+  user-select: none;
 }
 
 .progress-wheel {

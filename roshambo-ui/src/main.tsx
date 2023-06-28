@@ -12,6 +12,7 @@ import "@fontsource/red-hat-display/600.css";
 import "@fontsource/red-hat-display/700.css";
 import StateMachineContextProvider from './StateMachineProvider.tsx'
 import InstructionsPage from './Instructions.tsx';
+import HeightWrapper from './HeightWrapper.tsx';
 
 const router = createBrowserRouter([
   {
@@ -25,11 +26,13 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <div className='bg-gray-800 text-xl'>
-    <React.StrictMode>
-      <StateMachineContextProvider>
-        <RouterProvider router={router} />
-      </StateMachineContextProvider>
-    </React.StrictMode>
-  </div>
+  <HeightWrapper>
+    <div className='bg-gray-800 h-full text-xl'>
+      <React.StrictMode>
+        <StateMachineContextProvider>
+          <RouterProvider router={router} />
+        </StateMachineContextProvider>
+      </React.StrictMode>
+    </div>
+  </HeightWrapper>
 )
