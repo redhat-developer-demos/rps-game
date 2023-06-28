@@ -20,7 +20,7 @@ Before you begin, you will need to have the following installed:
 
 - Clone the repository to your local machine.
 - Navigate to the root directory of the project.
-- Install frontend dependencies using `npm install` in the frontend directory (`roshambo-frontend`).
+- Install frontend dependencies using `npm install` in the frontend directory (`roshambo-ui`).
 - Install backend dependencies using `mvn install` in the backend directory (`roshambo-backend`).
 - Start the Quarkus backend using `./mvnw quarkus:dev`.
 - Start the React development server using `npm run dev`.
