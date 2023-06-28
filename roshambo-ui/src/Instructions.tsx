@@ -67,7 +67,7 @@ const InstructionsPage: React.FunctionComponent = () => {
   const buttonText = CameraAccessTextMap[cameraAccessStatus]
 
   return (
-    <div className="flex place-content-center items-center justify-center py-4 px-4">
+    <div className="flex place-content-center items-center py-8 px-4">
       <div className="flex h-full flex-col justify-center space-y-6">
         <h1 className="text-3xl font-bold tracking-wide">Rock, Paper, Scissors</h1>
         <p className="text-lg">
@@ -87,7 +87,7 @@ const InstructionsPage: React.FunctionComponent = () => {
         <div className="text-white">
           <p className="text-2xl font-semibold mb-4">Instructions</p>
           <p>Before starting, make sure to <strong>Grant Camera Access</strong> using the button below.</p>
-          <button disabled={cameraAccessStatus === CameraAccessState.Granted || cameraAccessStatus === CameraAccessState.Pending} className={`rounded-md p-4 hover:bg-${colour}-600 bg-${colour}-500 my-6 w-9/12`} onClick={() => requestCameraAccess()}>
+          <button disabled={cameraAccessStatus === CameraAccessState.Granted || cameraAccessStatus === CameraAccessState.Pending} className={`rounded-md p-4 hover:bg-${colour}-600 bg-${colour}-500 my-6 w-10/12`} onClick={() => requestCameraAccess()}>
             <span>{buttonText} &nbsp;</span>
             <IconContext.Provider value={{ className: 'rounded-none text-white bg-transparent round pb-1', style: { height: 28, display: 'inline' } }}>
               {cameraAccessStatus === CameraAccessState.Granted ? <FiCheckCircle/> : <FiAlertCircle/>}
@@ -102,7 +102,7 @@ const InstructionsPage: React.FunctionComponent = () => {
           <p>
             Your team's most popular move selection will be used against the other team!
           </p>
-          <button className={'w-9/12 rounded-md p-4 hover:bg-green-600 bg-green-500 my-5'} onClick={joinGame}>
+          <button className={'w-10/12 rounded-md p-4 hover:bg-green-600 bg-green-500 my-5'} onClick={joinGame}>
             <span>Join Game &nbsp;</span>
             <IconContext.Provider value={{ className: 'rounded-none text-white bg-transparent round pb-1', style: { height: 28, display: 'inline' } }}>
               <FiPlay/>
