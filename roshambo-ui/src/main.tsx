@@ -27,7 +27,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <HeightWrapper>
-    <div className='bg-gray-800 h-full text-xl'>
+    <div className='bg-gray-800 flex text-xl'>
       <React.StrictMode>
         <StateMachineContextProvider>
           <RouterProvider router={router} />

@@ -19,10 +19,6 @@ function App() {
   switch (state.value) {
     case 'READY':
       content = <Waiting message='The game will begin soon...'></Waiting>
-      // content = <Capture
-      //   roundInfo={state.context.roundInfo}
-      //   userId={state.context.user.id}
-      //   team={state.context.user.team}/>
       break
     case 'PLAY':
       content = <Capture
@@ -35,6 +31,9 @@ function App() {
       break
     case 'MOVE_RESULT':
       content = <MoveProcessed data={state.context.processedMoveResponse} />
+      break
+    case 'ROUND_RESULT':
+      content = <Waiting message={'Next round will begin soon!'}/>
       break
     case 'INITIAL':
       content = <Waiting message='Initializing'></Waiting>
