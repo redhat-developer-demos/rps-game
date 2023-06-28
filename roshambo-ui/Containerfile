@@ -9,9 +9,15 @@ RUN npm run build
 
 FROM registry.access.redhat.com/ubi8/nginx-120
 
-# ADD /nginx.conf "${NGINX_CONF_PATH}"
 COPY --chown=1001:0 --from=build /usr/src/app/dist .
+# COPY --chown=1001:0 nginx.conf "${NGINX_CONF_PATH}"
+COPY --chown=1001:0 nginx.conf nginx.conf.template
+# ADD ./nginx.conf "${NGINX_CONF_PATH}"
+# ADD ./nginx.conf "${NGINX_DEFAULT_CONF_PATH}"
+# ADD ./nginx.conf "${NGINX_CONFIGURATION_PATH}"
 
-RUN ls -al
+# RUN echo $NGINX_CONF_PATH
 
-CMD nginx -g "daemon off;"
+CMD envsubst '$RPS_BACKEND_HOST' < 'nginx.conf.template' > $NGINX_CONF_PATH && nginx -g "daemon off;"
+
+# CMD nginx -g "daemon off;"
