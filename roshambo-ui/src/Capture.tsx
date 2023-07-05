@@ -23,35 +23,45 @@ const Capture: React.FunctionComponent<CaptureComponentProps> = (props) => {
   const [ state, send ] = useActor(useContext(StateMachineContext))
   const [ , setVideoVisible ] = useState<boolean>(state.context.cameraAccess === CameraAccessState.Granted);
   const [ move, setMove ] = useState<Shape>();
-  const [ , setRequest ] = useState<Promise<Response>>()
 
   async function submitMove(imageData?: string) {
+    let _request!: Promise<Response>
+
+    send({
+      type: 'PAUSE',
+      data: 'Processing'
+    })
+
     if (imageData) {
-      alert('Submit move!')
       setVideoVisible(false)
-    } else if (move) {
-      const _request = fetch(`/game/detect/button/${props.team}/${props.userId}/${move}`, {
+
+      _request = fetch(`/game/detect/shot/${props.team}/${props.userId}`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/octet-stream'
+        },
+        body: imageData
+      })
+
+
+    } else {
+      _request = fetch(`/game/detect/button/${props.team}/${props.userId}/${move}`, {
         method: 'POST',
       })
+    }
 
-      // Show a the waiting/loading screen while API is processing the request
-      send({
-        type: 'PAUSE',
-        data: 'Processing'
-      })
+    try {
+      const response = await _request
 
-      setTimeout(() => {
-        _request
-          .then((res) => res.json())
-          .then((data) => send({ type: 'MOVE_PROCESSED', data }))
-          .catch(() => {
-            alert('error processing move')
-          })
-  
-        setRequest(_request)
-      }, 1000)
-    } else {
-      alert('unexpected condition')
+      if (response.status !== 200) {
+        throw new Error(`Received ${response.status} from server`)
+      } else {
+        const data = await response.json()
+        send({ type: 'MOVE_PROCESSED', data })
+      }
+    } catch (e: any) {
+      alert(`Error processing move: ${e.toString()}`)
+      console.error('error processing move', e)
     }
   }
 
