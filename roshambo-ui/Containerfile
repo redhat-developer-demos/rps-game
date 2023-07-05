@@ -17,4 +17,4 @@ COPY --chown=1001:0 nginx.conf .
 
 # envsubst replaces the RPS_BACKEND_HOST in the template nginx.conf and writes
 # it to the $NGINX_CONF_PATH (this variable is defined in the base image)
-CMD envsubst '$RPS_BACKEND_HOST' < 'nginx.conf' > $NGINX_CONF_PATH && nginx -g "daemon off;"
+CMD NAMESERVERS=$(cat /etc/resolv.conf | grep "nameserver" | awk '{print $2}' | tr '\n' ' ') envsubst '$RPS_BACKEND_HOST,$NAMESERVERS' < 'nginx.conf' > $NGINX_CONF_PATH && nginx -g "daemon off;"
