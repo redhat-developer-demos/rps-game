@@ -31,9 +31,7 @@ jobs:
         distribution: 'adopt'
 
     - name: Build with Maven
-      run: mvn package
-      with:
-        context: ./roshambo-backend
+      run: mvn package --file ./roshambo-backend/pom.xml
 
     - name: Login to quay.io
       uses: docker/login-action@v2
