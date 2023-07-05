@@ -4,6 +4,7 @@ on:
   push:
     branches: [ main ]
     paths: ['roshambo-ui/**']
+  workflow_dispatch:
 
 concurrency:
   group: container-build
