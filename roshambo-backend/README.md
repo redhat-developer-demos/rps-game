@@ -4,6 +4,26 @@ This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 
+## S3 Upload Functionality
+
+NOTE: Only enable this feature for internal development!
+
+This Quarkus backend can process user supplied images of their hand to
+determine if they're choosing rock, paper, or scissors as their move.
+
+These images can be uploaded to an S3 bucket for use in fine-tuning the model
+used to classify images. 
+
+To use enable feature:
+
+1. Create a S3 Bucket. Default name: `rps-game-images`.
+1. Configure an user in IAM with write access to the bucket.
+1. Download an Access Key ID and Secret for that user.
+1. Set the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in the environment.
+
+With those variables set, the Quarkus application will upload images to the
+configured S3 bucket.
+
 ## Running the application in dev mode
 
 You can run your application in dev mode that enables live coding using:

@@ -4,6 +4,7 @@ import java.time.Duration;
 
 import org.acme.detector.Shape;
 import org.acme.detector.ShapeDetectorService;
+import org.acme.game.S3Uploader;
 import org.acme.game.ScoreInformation;
 import org.acme.game.UserGenerator;
 import org.acme.game.UsersInformation;
@@ -26,8 +27,6 @@ import jakarta.ws.rs.core.MediaType;
 
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.reactive.RestStreamElementType;
-
-
 
 @ApplicationScoped
 @Path("/game")
@@ -62,6 +61,9 @@ public class GameResource {
 
     @Inject
     UsersInformation usersInformation;
+
+    @Inject
+    S3Uploader s3;
 
     @GET
     @Path("/stream")
@@ -103,6 +105,10 @@ public class GameResource {
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
     public ShotResult shot(@PathParam("userId") int userId, @Min(1) @Max(2) @PathParam("team") int team, byte[] image) {
         long responseTime = calculateResponseTime();
+
+        // TODO: offload this to a thread to avoid blocking and increasing
+        // the response time of this endpoint
+        s3.uploadImage(image);
         
         final Shape shape = shapeDetectorService.detect(image);
         logger.infof("Detected %s by team %d for the user %d", shape.name(), team, userId);
