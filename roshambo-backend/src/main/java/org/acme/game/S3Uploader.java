@@ -53,11 +53,11 @@ public class S3Uploader {
             .region(Region.US_EAST_2)
             .build();
 
-            PutObjectRequest objectRequest = PutObjectRequest.builder()
-            // TODO: might need to parse the file type from the base64
-            .bucket(bucketName)
-            .key(imageName + ".png")
-            .build();
+    PutObjectRequest objectRequest = PutObjectRequest.builder()
+    // TODO: might need to parse the file type from the base64
+    .bucket(bucketName)
+    .key(imageName + ".png")
+    .build();
 
     try {
       s3.putObject(objectRequest, RequestBody.fromBytes(imageBytes));
