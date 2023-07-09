@@ -45,6 +45,9 @@ public class GameResource {
     @ConfigProperty(name = "roshambo.manual-rounds")
     boolean manualRounds;
 
+    @ConfigProperty(name= "roshambo.upload-s3")
+    boolean uploadToS3;
+
     @Channel("next-round") Multi<String> nextRoundStream;
 
     @Inject
@@ -88,8 +91,6 @@ public class GameResource {
         return new Initialization(conf, state);
     }
 
-  
-
     @GET
     @Path("/assign")
     public User assignNameAndTeam() {
@@ -106,9 +107,9 @@ public class GameResource {
     public ShotResult shot(@PathParam("userId") int userId, @Min(1) @Max(2) @PathParam("team") int team, byte[] image) {
         long responseTime = calculateResponseTime();
 
-        // TODO: offload this to a thread to avoid blocking and increasing
-        // the response time of this endpoint
-        s3.uploadImage(image);
+        if(uploadToS3) {
+            s3.uploadImage(image);
+        }
         
         final Shape shape = shapeDetectorService.detect(image);
         logger.infof("Detected %s by team %d for the user %d", shape.name(), team, userId);
