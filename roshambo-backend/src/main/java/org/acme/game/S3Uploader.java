@@ -23,24 +23,11 @@ public class S3Uploader {
   @ConfigProperty(name = "roshambo.bucket-name")
   String bucketName;
 
-  boolean uploadsEnabled;
-
   public S3Uploader (Logger logger) {
     this.logger = logger;
-
-    if (System.getenv("AWS_ACCESS_KEY_ID") != null && System.getenv("AWS_SECRET_ACCESS_KEY") != null) {
-      logger.infof("Detected AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in the environment. Enabling S3 uploads to bucket %s", bucketName);
-      uploadsEnabled = true;
-    } else {
-      logger.infof("Disabling S3 uploads because AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are not set in the environment");
-      uploadsEnabled = false;
-    }
   }
 
   public void uploadImage (byte image[]) {
-    if (uploadsEnabled == false) {
-      return;
-    }
 
     String imageName = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
 
