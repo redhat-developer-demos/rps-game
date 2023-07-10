@@ -20,7 +20,7 @@
 }
 
 @media only screen and (min-width: 600px)  {
-  #app-container {
+  #root {
     max-width: 800px;
     margin: 0 auto;
   }

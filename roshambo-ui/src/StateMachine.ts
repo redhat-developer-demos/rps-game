@@ -23,6 +23,7 @@ export default function getStateMachine() {
         config: Config,
         roundInfo: SSEContentEnable
         roundResult: SSEContentDisable
+        endResult: SSEContentEnd
         waitingMessage: string
         processedMoveResponse: MoveProcessResponse
         cameraAccess: CameraAccessState
@@ -89,6 +90,10 @@ export default function getStateMachine() {
           'MOVE_PROCESSED': {
             target: 'MOVE_RESULT',
             actions: 'setProcessedMoveResponse'
+          },
+          'END': {
+            actions: 'setEndResult',
+            target: 'GAME_OVER'
           }
         }
       },
@@ -103,12 +108,29 @@ export default function getStateMachine() {
           'DISABLE': {
             actions: 'setRoundResult',
             target: 'ROUND_RESULT'
+          },
+          'END': {
+            actions: 'setEndResult',
+            target: 'GAME_OVER'
           }
         },
       },
       'ROUND_RESULT': {
         on: {
           'ENABLE': {
+            actions: 'setRoundInfo',
+            target: 'PLAY'
+          },
+          'END': {
+            actions: 'setEndResult',
+            target: 'GAME_OVER'
+          }
+        }
+      },
+      GAME_OVER: {
+        // This allows players to join a new game without refreshing
+        on: {
+          ENABLE: {
             actions: 'setRoundInfo',
             target: 'PLAY'
           }
@@ -138,6 +160,11 @@ export default function getStateMachine() {
       }),
       setRoundResult: assign({
         roundResult: (_context, event) => {
+          return event.data
+        }
+      }),
+      setEndResult: assign({
+        endResult: (_context, event) => {
           return event.data
         }
       }),
