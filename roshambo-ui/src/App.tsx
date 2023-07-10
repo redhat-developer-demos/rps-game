@@ -7,6 +7,7 @@ import log from 'barelog'
 import Waiting from './Waiting';
 import MoveProcessed from './MoveProcessed';
 import { Navigate } from 'react-router-dom'
+import GameOver from './GameOver';
 
 
 function App() {
@@ -20,8 +21,7 @@ function App() {
 
   let content: JSX.Element = (<h2>Loading...</h2>)
   
-  log('current state machine state:', state.value)
-  log('current state machine context:', state.context)
+  log(`current state machine state is "${state.value}". context is:`, state.context)
 
   switch (state.value) {
     case 'READY':
@@ -45,6 +45,9 @@ function App() {
     case 'INITIAL':
       content = <Waiting message='Initializing'></Waiting>
       break
+    case 'GAME_OVER':
+      content = <GameOver />
+      break;
     default:
       break
   }
