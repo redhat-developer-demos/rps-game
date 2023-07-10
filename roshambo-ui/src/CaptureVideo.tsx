@@ -9,10 +9,6 @@ function isMobileDevice () {
   return navigator.userAgent.match(/ipod|ipad|iphone|android/gi)
 }
 
-function isInLandscapeOrientation () {
-  return window.innerWidth > window.innerHeight
-}
-
 const VideoCaptureComponent: React.FunctionComponent<VideoCaptureComponentProps> = ({ callback }) => {
   const [ imageData, setImageData ] = useState<string>()
   const videoRef = useRef<HTMLVideoElement|null>(null);
