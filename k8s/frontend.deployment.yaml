@@ -2,10 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: roshambo-frontend
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"roshambo-backend"}]'
   labels:
     app: roshambo-frontend
     app.openshift.io/runtime: nginx
-    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"roshambo-backend"}]'
 spec:
   replicas: 1
   selector:
