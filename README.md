@@ -16,6 +16,10 @@ Before you begin, you will need to have the following installed:
 - Java Development Kit (v17)
 - Maven
 
+Optionally, you might want to the Quarkus backend upload captures images to AWS
+S3. This requires creating an S3 bucket and configuring an IAM user with write
+access to the bucket. Check the backend README for more information.
+
 ### Installing
 
 - Clone the repository to your local machine.
