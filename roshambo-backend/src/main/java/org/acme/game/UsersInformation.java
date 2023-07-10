@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.acme.User;
@@ -46,7 +45,7 @@ public class UsersInformation {
         return playedTimes.get(id);
     }
 
-    User findUserById(int id) {
+    public User findUserById(int id) {
         Optional<User> user = currentUsers
             .values()
             .stream()
