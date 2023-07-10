@@ -20,6 +20,7 @@
         eventsCausingActions: {
           "setCameraAccess": "CAMERA_ACCESS";
 "setConfig": "done.invoke.(machine).INITIAL:invocation[0]";
+"setEndResult": "END";
 "setProcessedMoveResponse": "MOVE_PROCESSED";
 "setRoundInfo": "ENABLE";
 "setRoundResult": "DISABLE";
@@ -34,7 +35,7 @@
         eventsCausingServices: {
           "getConfig": "error.platform.(machine).INITIAL:invocation[0]" | "xstate.init";
         };
-        matchesStates: "INITIAL" | "MOVE_RESULT" | "PAUSED" | "PLAY" | "READY" | "ROUND_RESULT";
+        matchesStates: "GAME_OVER" | "INITIAL" | "MOVE_RESULT" | "PAUSED" | "PLAY" | "READY" | "ROUND_RESULT";
         tags: never;
       }
   

@@ -99,9 +99,9 @@ const Capture: React.FunctionComponent<CaptureComponentProps> = (props) => {
   }
 
   return (
-    <div className='text-white h-full grid -mt-8 content-center'>
+    <div className='text-white h-full grid content-center'>
       {content}
-      <Countdown timeInSeconds={props.roundInfo.lengthOfRoundInSeconds}></Countdown>
+      <Countdown timeInSeconds={30}></Countdown>
     </div>
     
   );

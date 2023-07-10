@@ -9,10 +9,10 @@ const Waiting: React.FunctionComponent<{ animated: boolean }> = ({ animated }) =
 
   return (
     <div>
-      <div className="grid grid-cols-3">
-        <img className={`${classPrefix} rock`} src={rockIcon} alt="rock icon" />
-        <img className={`${classPrefix} paper`} src={paperIcon} alt="paper icon" />
-        <img className={`${classPrefix} scissors`} src={scissorsIcon} alt="scissors icon" />
+      <div className="grid grid-cols-3 md:px-24">
+        <img className={`${classPrefix} rock w-24 md:w-28`} src={rockIcon} alt="rock icon" />
+        <img className={`${classPrefix} paper w-24 md:w-28`} src={paperIcon} alt="paper icon" />
+        <img className={`${classPrefix} scissors w-24 md:w-28`} src={scissorsIcon} alt="scissors icon" />
       </div>
     </div>
   );

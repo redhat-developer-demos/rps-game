@@ -57,11 +57,13 @@ export type SSEContentEnable = {
   currentRound: number,
   lengthOfRoundInSeconds: number
 }
+
 export type SSEContentDisable = ScoreData&{
   team1:  { count: number, shape: Shape },
   team2:  { count: number, shape: Shape },
-  winner: 'TIE'|string
+  winner: 'TIE'|'TEAM_1'|'TEAM_2'
 }
+
 export type SSEContentEnd = ScoreData
 
 export type SSEContent = SSEContentDisable|SSEContentEnable|SSEContentEnd
