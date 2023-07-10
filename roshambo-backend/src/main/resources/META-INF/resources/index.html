@@ -48,14 +48,14 @@
       <div class="grid grid-cols-2">
         <div class="h-screen p-7">
           <div class="bg-red-500 h-full text-center w-full rounded">
-            <h2 class="text-white text-2xl pt-3">Team #1</h2>
+            <h2 class="text-white text-2xl pt-3">Top Players</h2>
             <ul class="text-white text-xl pt-4" id="top-players"></ul>
           </div>
         </div>
         <div class="h-screen p-7">
           <div class="bg-blue-500 h-full text-center w-full rounded">
-            <h2 class="text-white text-2xl pt-3">Team #2</h2>
-            <ul class="text-white text-xl pt-4" id="top-players"></ul>
+            <h2 class="text-white text-2xl pt-3">Results</h2>
+            <div class="text-white text-xl pt-4" id="round-results"></div>
           </div>
         </div>
       </div>
@@ -64,6 +64,7 @@
   <script>
     let topPlayers = null
     let gameConfig = null
+    let roundResults = []
     const timerEl = document.getElementById('countdown')
 
     const ENDPOINTS = {
@@ -77,12 +78,18 @@
       ENABLE: 'start',
       DISABLE: 'stop',
       END: 'end',
-      TOP: 'top'
+      RESULTS: 'results'
     }
     const startBtn = document.getElementById('start-btn')
     const nextBtn = document.getElementById('next-btn')
 
     function startGame() {
+      // Reset variables
+      topPlayers = null
+      roundResults = []
+
+      renderTopPlayersAndResults()
+
       startBtn.setAttribute('disabled', true)
 
       fetch(ENDPOINTS.GAME_START)
@@ -158,13 +165,34 @@
       }, Math.round(1000 / 60))
     }
 
-    function renderTopPlayers() {
-      const el = document.getElementById('top-players')
+    function renderTopPlayersAndResults() {
+      const topPlayersEl = document.getElementById('top-players')
+      const roundResultsEl = document.getElementById('round-results')
+      
+      // Clear prior content in the leaderboards
+      topPlayersEl.innerHTML = ''
+      roundResultsEl.innerHTML = ''
 
-      topPlayers.forEach(player => {
+      topPlayers?.forEach(player => {
         const li = document.createElement('li')
         li.textContent = player
-        el.appendChild(li)
+        topPlayersEl.appendChild(li)
+      })
+
+      roundResults.forEach(result => {
+        const div = document.createElement('div')
+        
+        // Structure of a result object
+        // {
+        //   team1Score: number
+        //   team1: { count: number, shape: string }
+        //   team2Score: number
+        //   team2: { count: number, shape: string }
+        //   winner: string
+        // }
+        div.innerHTML = `<h2>Winner: ${result.winner}</h2>`
+
+        roundResultsEl.appendChild(div)
       })
     }
 
@@ -179,9 +207,10 @@
       } else if (type === SSE_TYPE.END) {
         nextBtn.setAttribute('disabled', true)
         startBtn.removeAttribute('disabled')
-        renderTopPlayers()
-      } else if (type === SSE_TYPE.TOP) {
+      } else if (type === SSE_TYPE.RESULTS) {
         topPlayers = content.topPlayers
+        roundResults.push(content.roundResult)
+        renderTopPlayersAndResults()
       } else {
         console.log(`Received uknown SSE message type "${type}". Content was:`, content)
       }
