@@ -98,9 +98,9 @@ public class PlayBlockerAsyncResource {
             this.controlStart();
         } else {
             if (!stillRoundsToPlay()) {
-                this.scoreInformation.reset();
                 this.sendEndOfGame(this.scoreInformation.getTeamScore());
                 this.state.end();
+                this.scoreInformation.reset();
             }
         }
     }
