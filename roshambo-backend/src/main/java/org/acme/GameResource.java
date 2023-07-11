@@ -1,7 +1,10 @@
 package org.acme;
 
+import io.quarkus.runtime.LaunchMode;
 import java.time.Duration;
 
+import org.acme.detector.MLShapeDetectorService;
+import org.acme.detector.RandomShapeDetectorService;
 import org.acme.detector.Shape;
 import org.acme.detector.ShapeDetectorService;
 import org.acme.dto.CurrentUserShapeDTO;
@@ -16,6 +19,7 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 
 import io.quarkus.runtime.Startup;
 import io.smallrye.mutiny.Multi;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.json.bind.Jsonb;
@@ -64,9 +68,6 @@ public class GameResource {
     UserGenerator userGenerator;
 
     @Inject
-    ShapeDetectorService shapeDetectorService;
-
-    @Inject
     ScoreInformation scoreInformation;
 
     @Inject
@@ -74,6 +75,19 @@ public class GameResource {
 
     @Inject
     S3Uploader s3;
+
+    ShapeDetectorService shapeDetectorService;
+
+    @PostConstruct
+    public void init() {
+        if (LaunchMode.current() == LaunchMode.NORMAL) {
+            logger.info("AI shape detector configured.");
+            shapeDetectorService = new MLShapeDetectorService();
+        } else {
+            logger.info("Random shape detector configured.");
+            shapeDetectorService = new RandomShapeDetectorService();
+        }
+    }
 
     @GET
     @Path("/stream")
