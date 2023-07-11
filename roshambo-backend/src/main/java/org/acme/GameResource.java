@@ -34,7 +34,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.xml.bind.DatatypeConverter;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
@@ -132,27 +131,27 @@ public class GameResource {
     // Bean validation team number
     @POST
     @Path("/detect/shot/{team}/{userId}")
-    @Consumes(MediaType.APPLICATION_OCTET_STREAM)
-    public RestResponse<Object> shot(@PathParam("userId") int userId, @Min(1) @Max(2) @PathParam("team") int team, byte[] image) {
+    @Consumes(MediaType.TEXT_PLAIN)
+    public RestResponse<Object> shot(@PathParam("userId") int userId, @Min(1) @Max(2) @PathParam("team") int team, String image) {
         long responseTime = calculateResponseTime();
         
-        if (new String(image).startsWith("data:image/png;base64,")) {
+        if (image.startsWith("data:image/png;base64,")) {
             // Images are uploaded as base64 strings, e.g: data:image/png;base64,$DATA
             // We need to strip the metadata before the comma, and convert to binary
-            String imageDataPortions[] = new String(image).split(",");
-            byte[] imageBytes = DatatypeConverter.parseBase64Binary(imageDataPortions[1]);
+            String[] imageDataPortions = image.split(",");
+            String imageBase64 = imageDataPortions[1];
     
             if(uploadToS3) {
-                s3.uploadImage(imageBytes);
+                s3.uploadImage(imageBase64);
             }
             
-            final Shape shape = shapeDetectorService.detect(imageBytes);
+            final Shape shape = shapeDetectorService.detect(imageBase64);
             logger.infof("Detected %s by team %d for the user %d", shape.name(), team, userId);
             
             this.afterDetection(shape, team, userId, responseTime);
             return ResponseBuilder.create(200).entity(new ShotResult(responseTime, shape)).build();
         } else {
-            return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST).entity(new String("expected a base64 encoded png image, e.g data:image/png;base64,$DATA")).build();
+            return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST).entity("expected a base64 encoded png image, e.g data:image/png;base64,$DATA").build();
         }
     }
 

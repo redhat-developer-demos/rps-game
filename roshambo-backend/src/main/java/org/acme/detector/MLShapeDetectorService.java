@@ -14,7 +14,7 @@ public class MLShapeDetectorService implements ShapeDetectorService {
     }
 
     @Override
-    public Shape detect(byte[] image) {
+    public Shape detect(String image) {
         JsonObject response = connector.prediction(Image.of(image));
         String shape = response.getString("prediction");
 

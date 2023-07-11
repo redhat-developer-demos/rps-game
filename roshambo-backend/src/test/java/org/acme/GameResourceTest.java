@@ -9,6 +9,7 @@ import io.restassured.response.Response;
 import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Base64;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -45,10 +46,12 @@ public class GameResourceTest {
         try (InputStream image = GameResourceTest.class.getClassLoader().getResourceAsStream("/rock1.jpg")) {
             byte[] imageChunk = image.readAllBytes();
 
+            String imageBase64 = Base64.getEncoder().encodeToString(imageChunk);
+
             given()
-                .header("Content-type", MediaType.APPLICATION_OCTET_STREAM)
+                .header("Content-type", MediaType.TEXT_PLAIN)
                 .and()
-                .body(imageChunk)
+                .body("data:image/png;base64,"+imageBase64)
                 .when()
                 .post("/game/detect/shot/1/0")
                 .then()
