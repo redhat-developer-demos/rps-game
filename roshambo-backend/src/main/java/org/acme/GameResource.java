@@ -3,6 +3,7 @@ package org.acme;
 import io.quarkus.runtime.LaunchMode;
 import java.time.Duration;
 
+import org.acme.detector.AiConnector;
 import org.acme.detector.MLShapeDetectorService;
 import org.acme.detector.RandomShapeDetectorService;
 import org.acme.detector.Shape;
@@ -35,6 +36,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.xml.bind.DatatypeConverter;
 
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.RestStreamElementType;
@@ -79,13 +81,16 @@ public class GameResource {
     @Inject
     S3Uploader s3;
 
+    @RestClient
+    AiConnector connector;
+
     ShapeDetectorService shapeDetectorService;
 
     @PostConstruct
     public void init() {
-        if (LaunchMode.current() == LaunchMode.NORMAL) {
+        if (LaunchMode.current() == LaunchMode.NORMAL || LaunchMode.current() == LaunchMode.TEST) {
             logger.info("AI shape detector configured.");
-            shapeDetectorService = new MLShapeDetectorService();
+            shapeDetectorService = new MLShapeDetectorService(connector);
         } else {
             logger.info("Random shape detector configured.");
             shapeDetectorService = new RandomShapeDetectorService();

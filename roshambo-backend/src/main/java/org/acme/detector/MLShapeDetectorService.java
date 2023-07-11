@@ -5,12 +5,13 @@ import jakarta.json.JsonObject;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-@ApplicationScoped
-@Ai
 public class MLShapeDetectorService implements ShapeDetectorService {
 
-    @RestClient
     AiConnector connector;
+
+    public MLShapeDetectorService(AiConnector aiConnector) {
+        this.connector = aiConnector;
+    }
 
     @Override
     public Shape detect(byte[] image) {
