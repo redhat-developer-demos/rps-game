@@ -4,6 +4,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
+import java.util.Base64;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -27,7 +28,7 @@ public class S3Uploader {
     this.logger = logger;
   }
 
-  public void uploadImage (byte image[]) {
+  public void uploadImage (String image) {
     String imageName = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
 
     S3Client s3 = S3Client.builder()
@@ -41,7 +42,7 @@ public class S3Uploader {
     .build();
 
     try {
-      s3.putObject(objectRequest, RequestBody.fromBytes(image));
+      s3.putObject(objectRequest, RequestBody.fromBytes(Base64.getDecoder().decode(image)));
     } catch (Exception ex) {
       logger.errorf("Exception thrown when uploading image to S3: %s", ex.toString());
     }

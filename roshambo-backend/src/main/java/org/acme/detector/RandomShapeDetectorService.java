@@ -10,7 +10,7 @@ public class RandomShapeDetectorService implements ShapeDetectorService {
     private Random random = new Random();
 
     @Override
-    public Shape detect(byte[] image) {
+    public Shape detect(String image) {
         final Shape[] shapes = Shape.values();
         return shapes[random.nextInt(shapes.length)];
     }

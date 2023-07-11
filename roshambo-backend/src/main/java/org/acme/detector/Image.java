@@ -10,9 +10,9 @@ public class Image {
         return image;
     }
 
-    public static Image of(byte[] imageContent) {
+    public static Image of(String imageContent) {
         Image image = new Image();
-        image.image = Base64.getEncoder().encodeToString(imageContent);
+        image.image = imageContent;
         return image;
     }
 
