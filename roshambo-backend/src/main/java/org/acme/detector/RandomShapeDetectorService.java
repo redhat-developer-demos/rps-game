@@ -5,8 +5,6 @@ import java.util.Random;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Default;
 
-@ApplicationScoped
-@Default
 public class RandomShapeDetectorService implements ShapeDetectorService {
 
     private Random random = new Random();
