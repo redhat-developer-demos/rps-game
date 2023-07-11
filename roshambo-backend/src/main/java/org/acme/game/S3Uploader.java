@@ -28,13 +28,7 @@ public class S3Uploader {
   }
 
   public void uploadImage (byte image[]) {
-
     String imageName = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
-
-    // Images are uploaded as base64 strings, e.g: data:image/jpeg;base64,$DATA
-    // We need to strip the metadata before the comment, and convert to binary
-    String imageDataPortion = new String(image).split(",")[1];
-    byte[] imageBytes = DatatypeConverter.parseBase64Binary(imageDataPortion);
 
     S3Client s3 = S3Client.builder()
             .region(Region.US_EAST_2)
@@ -47,7 +41,7 @@ public class S3Uploader {
     .build();
 
     try {
-      s3.putObject(objectRequest, RequestBody.fromBytes(imageBytes));
+      s3.putObject(objectRequest, RequestBody.fromBytes(image));
     } catch (Exception ex) {
       logger.errorf("Exception thrown when uploading image to S3: %s", ex.toString());
     }

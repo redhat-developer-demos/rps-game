@@ -33,9 +33,12 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.xml.bind.DatatypeConverter;
 
 import org.jboss.logging.Logger;
+import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.RestStreamElementType;
+import org.jboss.resteasy.reactive.RestResponse.ResponseBuilder;
 
 @ApplicationScoped
 @Path("/game")
@@ -125,18 +128,27 @@ public class GameResource {
     @POST
     @Path("/detect/shot/{team}/{userId}")
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
-    public ShotResult shot(@PathParam("userId") int userId, @Min(1) @Max(2) @PathParam("team") int team, byte[] image) {
+    public RestResponse<Object> shot(@PathParam("userId") int userId, @Min(1) @Max(2) @PathParam("team") int team, byte[] image) {
         long responseTime = calculateResponseTime();
-
-        if(uploadToS3) {
-            s3.uploadImage(image);
+        
+        if (new String(image).startsWith("data:image/png;base64,")) {
+            // Images are uploaded as base64 strings, e.g: data:image/png;base64,$DATA
+            // We need to strip the metadata before the comma, and convert to binary
+            String imageDataPortions[] = new String(image).split(",");
+            byte[] imageBytes = DatatypeConverter.parseBase64Binary(imageDataPortions[1]);
+    
+            if(uploadToS3) {
+                s3.uploadImage(imageBytes);
+            }
+            
+            final Shape shape = shapeDetectorService.detect(imageBytes);
+            logger.infof("Detected %s by team %d for the user %d", shape.name(), team, userId);
+            
+            this.afterDetection(shape, team, userId, responseTime);
+            return ResponseBuilder.create(200).entity(new ShotResult(responseTime, shape)).build();
+        } else {
+            return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST).entity(new String("expected a base64 encoded png image, e.g data:image/png;base64,$DATA")).build();
         }
-        
-        final Shape shape = shapeDetectorService.detect(image);
-        logger.infof("Detected %s by team %d for the user %d", shape.name(), team, userId);
-        
-        this.afterDetection(shape, team, userId, responseTime);
-        return new ShotResult(responseTime, shape);
     }
 
     @POST
