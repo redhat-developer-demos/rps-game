@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ai-service
+  name: ai-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-service
+  template:
+    metadata:
+      labels:
+        app: ai-service
+    spec:
+      containers:
+      - name: ai-service
+        image: quay.io/rhdevelopers/roshambo-ai:1.0.0 
+        ports:
+          - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: aiconfig
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-service
+  labels:
+    app: ai-service    
+spec:
+  ports:
+  - name: http
+    port: 8080
+  selector:
+    app: ai-service
+  type: LoadBalancer
