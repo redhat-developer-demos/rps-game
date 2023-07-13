@@ -31,8 +31,8 @@ export default function createPlayerMachine (api: ApiWrapper) {
       },
       events: {} as
         | { type: 'INIT'; }
-        | { type: 'ENABLE'; data: SSEContentEnable }
-        | { type: 'DISABLE'; data: SSEContentDisable }
+        | { type: 'START'; data: SSEContentEnable }
+        | { type: 'STOP'; data: SSEContentDisable }
         | { type: 'END'; data: SSEContentEnd }
     },
     initial: 'initialising',
@@ -59,7 +59,7 @@ export default function createPlayerMachine (api: ApiWrapper) {
         }
       },
       waiting: {
-        on: { ENABLE: 'selectShape', DISABLE: 'waiting', END: 'gameOver' }
+        on: { START: 'selectShape', STOP: 'waiting', END: 'gameOver' }
       },
       selectShape: {
         invoke: {
