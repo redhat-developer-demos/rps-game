@@ -1,4 +1,4 @@
-import { actions, assign, createMachine, interpret } from "xstate";
+import { assign, createMachine, interpret } from "xstate";
 import { Config, GameStatus, InitResponse, SSEContentEnd, SSEContentResult, SSEContentStart, SSEContentStop, SSEContentUserShape, TeamId, getConfigAndState } from "./Api";
 
 export default function getStateMachine() {
@@ -121,7 +121,7 @@ export default function getStateMachine() {
         }
       }),
       setEndResult: assign({
-        endResult: (ctx, event) => {
+        endResult: (ctx) => {
           const counts = ctx.roundResults.reduce((counters, current) => {
             if(current.roundResult.winner !== 'TIE') {
               counters[current.roundResult.winner] += 1
