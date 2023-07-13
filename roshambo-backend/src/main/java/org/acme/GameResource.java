@@ -97,6 +97,7 @@ public class GameResource {
             logger.info("Random shape detector configured.");
             shapeDetectorService = new RandomShapeDetectorService();
         }
+        logger.infof("Camera feature enabled? %s", enableCamera);
     }
 
     @GET
