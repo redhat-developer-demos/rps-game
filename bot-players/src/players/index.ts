@@ -12,6 +12,11 @@ export default function getBotsMachine (sse: SSEObservable, api: ApiWrapper): Bo
   sse.subscribe((value) => {
     const types = Object.values(SSEType)
     if (types.includes(value.type as SSEType)) {
+
+      if (value.type === SSEType.Heartbeat) {
+        log.trace('skip sending heartbeat to bot')
+      }
+
       botPlayers.forEach(bot => {
         // TODO: should probably improve types here, but tis fine...
         bot.send({

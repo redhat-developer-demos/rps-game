@@ -25,17 +25,21 @@ export default function getServerSentEventSource (baseUrl: string): SSEObservabl
       
       es.addEventListener('error', (event) => {
         log.error('SSE "error" event received. Will close and attempt to reconnect. Error event: %j', event)
-        es.close()
-      })
-  
-      es.addEventListener('close', (event) => {
-        log.warn('SSE "close" event %j', event)
-
+        
         setTimeout(() => {
           log.info('attempting to create new event source in 1 second')
           createEventSource()
         }, 1000)
       })
+  
+      // es.addEventListener('close', (event) => {
+      //   log.warn('SSE "close" event %j', event)
+
+      //   setTimeout(() => {
+      //     log.info('attempting to create new event source in 1 second')
+      //     createEventSource()
+      //   }, 1000)
+      // })
 
       es.addEventListener('message', (event) => {
         log.debug('SSE "message" event: %j', event)
@@ -55,9 +59,10 @@ export default function getServerSentEventSource (baseUrl: string): SSEObservabl
 export type SSEObservable = Observable<SSE<unknown>>
 
 export enum SSEType {
-  Enable = 'enable',
-  Disable = 'disable',
-  End = 'end'
+  Start = 'start',
+  Stop = 'stop',
+  End = 'end',
+  Heartbeat = 'heartbeat'
 } 
 
 export type SSEContentEnable = {
@@ -75,7 +80,7 @@ export type SSEContent = SSEContentDisable|SSEContentEnable|SSEContentEnd
 
 export type SSE<E extends SSEType|unknown> = {
   type: E,
-  content: E extends SSEType.Enable ? SSEContentEnable : 
-            E extends SSEType.Disable ? SSEContentDisable : 
+  content: E extends SSEType.Start ? SSEContentEnable : 
+            E extends SSEType.Stop ? SSEContentDisable : 
             E extends SSEType.End ? SSEContentEnd : unknown
 }
