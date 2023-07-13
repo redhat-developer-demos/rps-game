@@ -1,9 +1,3 @@
-import { useActor } from "@xstate/react"
-import { useContext, useState } from "react"
-import { StateMachineContext } from "./StateMachineProvider"
-import { startGame, advanceRound } from "./Api"
-import MusicRecommendationBtn from "./MusicRecommendation"
-
 function Header () {
   return (
     <header className="py-4 fixed top-0 w-screen">
