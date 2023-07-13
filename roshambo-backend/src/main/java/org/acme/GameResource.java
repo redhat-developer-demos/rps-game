@@ -61,6 +61,9 @@ public class GameResource {
     @ConfigProperty(name= "roshambo.upload-s3")
     boolean uploadToS3;
 
+    @ConfigProperty(name = "roshambo.enable.camera")
+    boolean enableCamera;
+
     @Channel("next-round") Multi<String> nextRoundStream;
 
     @Channel("status") Emitter<String>  statusStream;
@@ -114,8 +117,9 @@ public class GameResource {
     @Path("/init")
     public Initialization configuration() {
         state.setManualRounds(manualRounds);
-        Configuration conf = new Configuration(roundTimeInSeconds.getSeconds(), timeBetweenRoundsInSeconds.getSeconds(), numberOfRounds);
-        logger.infof("App Configured with Round Time: %d - Time Between Rounds: %d - Number of Rounds: %d - Manual next Round: %s", conf.roundTimeInSeconds, conf.roundTimeInSeconds, conf.numberOfRounds, manualRounds);
+        Configuration conf = new Configuration(roundTimeInSeconds.getSeconds(), timeBetweenRoundsInSeconds.getSeconds(), numberOfRounds,
+            enableCamera);
+        logger.infof("App Configured with Round Time: %d - Time Between Rounds: %d - Number of Rounds: %d - Manual next Round: %s - Camera Enabled: %s", conf.roundTimeInSeconds, conf.roundTimeInSeconds, conf.numberOfRounds, manualRounds, conf.enableCamera);
         return new Initialization(conf, state);
     }
 
@@ -133,25 +137,33 @@ public class GameResource {
     @Path("/detect/shot/{team}/{userId}")
     @Consumes(MediaType.TEXT_PLAIN)
     public RestResponse<Object> shot(@PathParam("userId") int userId, @Min(1) @Max(2) @PathParam("team") int team, String image) {
-        long responseTime = calculateResponseTime();
-        
-        if (image.startsWith("data:image/png;base64,")) {
-            // Images are uploaded as base64 strings, e.g: data:image/png;base64,$DATA
-            // We need to strip the metadata before the comma, and convert to binary
-            String[] imageDataPortions = image.split(",");
-            String imageBase64 = imageDataPortions[1];
-    
-            if(uploadToS3) {
-                s3.uploadImage(imageBase64);
+        if (enableCamera) {
+            long responseTime = calculateResponseTime();
+
+            if (image.startsWith("data:image/png;base64,")) {
+                // Images are uploaded as base64 strings, e.g: data:image/png;base64,$DATA
+                // We need to strip the metadata before the comma, and convert to binary
+                String[] imageDataPortions = image.split(",");
+                String imageBase64 = imageDataPortions[1];
+
+                if (uploadToS3) {
+                    s3.uploadImage(imageBase64);
+                }
+
+                final Shape shape = shapeDetectorService.detect(imageBase64);
+                logger.infof("Detected %s by team %d for the user %d", shape.name(), team, userId);
+
+                this.afterDetection(shape, team, userId, responseTime);
+                return ResponseBuilder.create(200).entity(new ShotResult(responseTime, shape)).build();
+            } else {
+                return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST)
+                    .entity("expected a base64 encoded png image, e.g data:image/png;base64,$DATA")
+                    .build();
             }
-            
-            final Shape shape = shapeDetectorService.detect(imageBase64);
-            logger.infof("Detected %s by team %d for the user %d", shape.name(), team, userId);
-            
-            this.afterDetection(shape, team, userId, responseTime);
-            return ResponseBuilder.create(200).entity(new ShotResult(responseTime, shape)).build();
         } else {
-            return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST).entity("expected a base64 encoded png image, e.g data:image/png;base64,$DATA").build();
+            return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST)
+                .entity("Camera version is not enabled yet")
+                .build();
         }
     }
 
