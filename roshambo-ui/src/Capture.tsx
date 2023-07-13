@@ -38,7 +38,7 @@ const Capture: React.FunctionComponent<CaptureComponentProps> = (props) => {
       _request = fetch(`/game/detect/shot/${props.team}/${props.userId}`, {
         method: 'POST',
         headers: {
-          'content-type': 'application/octet-stream'
+          'content-type': 'text/plain'
         },
         body: imageData
       })
