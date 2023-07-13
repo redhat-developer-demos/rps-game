@@ -146,6 +146,7 @@ public class PlayBlockerAsyncResource {
     // SEE event
     public void sendHeartBeat() {
         this.sendToGamers(new ServerSideEventDTO("heartbeat", new ServerSideEventMessage() {}));
+        this.sendToAdmin(new ServerSideEventDTO("heartbeat", new ServerSideEventMessage() {}));
     }
     // SSE event
     public void sendStartRound() {

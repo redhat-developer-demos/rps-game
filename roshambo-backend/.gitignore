@@ -1,3 +1,9 @@
+# Quinoa UI
+.quinoa/
+node_modules
+src/main/webui/dist/
+src/main/webui/build/
+
 #Maven
 target/
 pom.xml.tag
