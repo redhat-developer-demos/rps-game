@@ -1,15 +1,17 @@
 
 
-export async function initAndAssign (): Promise<{ config: Config, assignment: UserAssignment }> {
+export async function initAndAssign (): Promise<{ config: InitResponse, user: UserAssignment }> {
   const [ config, assignment ] = await Promise.all([
     // In development mode these requests go to the Vite development server
     // and get proxied to the Quarkus backend. For production, we'll need
     // to configure NGINX to proxy them to the Quarkus Pod/Service
-    fetch('/game/init').then(r => r.json() as Promise<Config>),
+    fetch('/game/init').then(r => r.json() as Promise<InitResponse>),
     fetch('/game/assign').then(r => r.json() as Promise<UserAssignment>)
   ])
 
-  return { config, assignment }
+  return new Promise((resolve) => {
+    setTimeout(() => resolve({ config, user: assignment }), 1000);
+  })
 }
 
 
@@ -20,9 +22,18 @@ export type UserAssignment = {
 }
 
 export type Config = {
-  numberOfRounds: number,
-  roundTimeInSeconds: number,
+  numberOfRounds: number
+  roundTimeInSeconds: number
   timeBetweenRoundsInSeconds: number
+  enableCamera: boolean
+}
+
+export type InitResponse = {
+  configuration: Config
+  state: {
+    manualRounds: boolean
+    status: 'INIT'|'START'|'STOP'|'END'
+  }
 }
 
 export type ScoreData = {

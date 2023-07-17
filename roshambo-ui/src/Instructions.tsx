@@ -6,6 +6,7 @@ import { useActor } from '@xstate/react';
 import { StateMachineContext } from './StateMachineProvider';
 import { useNavigate } from 'react-router-dom';
 import IconRow from './IconRow';
+import Waiting from './Waiting';
 
 const CameraAccessColourMap = {
   [CameraAccessState.Unknown]: 'amber',
@@ -24,10 +25,23 @@ const CameraAccessTextMap = {
 const InstructionsPage: React.FunctionComponent = () => {
   const navigate = useNavigate();
   const [ state, send ] = useActor(useContext(StateMachineContext))
+
+  if (!state.context.config) {
+    return (
+      <div className='h-screen -mt-12 grid grid-rows-6 grid-flow-row p-4 text-white container' id="app-container">
+        <div className='row-span-1'></div>
+        <div className='row-span-5 -mt-4'>
+          <Waiting message={'Loading...'}></Waiting>
+        </div>
+      </div>
+    )
+  }
+
   const cameraAccessStatus = state.context.cameraAccess ?? CameraAccessState.Unknown
+  const cameraFeatureEnabled = state.context.config.enableCamera
 
   function joinGame () {
-    if (cameraAccessStatus !== CameraAccessState.Granted) {
+    if (cameraAccessStatus !== CameraAccessState.Granted && cameraFeatureEnabled) {
       const proceed = confirm(`Are you sure you'd like to join the game without granting camera access?`)
 
       if (proceed) {
@@ -86,18 +100,22 @@ const InstructionsPage: React.FunctionComponent = () => {
 
         <div className="text-white">
           <p className="text-2xl font-semibold mb-4">Instructions</p>
-          <p>Before starting, make sure to <strong>Grant Camera Access</strong> using the button below.</p>
-          <button disabled={cameraAccessStatus === CameraAccessState.Granted || cameraAccessStatus === CameraAccessState.Pending} className={`rounded-md p-4 hover:bg-${colour}-600 bg-${colour}-500 my-6 w-10/12`} onClick={() => requestCameraAccess()}>
-            <span>{buttonText} &nbsp;</span>
-            <IconContext.Provider value={{ className: 'rounded-none text-white bg-transparent round pb-1', style: { height: 28, display: 'inline' } }}>
-              {cameraAccessStatus === CameraAccessState.Granted ? <FiCheckCircle/> : <FiAlertCircle/>}
-            </IconContext.Provider>
-          </button>
-          <p>
-            Use your camera to take a picture of your hand in the shape of rock, paper, or scissors.
+          <p className='mb-4'>
+            Once the game starts you'll be prompted to select a shape; rock, paper, or scissors.
           </p>
           <div className="my-5">
             <IconRow animated={false} />
+          </div>
+          <div className="camera-access" hidden={cameraFeatureEnabled === false}>
+            <p hidden={cameraFeatureEnabled === false}>
+              You can use your camera to take a picture of your hand in the shape of rock, paper, or scissors if you <strong>Grant Camera Access</strong>!
+            </p>
+            <button disabled={cameraAccessStatus === CameraAccessState.Granted || cameraAccessStatus === CameraAccessState.Pending} className={`rounded-md p-4 hover:bg-${colour}-600 bg-${colour}-500 my-6 w-10/12`} onClick={() => requestCameraAccess()}>
+              <span>{buttonText} &nbsp;</span>
+              <IconContext.Provider value={{ className: 'rounded-none text-white bg-transparent round pb-1', style: { height: 28, display: 'inline' } }}>
+                {cameraAccessStatus === CameraAccessState.Granted ? <FiCheckCircle/> : <FiAlertCircle/>}
+              </IconContext.Provider>
+            </button>
           </div>
           <p>
             Your team's most popular move selection will be used against the other team!

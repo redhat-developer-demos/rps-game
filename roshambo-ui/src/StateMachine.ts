@@ -1,5 +1,5 @@
 import { assign, createMachine, interpret } from "xstate";
-import { UserAssignment, Config, SSEContentEnable, SSEContentDisable, SSEContentEnd, MoveProcessResponse } from "./Api";
+import { UserAssignment, Config, SSEContentEnable, SSEContentDisable, SSEContentEnd, MoveProcessResponse, initAndAssign, InitResponse } from "./Api";
 import { CameraAccessState } from "./Types";
 
 export default function getStateMachine() {
@@ -14,7 +14,7 @@ export default function getStateMachine() {
       services: {} as {
         'getConfig': {
           // The data that gets returned from the service
-          data: { user: UserAssignment, config: Config };
+          data: { user: UserAssignment, config: InitResponse };
         };
       },
       // The context (extended state) of the machine
@@ -139,19 +139,12 @@ export default function getStateMachine() {
     }
   }, {
     services: {
-      'getConfig': () => {
-        return new Promise((resolve, reject) => {
-          setTimeout(() => {
-            // TODO remove delay after testing
-            initAndAssign().then(resolve).catch(reject)
-          }, 1000)
-        })
-      }
+      'getConfig': () => initAndAssign()
     },
     actions: {
       'setConfig': assign({
         user: (_context, event) => event.data.user,
-        config: (_context, event) => event.data.config
+        config: (_context, event) => event.data.config.configuration
       }),
       'setRoundInfo': assign({
         roundInfo: (_context, event) => {
@@ -193,17 +186,4 @@ export default function getStateMachine() {
   const service = interpret(machine)
 
   return { service, machine }
-}
-
-// TODO: check localStorage for already assigned user and team?
-async function initAndAssign (): Promise<{ config: Config, user: UserAssignment }> {
-  const [ config, assignment ] = await Promise.all([
-    // In development mode these requests go to the Vite development server
-    // and get proxied to the Quarkus backend. For production, we'll need
-    // to configure NGINX to proxy them to the Quarkus Pod/Service
-    fetch('/game/init').then(r => r.json() as Promise<Config>),
-    fetch('/game/assign').then(r => r.json() as Promise<UserAssignment>)
-  ])
-
-  return { config, user: assignment }
 }
