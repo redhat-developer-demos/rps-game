@@ -1,6 +1,5 @@
 import { useActor } from '@xstate/react';
 import { useContext } from 'react';
-import './Capture.css'
 import { StateMachineContext } from './StateMachineProvider';
 
 const GameOver: React.FunctionComponent = () => {

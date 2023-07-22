@@ -17,7 +17,7 @@ const GameRules: React.FC<{ open?: boolean }> = ({ open }) => {
     <>
       <div className="flex justify-center">
         <button
-          className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 border-red-400 border-2 rounded"
+          className="bg-red hover:bg-red text-white font-bold py-3 px-8 border-red-400 border-2 rounded"
           onClick={handleShowRules}
         >
           Show Game Rules
@@ -37,7 +37,7 @@ const GameRules: React.FC<{ open?: boolean }> = ({ open }) => {
               </div>
             </div>
             <div className="flex justify-center mt-4">
-              <button className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded" onClick={handleCloseModal}>
+              <button className="bg-red hover:bg-red text-white font-bold py-3 px-8 rounded" onClick={handleCloseModal}>
                 Close
               </button>
             </div>

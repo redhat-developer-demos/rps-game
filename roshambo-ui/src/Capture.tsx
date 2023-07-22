@@ -1,14 +1,12 @@
-import './Capture.css'
+import styles from './Capture.module.css'
 import { useContext, useState } from 'react'
 import { SSEContentEnable, Shape } from './Api';
 import { useActor } from '@xstate/react';
 import { StateMachineContext } from './StateMachineProvider';
-import { IconContext } from 'react-icons'
-import { FiSend } from 'react-icons/fi';
 
-import shapeRock from './assets/rock.png'
-import shapeScissors from './assets/scissors.png'
-import shapePaper from './assets/paper.png'
+import shapeRock from './assets/2023_Roshambo_UI__Rock_choice_icon.svg'
+import shapePaper from './assets/2023_Roshambo_UI__Paper_choice_icon.svg'
+import shapeScissors from './assets/2023_Roshambo_UI__Scissor_choice_icon.svg'
 import VideoCaptureComponent from './CaptureVideo';
 import Countdown from './Countdown';
 import { CameraAccessState } from './Types';
@@ -73,33 +71,31 @@ const Capture: React.FunctionComponent<CaptureComponentProps> = (props) => {
   } else {
     content = (
       <div className='mt-12'>
-        <div className="grid grid-cols-3 justify-center">
-          <button className={`bg-slate-100 shape-selector ${move === Shape.Rock ? 'red' : ''}`} onClick={() => setMove(Shape.Rock)} >
-            <img src={shapeRock} alt="rock" />
-            <small>Rock</small>
+        <div className="grid grid-cols-3 gap-3 justify-center mb-8">
+          <button className={`${styles.button} ${move === Shape.Rock ? styles.selected : ''}`} onClick={() => setMove(Shape.Rock)} >
+            <img className='' src={shapeRock} alt="rock" />
+            <p>Rock</p>
           </button>
-          <button className={`bg-slate-100 shape-selector ${move === Shape.Paper ? 'red' : ''}`} onClick={() => setMove(Shape.Paper)} >
+          <button className={`${styles.button} ${move === Shape.Paper ? styles.selected : ''}`} onClick={() => setMove(Shape.Paper)} >
             <img src={shapePaper} alt="paper" />
-            <small>Paper</small>
+            <p>Paper</p>
           </button>
-          <button className={`bg-slate-100 shape-selector ${move === Shape.Scissors ? 'red' : ''}`} onClick={() => setMove(Shape.Scissors)} >
+          <button className={`${styles.button} ${move === Shape.Scissors ? styles.selected : ''}`} onClick={() => setMove(Shape.Scissors)} >
             <img src={shapeScissors} alt="scissors" />
-            <small>Scissors</small>
+            <p>Scissors</p>
           </button>
         </div>
         <br />
-        <button className={`rounded-md m-2 p-4 hover:bg-green-600 bg-green-500 ${move ? 'opacity-100' : 'opacity-50'}`} disabled={move === undefined} onClick={() => submitMove()}>
-          <span>Submit Move &nbsp;</span>
-          <IconContext.Provider value={{ className: 'text-white bg-transparent', style: { display: 'inline' } }}>
-            <FiSend></FiSend>
-          </IconContext.Provider>
+        <button className={`bg-blue text-2xl py-3 px-14 rounded font-semibold ${move ? 'opacity-100' : 'opacity-50'}`} disabled={move === undefined} onClick={() => submitMove()}>
+          <span>Submit move &nbsp;</span>
         </button>
       </div>
     )
   }
 
   return (
-    <div className='text-white h-full grid content-center'>
+    <div className='text-white h-full grid content-center capture-container'>
+      <h2 className='text-2xl'>Choose your move!</h2>
       {content}
       <Countdown timeInSeconds={30}></Countdown>
     </div>

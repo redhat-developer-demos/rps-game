@@ -4,29 +4,29 @@ type MovedProcessedComponentProps = {
   data: MoveProcessResponse
 }
 
-import shapeRockUrl from './assets/rock.png'
-import shapeScissorsUrl from './assets/scissors.png'
-import shapePaperUrl from './assets/paper.png'
+import iconRock from './assets/2023_Roshambo_UI__Rock_choice_icon.svg'
+import iconPaper from './assets/2023_Roshambo_UI__Paper_choice_icon.svg'
+import iconScissors from './assets/2023_Roshambo_UI__Scissor_choice_icon.svg'
 
 const RoundResult: React.FunctionComponent<MovedProcessedComponentProps> = ({ data }) => {
   const shapes = {
-    [Shape.Rock]: shapeRockUrl,
-    [Shape.Paper]: shapePaperUrl,
-    [Shape.Scissors]: shapeScissorsUrl
+    [Shape.Rock]: iconRock,
+    [Shape.Paper]: iconPaper,
+    [Shape.Scissors]: iconScissors
   }
   return (
     <div className="h-full flex flex-col py-12">
-      <div className="flex flex-1 items-center">
-        <p className="flex-1 text-xl text-slate-200">Your move was</p>
+      <div className="flex flex-1 items-center mb-4">
+        <p className="flex-1 text-2xl text-slate-200">Your move was...</p>
       </div>
-      <div className="flex flex-1 items-center align-center text-center">
-        <img className="inline m-auto invert h-24" src={shapes[data.shape]} alt={`${data.shape} icon`} />
+      <div className="flex flex-1 items-center align-center text-center mb-4">
+        <img className="inline m-auto h-36" src={shapes[data.shape]} alt={`${data.shape} icon`} />
       </div>
       <div className="flex flex-1 items-center">
         <h2 className="w-full text-4xl capitalize">{ data.shape.toLowerCase() }</h2>
       </div>
-      <div className="flex flex-1 items-centerend">
-        <p className="text-xl w-full text-slate-200">The next round will begin soon...</p>
+      <div className="flex flex-1 items-centerend mt-8">
+        <p className="text-2xl w-full text-slate-200">The next round will begin soon...</p>
       </div>
     </div>
   );

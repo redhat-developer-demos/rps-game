@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  -webkit-touch-callout:none;
+  -webkit-text-size-adjust:none;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+  -webkit-user-select:none;
+  user-select: none; 
+}
+
 :root {
   --app-height: 100%;
   font-family: 'Red Hat Display', system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -10,7 +18,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #212427;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -44,13 +52,4 @@ body {
   border-top-color: transparent;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
 }

@@ -7,10 +7,12 @@ import { StateMachineContext } from './StateMachineProvider';
 import { useNavigate } from 'react-router-dom';
 import IconRow from './IconRow';
 import Waiting from './Waiting';
+import RoshamboLogo from './assets/2023_Roshambo_UI__Roshambo_Logo_Descrip_W.svg'
+import './Instructions.css'
 
 const CameraAccessColourMap = {
-  [CameraAccessState.Unknown]: 'amber',
-  [CameraAccessState.Pending]: 'slate',
+  [CameraAccessState.Unknown]: 'yellow',
+  [CameraAccessState.Pending]: 'yellow',
   [CameraAccessState.Granted]: 'green',
   [CameraAccessState.Denied]: 'red'
 }
@@ -19,7 +21,7 @@ const CameraAccessTextMap = {
   [CameraAccessState.Unknown]: 'Grant Camera Access',
   [CameraAccessState.Pending]: 'Camera Access Pending',
   [CameraAccessState.Granted]: 'Camera Access Granted',
-  [CameraAccessState.Denied]: 'Grant Camera Access'
+  [CameraAccessState.Denied]: 'Camera Unavailable'
 }
 
 const InstructionsPage: React.FunctionComponent = () => {
@@ -79,12 +81,11 @@ const InstructionsPage: React.FunctionComponent = () => {
 
   const colour = CameraAccessColourMap[cameraAccessStatus]
   const buttonText = CameraAccessTextMap[cameraAccessStatus]
-
   return (
-    <div className="flex place-content-center items-center py-8 px-4">
+    <div className="flex place-content-center items-center py-8 px-7">
       <div className="flex h-full flex-col justify-center space-y-6">
-        <h1 className="text-3xl font-bold tracking-wide">Rock, Paper, Scissors</h1>
-        <p className="text-lg">
+        <img src={RoshamboLogo} alt="Roshambo Game Logo" />
+        {/* <p className="text-lg">
           An interactive game powered by{' '}
           <a
             href="https://www.redhat.com/en/technologies/cloud-computing/openshift/openshift-data-science"
@@ -94,37 +95,37 @@ const InstructionsPage: React.FunctionComponent = () => {
           >
             Red Hat OpenShift Data Science
           </a>
-        </p>
+        </p> */}
 
         <hr className="border-gray-400 w-full max-w-2xl my-6" />
 
         <div className="text-white">
-          <p className="text-2xl font-semibold mb-4">Instructions</p>
-          <p className='mb-4'>
+          <p className="text-xl font-bold mb-4">Game Instructions</p>
+          {/* <p className='mb-4'>
             Once the game starts you'll be prompted to select a shape; rock, paper, or scissors.
-          </p>
-          <div className="my-5">
-            <IconRow animated={false} />
-          </div>
+          </p> */}
+
           <div className="camera-access" hidden={cameraFeatureEnabled === false}>
-            <p hidden={cameraFeatureEnabled === false}>
-              You can use your camera to take a picture of your hand in the shape of rock, paper, or scissors if you <strong>Grant Camera Access</strong>!
-            </p>
-            <button disabled={cameraAccessStatus === CameraAccessState.Granted || cameraAccessStatus === CameraAccessState.Pending} className={`rounded-md p-4 hover:bg-${colour}-600 bg-${colour}-500 my-6 w-10/12`} onClick={() => requestCameraAccess()}>
+            <p className="font-bold mb-1">Step 1</p>
+            
+            <p>Before starting, make sure to <strong>Grant Camera Access</strong> using the button below.</p>
+
+            <button disabled={cameraAccessStatus === CameraAccessState.Granted || cameraAccessStatus === CameraAccessState.Pending} className={`text-xl font-semibold text-black rounded-md p-4 bg-${colour} my-6 w-full`} onClick={() => requestCameraAccess()}>
               <span>{buttonText} &nbsp;</span>
-              <IconContext.Provider value={{ className: 'rounded-none text-white bg-transparent round pb-1', style: { height: 28, display: 'inline' } }}>
+              <IconContext.Provider value={{ className: 'rounded-none bg-transparent round pb-1', style: { height: 28, display: 'inline' } }}>
                 {cameraAccessStatus === CameraAccessState.Granted ? <FiCheckCircle/> : <FiAlertCircle/>}
               </IconContext.Provider>
             </button>
+
+            <p className="font-bold mb-1">Step 2</p>
+            <p className='mb-4'>Use your camera to take a picture of your hand in the shape of rock, paper, or scissors.</p>
+            <IconRow animated={false} />
           </div>
-          <p>
-            Your team's most popular move selection will be used against the other team!
-          </p>
-          <button className={'w-10/12 rounded-md p-4 hover:bg-green-600 bg-green-500 my-5'} onClick={joinGame}>
+
+          <p className="font-bold mb-1 mt-4">Step 3</p>
+          <p>Your team's most popular move selection will be used against the other team!</p>
+          <button className={'w-full text-xl font-semibold text-black rounded-md p-4 bg-green my-5'} onClick={joinGame}>
             <span>Join Game &nbsp;</span>
-            <IconContext.Provider value={{ className: 'rounded-none text-white bg-transparent round pb-1', style: { height: 28, display: 'inline' } }}>
-              <FiPlay/>
-            </IconContext.Provider>
           </button>
         </div>
       </div>
