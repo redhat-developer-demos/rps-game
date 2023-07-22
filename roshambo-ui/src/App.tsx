@@ -8,12 +8,13 @@ import Waiting from './Waiting';
 import MoveProcessed from './MoveProcessed';
 import { Navigate } from 'react-router-dom'
 import GameOver from './GameOver';
+import RoshamboLogo from './assets/2023_Roshambo_UI__Roshambo_Logo_Descrip_W.svg'
 
 
 function App() {
   const [ state ] = useActor(useContext(StateMachineContext))
 
-  if (!state.context.config) {
+  if (!state.context.config || !state.context.user) {
     // If the config isn't loaded, then the user probably came directly here
     // without visiting the instructions page
     return <Navigate to="/"></Navigate>
@@ -52,11 +53,14 @@ function App() {
       break
   }
 
+  const teamColour = state.context.user.team === 1 ? 'bg-red' : 'bg-blue'
+
   return (
-    <div className='grid grid-rows-6 grid-flow-row p-4 text-white container' id="app-container">
-      <div className='row-span-1 items-center inset-x-0 p-3 my-6 bg-red-600 text-white flex rounded-md border-red-400 border-2'>
-        <p className='flex-1 text-left'><strong>{ state.context.user ? state.context.user.name : '...' }</strong></p>
-        <p className='flex-1 text-right'><strong>Team #{ state.context.user ? state.context.user.team : '...' }</strong></p>
+    <div className='grid grid-rows-6 grid-flow-row p-4 px-7 text-white container' id="app-container">
+      <img src={RoshamboLogo} alt="Roshambo Game Logo" />
+      <div className={`row-span-1 items-center inset-x-0 p-3 my-6 text-white flex rounded-md px-6 ${teamColour}`}>
+        <p className='flex-1 text-xl text-left'>{ state.context.user ? state.context.user.name : '...' }</p>
+        <p className='flex-1 text-xl text-right'>Team #{ state.context.user ? state.context.user.team : '...' }</p>
       </div>
       <div className='row-span-5 -mt-4'>
         {content}

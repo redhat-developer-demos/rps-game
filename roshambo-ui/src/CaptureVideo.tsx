@@ -94,7 +94,7 @@ const VideoCaptureComponent: React.FunctionComponent<VideoCaptureComponentProps>
           <video className={`block rounded m-auto ${isMobileDevice() ? '' : 'flipped'}`} ref={videoRef} autoPlay playsInline muted />
         </div>
         <div className={`flex justify-center pt-2`}>
-          <button className='rounded bg-red-600 border-solid border-2 border-red-500 px-8 py-3 m-4' onClick={() => captureMove()}>Capture Move</button>
+          <button className='rounded border-solid border-2 border-red-500 px-8 py-3 m-4' onClick={() => captureMove()}>Capture Move</button>
         </div>
       </div>
     )

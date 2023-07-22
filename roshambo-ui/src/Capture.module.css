@@ -1,0 +1,27 @@
+.button {
+  transition: all 0.3s ease;
+  @apply rounded-xl;
+  @apply border-solid;
+  @apply border-2;
+  @apply h-28;
+  
+}
+
+.selected {
+  @apply bg-white;
+  @apply text-black;
+}
+
+.button img {
+  transform: rotate(-45deg);
+  @apply p-4;
+  @apply w-8/12;
+  @apply m-auto;
+  @apply h-20;
+}
+
+
+.button p {
+  @apply text-xl;
+  @apply -mt-2;
+}

@@ -5,17 +5,19 @@ export default {
   ],
   safelist: [
     // Hacky way to ensure dynamic some classes work
-    'bg-red-400',
-    'bg-red-500',
-    'bg-green-400',
-    'bg-green-500',
-    'bg-amber-400',
-    'bg-amber-500',
-    'bg-slate-400',
-    'bg-slate-500'
+    'bg-red',
+    'bg-green',
+    'bg-yellow'
   ],
   theme: {
     extend: {
+      colors: {
+        red: '#ee0000',
+        blue: '#0066cc',
+        yellow: '#e6ad3b',
+        green: '#6ec664',
+        grey: '#212427'
+      },
       fontFamily: {
         'sans': ['"Red Hat Display"', 'sans-serif'],
       },

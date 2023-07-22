@@ -1,5 +1,5 @@
 svg {
-  @apply text-black;
+  @apply text-grey;
   @apply rounded-full;
   @apply bg-slate-50;
 }

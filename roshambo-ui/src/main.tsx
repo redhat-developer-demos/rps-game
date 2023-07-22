@@ -13,10 +13,15 @@ import "@fontsource/red-hat-display/700.css";
 import StateMachineContextProvider from './StateMachineProvider.tsx'
 import InstructionsPage from './Instructions.tsx';
 import HeightWrapper from './HeightWrapper.tsx';
+import TitlePage from './TitlePage.tsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
+    element: <TitlePage/>,
+  },
+  {
+    path: '/instructions',
     element: <InstructionsPage/>,
   },
   {
@@ -27,7 +32,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <HeightWrapper>
-    <div className='bg-gray-800 flex text-xl'>
+    <div className='flex'>
       <React.StrictMode>
         <StateMachineContextProvider>
           <RouterProvider router={router} />
