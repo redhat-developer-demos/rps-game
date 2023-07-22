@@ -1,17 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import DeveloperLogo from './assets/2023_Roshambo_UI__RHD_Logo.svg'
 import TitleArt from './assets/2023_Roshambo_UI_Title_art.png'
 import RoshamboLogo from './assets/2023_Roshambo_UI__Roshambo_Logo_Descrip_W.svg'
-import { useActor } from '@xstate/react';
-import { Link, useNavigate } from 'react-router-dom';
-import { StateMachineContext } from './StateMachineProvider';
+import { Link } from 'react-router-dom';
 
 
 
-const TitlePage: React.FunctionComponent = () => {
-  const navigate = useNavigate();
-  const [ state ] = useActor(useContext(StateMachineContext))
-  
+const TitlePage: React.FunctionComponent = () => {  
   return (
     <div style={{height: '100svh'}} className="flex flex-col place-content-center items-center gap-4 px-4">
       <img src={RoshamboLogo} alt="Roshambo Game Logo" />

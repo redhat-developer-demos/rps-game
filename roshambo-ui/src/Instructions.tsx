@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { IconContext } from 'react-icons'
-import { FiCheckCircle, FiAlertCircle, FiPlay } from 'react-icons/fi';
+import { FiCheckCircle, FiAlertCircle } from 'react-icons/fi';
 import { CameraAccessState } from './Types';
 import { useActor } from '@xstate/react';
 import { StateMachineContext } from './StateMachineProvider';
