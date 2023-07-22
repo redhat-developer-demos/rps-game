@@ -18,12 +18,8 @@ const Footer: React.FunctionComponent = () => {
   }
 
   return (
-    <footer className="py-4 fixed bottom-0 w-screen">
-      <hr />
-      {/* <div className="container mx-auto px-4">
-        <h1 className="text-2xl font-bold">Footer</h1>
-      </div> */}
-      <Marquee speed={50} className="text-xl pt-4">
+    <footer className="py-4 bg-grey fixed bottom-0 w-screen text-white">
+      <Marquee speed={50} className="text-xl">
         <span className="font-bold">Top Players &nbsp;&nbsp;-</span>
         {topPlayers}
         <span className="font-bold">-&nbsp;&nbsp; Top Players</span>

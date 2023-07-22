@@ -2,6 +2,7 @@ import { useActor } from '@xstate/react'
 import React, { useContext, useState } from 'react'
 import { advanceRound, startGame } from './Api'
 import { StateMachineContext } from './StateMachineProvider'
+import NextRoundIcons from './assets/2023_Roshambo_UI__Next_round_icons.svg'
 
 const ContentReady: React.FunctionComponent = () => {
   const [ state ] = useActor(useContext(StateMachineContext))
@@ -30,14 +31,15 @@ const ContentReady: React.FunctionComponent = () => {
     }
   }
 
-  const commonClasses = 'w-36 h-36 rounded-full cursor-pointer font-medium text-white text-xl py-2 px-4 rounded'
+  const commonClasses = 'w-36 h-36 rounded-full cursor-pointer text-white text-xl py-2 px-4 rounded'
+  const icons = <img src={NextRoundIcons} alt="Rock Paper Scissors Icons" />
 
   if (state.value === 'GAME_OVER' || state.value === 'READY' && state.context.initialState !== 'STOP') {
-    button = <button disabled={btnState} onClick={onButtonClicked} className={`${commonClasses} bg-green-500 hover:bg-green-700`}>New Game</button>
+    button = <button disabled={btnState} onClick={onButtonClicked} className={`${commonClasses} bg-black hover:opacity-90`}>{icons} New Game</button>
   } else if (state.value === 'PLAY') {
-    button = <button disabled className={`${commonClasses} bg-gray-500 hover:bg-gray-700`}>Please Wait&nbsp; ⏱️</button>
+    button = <button disabled className={`${commonClasses} bg-black`}>{icons}Please Wait&nbsp; ⏱️</button>
   } else {
-    button = <button disabled={btnState} onClick={onButtonClicked} className={`${commonClasses} bg-green-500 hover:bg-green-700`}>Next Round</button>
+    button = <button disabled={btnState} onClick={onButtonClicked} className={`${commonClasses} bg-black hover:opacity-90`}>{icons} Next Round</button>
   }
   
   return (

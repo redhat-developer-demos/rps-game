@@ -3,19 +3,19 @@ export default {
   content: [
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+
   safelist: [
-    // Hacky way to ensure dynamic some classes work
-    'bg-red-400',
-    'bg-red-500',
-    'bg-green-400',
-    'bg-green-500',
-    'bg-amber-400',
-    'bg-amber-500',
-    'bg-slate-400',
-    'bg-slate-500'
+    'bg-blue',
+    'bg-red'
   ],
   theme: {
     extend: {
+      colors: {
+        red: '#ee0000',
+        blue: '#0066cc',
+        grey: '#3d3f42',
+        black: '#212427'
+      },
       fontFamily: {
         'sans': ['"Red Hat Display"', 'sans-serif'],
       },
