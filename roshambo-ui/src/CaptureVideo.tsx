@@ -21,7 +21,35 @@ const VideoCaptureComponent: React.FunctionComponent<VideoCaptureComponentProps>
       setStream(undefined)
     }
   }, [stream])
-  
+
+  const getVideoStream = useCallback(async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        // Forces landscape image, despite the application's portrait orientation
+        aspectRatio: 3 / 4,
+        // On a laptop, use the camera that faces the user. On iOS and Android
+        // devices use the "selfie" camera
+        facingMode: isMobileDevice() ? 'environment' : 'user'
+      }
+    })
+    
+    const video = videoRef.current;
+    
+    try {
+      if (video) {
+        video.srcObject = stream;
+        await video.play();
+      }
+
+      setStream(stream)
+    } catch (e) {
+      // Sometimes video.play throws an exception and then plays but with
+      // an incorrect aspect ratio. This forces a retry.
+      stream.getTracks().forEach(t => t.stop())
+      setTimeout(() => getVideoStream(), 100)
+    }
+  }, [])
+
   useEffect(() => {
     if (imageData) {
       stopStream()
@@ -33,27 +61,7 @@ const VideoCaptureComponent: React.FunctionComponent<VideoCaptureComponentProps>
     }
 
     return stopStream
-  }, [stream, imageData, stopStream])
-
-  async function getVideoStream () {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        // aspectRatio: 4 / 3,
-        // On a laptop, use the camera that faces the user. On iOS and Android
-        // devices use the "selfie" camera
-        facingMode: isMobileDevice() ? 'environment' : 'user'
-      }
-    })
-    
-    const video = videoRef.current;
-    
-    if (video) {
-      video.srcObject = stream;
-      video.play();
-    }
-
-    setStream(stream)
-  }
+  }, [stream, imageData, stopStream, getVideoStream])
 
   function captureMove () {
     const video = videoRef.current;
@@ -61,12 +69,16 @@ const VideoCaptureComponent: React.FunctionComponent<VideoCaptureComponentProps>
     const ctx = canvas?.getContext('2d');
 
     if (canvas && video && ctx) {
-      const { clientHeight: height, clientWidth: width } = video
-      
-      canvas.width = width;
-      canvas.height = height;
+      const {
+        // Could use client width and height, but
+        // these are typically lower resolution
+        videoHeight: vHeight, videoWidth: vWidth
+      } = video
 
-      ctx.drawImage(video, 0, 0, width, height);
+      canvas.width = vWidth;
+      canvas.height = vHeight;
+
+      ctx.drawImage(video, 0, 0, vWidth, vHeight);
 
       setImageData(canvas.toDataURL())
     }
@@ -77,8 +89,6 @@ const VideoCaptureComponent: React.FunctionComponent<VideoCaptureComponentProps>
   }
 
   function submitMove () {
-    console.log('submit move. has data', imageData ? true:false)
-    console.log(typeof callback, callback.toString())
     if (imageData) {
       callback(imageData)
     } else {
@@ -94,7 +104,9 @@ const VideoCaptureComponent: React.FunctionComponent<VideoCaptureComponentProps>
           <video className={`block rounded m-auto ${isMobileDevice() ? '' : 'flipped'}`} ref={videoRef} autoPlay playsInline muted />
         </div>
         <div className={`flex justify-center pt-2`}>
-          <button className='rounded border-solid border-2 border-red-500 px-8 py-3 m-4' onClick={() => captureMove()}>Capture Move</button>
+          <button className={'w-8/12 text-xl font-semibold text-grey rounded-md p-4 bg-green my-5'} onClick={captureMove}>
+            <span>Capture Move</span>
+          </button>
         </div>
       </div>
     )
@@ -106,8 +118,8 @@ const VideoCaptureComponent: React.FunctionComponent<VideoCaptureComponentProps>
           <img className={`block rounded m-auto ${isMobileDevice() ? '' : 'flipped'}`} src={imageData} />
         </div>
         <div className={`flex justify-center pt-2`}>
-          <button className='rounded bg-orange-600 border-solid border-2 border-orange-500 px-8 py-3 m-4' onClick={() => discardMove()}>Discard</button>
-          <button className='rounded bg-green-600 border-solid border-2 border-green-500 px-8 py-3 m-4' onClick={() => submitMove()}>Submit</button>
+          <button className='text-xl font-semibold rounded-md bg-red px-8 py-3 m-4' onClick={() => discardMove()}>Discard</button>
+          <button className='text-xl font-semibold text-grey rounded-md bg-green px-8 py-3 m-4' onClick={() => submitMove()}>Submit</button>
         </div>
       </div>
     )
