@@ -20,13 +20,13 @@ function App() {
     return <Navigate to="/"></Navigate>
   }
 
-  let content: JSX.Element = (<h2>Loading...</h2>)
-  
+  let content!: JSX.Element
+
   log(`current state machine state is "${state.value}". context is:`, state.context)
 
   switch (state.value) {
     case 'READY':
-      content = <Waiting message='The game will begin soon...'></Waiting>
+      content = <Waiting message='The game will resume soon...'></Waiting>
       break
     case 'PLAY':
       content = <Capture
@@ -50,6 +50,7 @@ function App() {
       content = <GameOver />
       break;
     default:
+      content = (<h2>Loading...</h2>)
       break
   }
 

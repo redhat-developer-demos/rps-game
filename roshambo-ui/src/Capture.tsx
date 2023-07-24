@@ -71,6 +71,7 @@ const Capture: React.FunctionComponent<CaptureComponentProps> = (props) => {
   } else {
     content = (
       <div className='mt-12'>
+        <h2 className='text-2xl'>Choose your move!</h2>
         <div className="grid grid-cols-3 gap-3 justify-center mb-8">
           <button className={`${styles.button} ${move === Shape.Rock ? styles.selected : ''}`} onClick={() => setMove(Shape.Rock)} >
             <img className='' src={shapeRock} alt="rock" />
@@ -95,7 +96,6 @@ const Capture: React.FunctionComponent<CaptureComponentProps> = (props) => {
 
   return (
     <div className='text-white h-full grid content-center capture-container'>
-      <h2 className='text-2xl'>Choose your move!</h2>
       {content}
       <Countdown timeInSeconds={30}></Countdown>
     </div>
