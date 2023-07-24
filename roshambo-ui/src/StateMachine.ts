@@ -1,6 +1,7 @@
 import { assign, createMachine, interpret } from "xstate";
 import { UserAssignment, Config, SSEContentEnable, SSEContentDisable, SSEContentEnd, MoveProcessResponse, initAndAssign, InitResponse } from "./Api";
 import { CameraAccessState } from "./Types";
+import log from 'barelog'
 
 export default function getStateMachine() {
     // Types are generated using the XState VScode plugin!
@@ -139,7 +140,15 @@ export default function getStateMachine() {
     }
   }, {
     services: {
-      'getConfig': () => initAndAssign()
+      'getConfig': () => initAndAssign().catch((e) => {
+        log('error in init/assign', e)
+
+        return new Promise((_resolve, reject) => {
+          // Delay the retry. This might be possible with xstate "after",
+          // but don't have time to dive into it. This works...
+          setTimeout(reject, 1000)
+        })
+      })
     },
     actions: {
       'setConfig': assign({
