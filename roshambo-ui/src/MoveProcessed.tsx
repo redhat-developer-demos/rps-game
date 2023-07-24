@@ -15,12 +15,12 @@ const MoveProcessed: React.FunctionComponent<MovedProcessedComponentProps> = ({ 
     [Shape.Scissors]: iconScissors
   }
   return (
-    <div className="h-full flex flex-col py-12">
+    <div className="flex flex-col pt-12">
       <div className="flex flex-1 items-center mb-4">
         <p className="flex-1 text-2xl text-slate-200">Your move was...</p>
       </div>
       <div className="flex flex-1 items-center align-center text-center mb-4">
-        <img className="inline m-auto h-36" src={shapes[data.shape]} alt={`${data.shape} icon`} />
+        <img className="inline m-auto h-20" src={shapes[data.shape]} alt={`${data.shape} icon`} />
       </div>
       <div className="flex flex-1 items-center">
         <h2 className="w-full text-4xl capitalize">{ data.shape.toLowerCase() }</h2>

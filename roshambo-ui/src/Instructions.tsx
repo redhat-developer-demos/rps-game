@@ -122,8 +122,14 @@ const InstructionsPage: React.FunctionComponent = () => {
             <IconRow animated={false} />
           </div>
 
-          <p className="font-bold mb-1 mt-4">Step 3</p>
-          <p>Your team's most popular move selection will be used against the other team!</p>
+          <div hidden={cameraFeatureEnabled === true}>
+            <p className="font-bold mb-1">Step 1</p>
+            <p className='mb-4'>When the game starts, select a shape using this application.</p>
+            <IconRow animated={false} />
+          </div>
+
+          <p className="font-bold mb-1 mt-4">Win Conditions</p>
+          <p className='mt-4'>Your team's most popular move selection will be used against the other team!</p>
           <button className={'w-full text-xl font-semibold text-black rounded-md p-4 bg-green my-5'} onClick={joinGame}>
             <span>Join Game &nbsp;</span>
           </button>

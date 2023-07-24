@@ -8,7 +8,7 @@ const Waiting: React.FunctionComponent<{ message?: string }> = ({ message }) => 
       <div className="grid items-end">
         <IconRow animated={true}></IconRow>
       </div>
-      <h2 className='text-white relative pt-6 md:pt-16 w-full text-center text-2xl'>{ message }</h2>
+      <h2 className='text-white relative pt-6 md:pt-16 w-full text-center text-xl'>{ message }</h2>
     </div>
   );
 }

@@ -15,8 +15,8 @@ const RoundResult: React.FunctionComponent<MovedProcessedComponentProps> = ({ da
     [Shape.Scissors]: iconScissors
   }
   return (
-    <div className="h-full flex flex-col py-12">
-      <div className="flex flex-1 items-center mb-4">
+    <div className="flex flex-col py-12">
+      {/* <div className="flex flex-1 items-center mb-4">
         <p className="flex-1 text-2xl text-slate-200">Your move was...</p>
       </div>
       <div className="flex flex-1 items-center align-center text-center mb-4">
@@ -27,7 +27,7 @@ const RoundResult: React.FunctionComponent<MovedProcessedComponentProps> = ({ da
       </div>
       <div className="flex flex-1 items-centerend mt-8">
         <p className="text-2xl w-full text-slate-200">The next round will begin soon...</p>
-      </div>
+      </div> */}
     </div>
   );
 }
