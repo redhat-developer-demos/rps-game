@@ -14,6 +14,8 @@ import StateMachineContextProvider from './StateMachineProvider.tsx'
 import InstructionsPage from './Instructions.tsx';
 import HeightWrapper from './HeightWrapper.tsx';
 import TitlePage from './TitlePage.tsx';
+import LandscapeBlocker from './LandscapeBlocker.tsx';
+import ReadinessCheck from './ReadinessCheck.tsx';
 
 const router = createBrowserRouter([
   {
@@ -22,22 +24,24 @@ const router = createBrowserRouter([
   },
   {
     path: '/instructions',
-    element: <InstructionsPage/>,
+    element: <ReadinessCheck><InstructionsPage/></ReadinessCheck>,
   },
   {
     path: '/play',
-    element: <App/>
+    element: <ReadinessCheck><App/></ReadinessCheck>
   }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <HeightWrapper>
-    <div className='flex'>
-      <React.StrictMode>
-        <StateMachineContextProvider>
-          <RouterProvider router={router} />
-        </StateMachineContextProvider>
-      </React.StrictMode>
-    </div>
-  </HeightWrapper>
+  <LandscapeBlocker>
+    <HeightWrapper>
+      <div className='flex w-full mx-auto grow'>
+        <React.StrictMode>
+          <StateMachineContextProvider>
+            <RouterProvider router={router} />
+          </StateMachineContextProvider>
+        </React.StrictMode>
+      </div>
+    </HeightWrapper>
+  </LandscapeBlocker>
 )

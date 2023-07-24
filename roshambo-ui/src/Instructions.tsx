@@ -82,7 +82,7 @@ const InstructionsPage: React.FunctionComponent = () => {
   const colour = CameraAccessColourMap[cameraAccessStatus]
   const buttonText = CameraAccessTextMap[cameraAccessStatus]
   return (
-    <div className="flex place-content-center items-center py-8 px-7">
+    <div className="m-auto flex place-content-center items-center py-8 px-7">
       <div className="flex h-full flex-col justify-center space-y-6">
         <img src={RoshamboLogo} alt="Roshambo Game Logo" />
         {/* <p className="text-lg">
