@@ -5,6 +5,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 import java.time.Duration;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import org.acme.dto.CurrentRoundInformationDTO;
 import org.acme.dto.ResultDescriptionDTO;
@@ -71,7 +72,7 @@ public class PlayBlockerAsyncResource {
     @Inject
     State state;
 
-    @Scheduled(every = "10s", delay = 5)
+    @Scheduled(every = "10s", delayed = "5s")
     public void heartbeat() {
         this.sendHeartBeat();
     }
@@ -145,6 +146,7 @@ public class PlayBlockerAsyncResource {
 
     // SEE event
     public void sendHeartBeat() {
+        logger.debug("Sending heartbeats to sockets");
         this.sendToGamers(new ServerSideEventDTO("heartbeat", new ServerSideEventMessage() {}));
         this.sendToAdmin(new ServerSideEventDTO("heartbeat", new ServerSideEventMessage() {}));
     }
@@ -188,6 +190,8 @@ public class PlayBlockerAsyncResource {
             Jsonb jsonb = JsonbBuilder.create();
             String result = jsonb.toJson(serverSideEventDTO);
             nextRoundStream.send(result);
+        } else {
+            logger.warn("skipping sending " + serverSideEventDTO.getType());
         }
     }
 

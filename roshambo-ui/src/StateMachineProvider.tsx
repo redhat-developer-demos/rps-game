@@ -25,6 +25,13 @@ const StateMachineContextProvider: React.FunctionComponent<{ children: JSX.Eleme
     setupEventSource()
 
     function setupEventSource (): EventSource {
+      log('SSE creating new SSE connection')
+      
+      if (es) {
+        log('SSE closing old SSE connection')
+        es.close()
+      }
+
       es = new EventSource('/game/stream')
 
       es.addEventListener('open', (event) => {
@@ -38,11 +45,6 @@ const StateMachineContextProvider: React.FunctionComponent<{ children: JSX.Eleme
         
         // Remove any existing connection timeout timer
         clearTimeout(connectionTimeoutTimer)
-        
-        // If the connection isn't closed, close it
-        if (es.readyState !== EventSource.CLOSED) {
-          es.close()
-        }
 
         // Attempt to reconnect in 1 second
         setTimeout(() => setupEventSource(), 1000)
