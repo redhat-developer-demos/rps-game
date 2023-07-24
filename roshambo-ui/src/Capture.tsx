@@ -70,18 +70,18 @@ const Capture: React.FunctionComponent<CaptureComponentProps> = (props) => {
     )
   } else {
     content = (
-      <div className='mt-12'>
-        <h2 className='text-2xl'>Choose your move!</h2>
-        <div className="grid grid-cols-3 gap-3 justify-center mb-8">
-          <button className={`${styles.button} ${move === Shape.Rock ? styles.selected : ''}`} onClick={() => setMove(Shape.Rock)} >
+      <div className='mt-10'>
+        <h2 className='text-2xl my-5'>Choose your move!</h2>
+        <div className="grid grid-cols-3 gap-3 justify-items-center justify-center mb-8">
+          <button className={`${styles.button} md:w-32 md:h-32 ${move === Shape.Rock ? styles.selected : ''}`} onClick={() => setMove(Shape.Rock)} >
             <img className='' src={shapeRock} alt="rock" />
             <p>Rock</p>
           </button>
-          <button className={`${styles.button} ${move === Shape.Paper ? styles.selected : ''}`} onClick={() => setMove(Shape.Paper)} >
+          <button className={`${styles.button} md:w-32 md:h-32 ${move === Shape.Paper ? styles.selected : ''}`} onClick={() => setMove(Shape.Paper)} >
             <img src={shapePaper} alt="paper" />
             <p>Paper</p>
           </button>
-          <button className={`${styles.button} ${move === Shape.Scissors ? styles.selected : ''}`} onClick={() => setMove(Shape.Scissors)} >
+          <button className={`${styles.button} md:w-32 md:h-32 ${move === Shape.Scissors ? styles.selected : ''}`} onClick={() => setMove(Shape.Scissors)} >
             <img src={shapeScissors} alt="scissors" />
             <p>Scissors</p>
           </button>
@@ -95,7 +95,7 @@ const Capture: React.FunctionComponent<CaptureComponentProps> = (props) => {
   }
 
   return (
-    <div className='text-white h-full grid content-center capture-container'>
+    <div className='text-white h-full capture-container'>
       {content}
       <Countdown timeInSeconds={30}></Countdown>
     </div>
