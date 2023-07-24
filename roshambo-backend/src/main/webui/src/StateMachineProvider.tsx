@@ -26,6 +26,13 @@ const StateMachineContextProvider: React.FunctionComponent<{ children: JSX.Eleme
     setupEventSource()
 
     function setupEventSource (): EventSource {
+      log('SSE creating new EventSource connection')
+      if (es) {
+        log('SSE closing existing connection')
+        // Play it safe and close
+        es.close()
+      }
+
       es = new EventSource('/admin/stream')
 
       es.addEventListener('open', (event) => {
@@ -139,7 +146,7 @@ const StateMachineContextProvider: React.FunctionComponent<{ children: JSX.Eleme
 
       clearTimeout(connectionTimeoutTimer)
 
-      if (es && es.readyState !== EventSource.CLOSED) {
+      if (es) {
         es.close()
       }
     }
