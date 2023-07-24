@@ -33,15 +33,15 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <LandscapeBlocker>
-    <HeightWrapper>
-      <div className='flex w-full mx-auto grow'>
-        <React.StrictMode>
+  <React.StrictMode>
+    <LandscapeBlocker>
+      <HeightWrapper>
+        <div className='flex w-full mx-auto grow'>
           <StateMachineContextProvider>
             <RouterProvider router={router} />
           </StateMachineContextProvider>
-        </React.StrictMode>
-      </div>
-    </HeightWrapper>
-  </LandscapeBlocker>
+        </div>
+      </HeightWrapper>
+    </LandscapeBlocker>
+  </React.StrictMode>
 )
