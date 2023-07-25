@@ -4,6 +4,10 @@ Welcome to the Rock Paper Scissors game powered by [Red Hat OpenShift AI](https:
 
 This game uses a Quarkus backend and a React frontend. The game integrates machine learning models to process your move, giving it a modern twist to the classic game! 
 
+<div align="center">
+<img width="33%" src="roshambo-phone.png" alt="Roshambo on iPhone" title="Roshambo on iPhone"</img>
+</div>
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
