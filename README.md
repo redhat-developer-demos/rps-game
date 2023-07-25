@@ -28,14 +28,15 @@ access to the bucket. Check the backend README for more information.
 - Install backend dependencies using `mvn install` in the backend directory (`roshambo-backend`).
 - Start the Quarkus backend using `./mvnw quarkus:dev`.
 - Start the React development server using `npm run dev`.
-- Visit http://localhost:5173 in your web browser to view the application.
+- Visit http://localhost:5173 in your web browser to view the application (view the README in the `roshambo-ui` folder for details about SSL and iOS Camera access)
 
 ## Built With
 
-- [React](https://react.dev) - The web framework used
-- [TypeScript](https://www.typescriptlang.org) - The main language for the frontend
-- [Quarkus](https://quarkus.io) - Used for the backend
-- [Tailwind CSS](https://tailwindcss.com) - Used for styling
+- [React](https://react.dev) - The web framework used.
+- [TypeScript](https://www.typescriptlang.org) - The main language for the frontend.
+- [XState](https://xstate.js.org/docs/) - State management for the frontend, and bot players.
+- [Quarkus](https://quarkus.io) - Used for the backend.
+- [Tailwind CSS](https://tailwindcss.com) - Used for styling.
 
 ## Contributing
 
@@ -46,6 +47,7 @@ If you'd like to contribute, please fork the repository and use a feature branch
 - [Alex Soto Bueno](https://twitter.com/alexsotob) (Backend)
 - [Evan Shortiss](https://twitter.com/evanshortiss) (Frontend)
 - [Cedric Clyburn](https://twitter.com/cedricclyburn) (Frontend)
+- [Chris Chase](https://twitter.com/chaseredhat) (AI Model)
 
 ## License
 
