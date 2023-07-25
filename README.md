@@ -1,6 +1,6 @@
 # Rock Paper Scissors Game
 
-Welcome to the Rock Paper Scissors game powered by Red Hat OpenShift Data Science! :rocket:
+Welcome to the Rock Paper Scissors game powered by [Red Hat OpenShift AI](https://red.ht/openshift_ai)! :rocket:
 
 This game uses a Quarkus backend and a React frontend. The game integrates machine learning models to process your move, giving it a modern twist to the classic game! 
 
