@@ -38,7 +38,7 @@ Once the server is running, use the `POTS /bot` endpoint to create a bot
 player:
 
 ```bash
-curl -x POST http://localhost:8181/bot
+curl -X POST http://localhost:8181/bot
 ```
 
 The response to this request will contain the unique bot ID:
@@ -48,4 +48,8 @@ The response to this request will contain the unique bot ID:
 ```
 
 The endpoint can be called multiple times if multiple bot players need to be
-created. 
+created, e.g 
+
+```bash
+for i in {1..10}; do curl -X POST 'http://localhost:8181/bot' | echo ; done
+```
