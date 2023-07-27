@@ -30,6 +30,9 @@ export default function getApiWrapper (baseUrl: string): ApiWrapper {
     try {
       const { statusCode } = await request(url, {
         method: 'POST',
+        headers: {
+          'content-type': 'text/plain'
+        },
         body: params.useImages ? shapeBase64[params.shape] : undefined
       })
 
