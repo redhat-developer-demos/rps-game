@@ -1,7 +1,7 @@
 import startServer from './server';
 import log from './log';
 import closeWithGrace = require('close-with-grace')
-import { CLOSE_WITH_GRACE_DELAY, GAME_SERVER_URL } from './config';
+import config from './config';
 import getBotsMachine from './players';
 import getServerSentEventSource from './sse';
 import getApiWrapper from './api';
@@ -9,9 +9,15 @@ import getApiWrapper from './api';
 async function main() {
   log.info('bootstrapping bot players server');
 
+  const {
+    GAME_SERVER_URL,
+    GAME_UPLOAD_IMAGES,
+    CLOSE_WITH_GRACE_DELAY
+  } = config
+
   const sse = getServerSentEventSource(GAME_SERVER_URL)
   const api = getApiWrapper(GAME_SERVER_URL)
-  const botMachine = getBotsMachine(sse, api)
+  const botMachine = getBotsMachine(sse, api, GAME_UPLOAD_IMAGES)
 
   const app = await startServer(botMachine);
 
