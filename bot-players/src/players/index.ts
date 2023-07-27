@@ -5,7 +5,7 @@ import createPlayerMachine from "./fsm";
 
 const botPlayers = new Map<string, ReturnType<typeof createPlayerMachine>>();
 
-export default function getBotsMachine (sse: SSEObservable, api: ApiWrapper): BotMachine {
+export default function getBotsMachine (sse: SSEObservable, api: ApiWrapper, useImages: boolean): BotMachine {
 
   // Anytime an SSE arrives, notify all the bots. This will make them change
   // state, e.g from "waiting" to "selectShape" so they submit a shape
@@ -31,7 +31,7 @@ export default function getBotsMachine (sse: SSEObservable, api: ApiWrapper): Bo
   
   return {
     createBotPlayer () {
-      const bot = createPlayerMachine(api)
+      const bot = createPlayerMachine(api, useImages)
     
       botPlayers.set(bot.id, bot)
 
