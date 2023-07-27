@@ -1,7 +1,7 @@
 import pino from 'pino';
-import { LOG_LEVEL, NODE_ENV } from './config';
+import config from './config';
 
-const level = LOG_LEVEL ? LOG_LEVEL : NODE_ENV === 'prod' ? 'info' : 'debug';
+const level = config.LOG_LEVEL ? config.LOG_LEVEL : config.NODE_ENV === 'prod' ? 'info' : 'debug';
 
 const log = pino({
   level
