@@ -10,14 +10,18 @@ import log from './log'
  * errors and reconnect attempts.
  * @returns Observable<SSE<unknown>>
  */
-export default function getServerSentEventSource (baseUrl: string): SSEObservable {
+export default function getServerSentEventSource (baseUrl: string, rejectUnauthorized: boolean): SSEObservable {
   const url = new URL('/game/stream', baseUrl).toString()
 
   return multicast(new Observable<SSE<unknown>>(observer => {
     function createEventSource () {
       log.info(`creating event source to url: ${url}`)
 
-      const es = new EventSource(url)
+      const es = new EventSource(url, {
+        https: {
+          rejectUnauthorized
+        }
+      })
 
       es.addEventListener('open', (event) => {
         log.info('SSE "open" event %j', event)
