@@ -26,20 +26,13 @@ export default function getServerSentEventSource (baseUrl: string): SSEObservabl
       es.addEventListener('error', (event) => {
         log.error('SSE "error" event received. Will close and attempt to reconnect. Error event: %j', event)
         
+        es.close()
+        
         setTimeout(() => {
           log.info('attempting to create new event source in 1 second')
           createEventSource()
         }, 1000)
       })
-  
-      // es.addEventListener('close', (event) => {
-      //   log.warn('SSE "close" event %j', event)
-
-      //   setTimeout(() => {
-      //     log.info('attempting to create new event source in 1 second')
-      //     createEventSource()
-      //   }, 1000)
-      // })
 
       es.addEventListener('message', (event) => {
         log.debug('SSE "message" event: %j', event)
