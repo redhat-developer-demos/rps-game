@@ -8,11 +8,14 @@ public class Configuration {
 
     public boolean enableCamera;
 
-    public Configuration(long roundTimeInSconds, long timeBetweenRoundsInSeconds, int numberOfRounds, boolean cameraEnabled) {
+    public String uuid;
+
+    public Configuration(long roundTimeInSconds, long timeBetweenRoundsInSeconds, int numberOfRounds, boolean cameraEnabled, String uuid) {
         this.roundTimeInSeconds = roundTimeInSconds;
         this.timeBetweenRoundsInSeconds = timeBetweenRoundsInSeconds;
         this.numberOfRounds = numberOfRounds;
         this.enableCamera = cameraEnabled;
+        this.uuid = uuid;
     }
 
 

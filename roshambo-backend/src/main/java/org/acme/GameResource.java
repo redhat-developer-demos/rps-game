@@ -2,6 +2,7 @@ package org.acme;
 
 import io.quarkus.runtime.LaunchMode;
 import java.time.Duration;
+import java.util.UUID;
 
 import org.acme.detector.AiConnector;
 import org.acme.detector.MLShapeDetectorService;
@@ -71,6 +72,8 @@ public class GameResource {
     @Inject
     State state;
 
+    static String gameUUId = UUID.randomUUID().toString();
+
     @Inject
     UserGenerator userGenerator;
 
@@ -97,6 +100,7 @@ public class GameResource {
             logger.info("Random shape detector configured.");
             shapeDetectorService = new RandomShapeDetectorService();
         }
+
         logger.infof("Camera feature enabled? %s", enableCamera);
     }
 
@@ -119,8 +123,8 @@ public class GameResource {
     public Initialization configuration() {
         state.setManualRounds(manualRounds);
         Configuration conf = new Configuration(roundTimeInSeconds.getSeconds(), timeBetweenRoundsInSeconds.getSeconds(), numberOfRounds,
-            enableCamera);
-        logger.infof("App Configured with Round Time: %d - Time Between Rounds: %d - Number of Rounds: %d - Manual next Round: %s - Camera Enabled: %s", conf.roundTimeInSeconds, conf.roundTimeInSeconds, conf.numberOfRounds, manualRounds, conf.enableCamera);
+            enableCamera, gameUUId);
+        logger.infof("App Configured with Round Time: %d - Time Between Rounds: %d - Number of Rounds: %d - Manual next Round: %s - Camera Enabled: %s - Game UUID: %s", conf.roundTimeInSeconds, conf.roundTimeInSeconds, conf.numberOfRounds, manualRounds, conf.enableCamera, gameUUId);
         return new Initialization(conf, state);
     }
 
