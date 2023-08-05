@@ -7,12 +7,7 @@ import java.time.Duration;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import org.acme.dto.CurrentRoundInformationDTO;
-import org.acme.dto.ResultDescriptionDTO;
-import org.acme.dto.ServerSideEventDTO;
-import org.acme.dto.ServerSideEventMessage;
-import org.acme.dto.TeamScoreDTO;
-import org.acme.dto.ResultsDTO;
+import org.acme.dto.*;
 import org.acme.game.ResultDescription;
 import org.acme.game.ScoreInformation;
 import org.acme.game.TeamScore;
@@ -147,8 +142,8 @@ public class PlayBlockerAsyncResource {
     // SEE event
     public void sendHeartBeat() {
         logger.debug("Sending heartbeats to sockets");
-        this.sendToGamers(new ServerSideEventDTO("heartbeat", new ServerSideEventMessage() {}));
-        this.sendToAdmin(new ServerSideEventDTO("heartbeat", new ServerSideEventMessage() {}));
+        this.sendToGamers(new ServerSideEventDTO("heartbeat", HeartBeatDTO.of(GameResource.gameUUId)));
+        this.sendToAdmin(new ServerSideEventDTO("heartbeat", HeartBeatDTO.of(GameResource.gameUUId)));
     }
     // SSE event
     public void sendStartRound() {
