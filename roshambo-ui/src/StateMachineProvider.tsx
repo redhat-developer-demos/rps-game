@@ -2,7 +2,7 @@ import { createContext, useEffect } from "react";
 import getStateMachine from "./StateMachine";
 import { useMachine } from "@xstate/react";
 import log from 'barelog'
-import { SSEType, SSEContentEnable, SSEContentDisable, SSEContentEnd, SSE } from "./Api";
+import { SSEType, SSEContentEnable, SSEContentDisable, SSEContentEnd, SSE, SSEContentHeartbeat, processHeartBeat } from "./Api";
 
 const { service, machine } = getStateMachine()
 
@@ -73,52 +73,51 @@ const StateMachineContextProvider: React.FunctionComponent<{ children: JSX.Eleme
         log('SSE "message" event.data', event.data)
 
         try {
-          const data = JSON.parse(event.data) as SSE<unknown>
+          processMessage(JSON.parse(event.data) as SSE<unknown>)
+        } catch (e) {
+          log('error parsing received event:', event)
+        }
+      }
 
-          if (data.type === SSEType.Heartbeat) {
+      function processMessage (message: SSE<unknown>) {
+        switch (message.type) {
+          case SSEType.Enable:
+            send({
+              type: 'ENABLE',
+              data: message.content as SSEContentEnable
+            })
+            break;
+          case SSEType.Disable:
+            send({
+              type: 'DISABLE',
+              data: message.content as SSEContentDisable
+            })
+            break;
+          case SSEType.End:
+            send({
+              type: 'END',
+              data: message.content as SSEContentEnd
+            })
+            break;
+          case SSEType.Heartbeat:
             log('SEE received "heartbeat"')
             // Heartbeat is a special message type that we use to determine
             // if the connection to the backend is healthy. We could simply
             // reset this upon receiving any message, but the heartbeat is
             // specifically designed for this.
-            resetConnectionTimeout()
-          } else {
-            processMessage(data)
-          }
-
-        } catch (e) {
-          log('error parsing received event:', event)
+            resetConnectionTimeout();
+            
+            processHeartBeat(message.content as SSEContentHeartbeat)
+            break;
+          default:
+            log(`SSE received unrecognised message type "${message.type}". Content was:`, message)
+            break;
         }
       }
 
       return es
     }
 
-    function processMessage (message: SSE<unknown>) {
-      switch (message.type) {
-        case SSEType.Enable:
-          send({
-            type: 'ENABLE',
-            data: message.content as SSEContentEnable
-          })
-          break;
-        case SSEType.Disable:
-          send({
-            type: 'DISABLE',
-            data: message.content as SSEContentDisable
-          })
-          break;
-        case SSEType.End:
-          send({
-            type: 'END',
-            data: message.content as SSEContentEnd
-          })
-          break;
-        default:
-          log(`SSE received unrecognised message type "${message.type}". Content was:`, message)
-          break;
-      }
-    }
 
     // Technically this isn't too important since this component is never
     // really unmounted, but if React strict mode is enabled we'd end up with
