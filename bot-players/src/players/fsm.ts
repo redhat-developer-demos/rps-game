@@ -80,7 +80,7 @@ export default function createPlayerMachine (api: ApiWrapper, useImages: boolean
       selectShape: async ({ user }) => {
 
         const shape = shapes[Math.round(Math.random() * (shapes.length - 1))]
-        const shapeDelay = Math.random() * 5000
+        const shapeDelay = Math.random() * 8000
         
         // It's not realistic that all player shapes arrive at the same time.
         // Add random delay to simulate a player "considering" their choice

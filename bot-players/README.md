@@ -48,8 +48,8 @@ The response to this request will contain the unique bot ID:
 ```
 
 The endpoint can be called multiple times if multiple bot players need to be
-created, e.g 
+created, e.g:
 
 ```bash
-for i in {1..10}; do curl -X POST 'http://localhost:8181/bot' | echo ; done
+for i in {1..25}; do curl -X POST -s 'http://localhost:8181/bot' | jq ; done
 ```
