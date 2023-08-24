@@ -49,3 +49,15 @@ jobs:
         tags: |
           quay.io/rhdevelopers/roshambo-backend:latest
           quay.io/rhdevelopers/roshambo-backend:sha-${{ steps.git-sha.outputs.sha }}
+
+    - name: Build and push (ROSHAMBO_ENABLE_CAMERA=true) images to quay.io
+      uses: docker/build-push-action@v4
+      with:
+        context: ./roshambo-backend
+        file: ./roshambo-backend/src/main/docker/Dockerfile.jvm
+        build-args: |
+          ROSHAMBO_ENABLE_CAMERA=true
+        push: true
+        tags: |
+          quay.io/rhdevelopers/roshambo-backend:latest-camera
+          quay.io/rhdevelopers/roshambo-backend:sha-${{ steps.git-sha.outputs.sha }}-camera
