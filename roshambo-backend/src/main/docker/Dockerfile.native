@@ -15,6 +15,11 @@
 #
 ###
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
+
+# Enable the injection of ROSHAMBO_ENABLE_CAMERA at build time
+ARG ROSHAMBO_ENABLE_CAMERA=false
+ENV ROSHAMBO_ENABLE_CAMERA ${ROSHAMBO_ENABLE_CAMERA}
+
 WORKDIR /work/
 RUN chown 1001 /work \
     && chmod "g+rwX" /work \
