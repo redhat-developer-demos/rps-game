@@ -47,6 +47,7 @@ export async function initAndAssign (): Promise<{ config: InitResponse, user: Us
       return initAndAssign()
     }
   } else {
+    log('fetching new user assignment')
     const [ config, assignment ] = await Promise.all([
       // In development mode these requests go to the Vite development server
       // and get proxied to the Quarkus backend. For production, we'll need

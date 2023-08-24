@@ -4,7 +4,6 @@ const HeightWrapper: React.FC<{ children: JSX.Element }> = ({ children }) => {
   
   useEffect(() => {
     function resizeListener () {
-      console.log('height', `${window.innerHeight}px`)
       document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`)
     }
 
