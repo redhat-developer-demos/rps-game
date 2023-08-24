@@ -81,6 +81,9 @@ FROM registry.access.redhat.com/ubi8/openjdk-17:1.15
 
 ENV LANGUAGE='en_US:en'
 
+# Enable the injection of ROSHAMBO_ENABLE_CAMERA at build time
+ARG ROSHAMBO_ENABLE_CAMERA=false
+ENV ROSHAMBO_ENABLE_CAMERA ${ROSHAMBO_ENABLE_CAMERA}
 
 COPY target/lib/* /deployments/lib/
 COPY target/*-runner.jar /deployments/quarkus-run.jar

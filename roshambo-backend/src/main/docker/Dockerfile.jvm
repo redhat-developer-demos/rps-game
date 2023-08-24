@@ -81,6 +81,9 @@ FROM registry.access.redhat.com/ubi8/openjdk-17:1.15
 
 ENV LANGUAGE='en_US:en'
 
+# Enable the injection of ROSHAMBO_ENABLE_CAMERA at build time
+ARG ROSHAMBO_ENABLE_CAMERA=false
+ENV ROSHAMBO_ENABLE_CAMERA ${ROSHAMBO_ENABLE_CAMERA}
 
 # We make four distinct layers so if there are application changes the library layers can be re-used
 COPY --chown=185 target/quarkus-app/lib/ /deployments/lib/
