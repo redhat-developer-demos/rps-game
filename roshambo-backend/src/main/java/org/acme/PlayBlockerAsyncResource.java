@@ -186,7 +186,7 @@ public class PlayBlockerAsyncResource {
             String result = jsonb.toJson(serverSideEventDTO);
             nextRoundStream.send(result);
         } else {
-            logger.warn("skipping sending " + serverSideEventDTO.getType());
+            logger.debug("skipping sending " + serverSideEventDTO.getType());
         }
     }
 
