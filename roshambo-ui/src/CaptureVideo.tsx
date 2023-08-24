@@ -1,4 +1,5 @@
 import './CaptureVideo.css'
+import log from 'barelog'
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type VideoCaptureComponentProps = {
@@ -78,9 +79,11 @@ const VideoCaptureComponent: React.FunctionComponent<VideoCaptureComponentProps>
       canvas.width = vWidth;
       canvas.height = vHeight;
 
+      log(`drawing image to canvas. size is ${vWidth}x${vHeight}`)
       ctx.drawImage(video, 0, 0, vWidth, vHeight);
 
-      setImageData(canvas.toDataURL())
+
+      setImageData(canvas.toDataURL("image/jpeg", 0.7))
     }
   }
 
