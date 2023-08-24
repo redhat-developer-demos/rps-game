@@ -145,7 +145,7 @@ public class GameResource {
         if (enableCamera) {
             long responseTime = calculateResponseTime();
 
-            if (image.startsWith("data:image/png;base64,")) {
+            if (image.startsWith("data:image/png;base64,") || image.startsWith("data:image/jpeg;base64,")) {
                 // Images are uploaded as base64 strings, e.g: data:image/png;base64,$DATA
                 // We need to strip the metadata before the comma, and convert to binary
                 String[] imageDataPortions = image.split(",");
