@@ -1,0 +1,39 @@
+name: AI Container Build
+
+on:
+  push:
+    branches: [ main ]
+    paths: ['roshambo-ai/**']
+  workflow_dispatch:
+
+jobs:
+  build-container:
+    runs-on: ubuntu-20.04
+
+    outputs:
+      git-sha: ${{ steps.git-sha.outputs.sha }}
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v3
+
+    - name: Set output for Git short SHA
+      id: git-sha
+      run: echo "::set-output name=sha::$(git rev-parse --short HEAD)"
+
+    - name: Login to quay.io
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.QUAY_USERNAME }}
+        password: ${{ secrets.QUAY_PASSWORD }}
+        registry: quay.io
+
+    - name: Build and push images to quay.io
+      uses: docker/build-push-action@v4
+      with:
+        context: ./roshambo-ai
+        file: ./roshambo-ai/Dockerfile
+        push: true
+        tags: |
+          quay.io/rhdevelopers/roshambo-ai:latest
+          quay.io/rhdevelopers/roshambo-ai:sha-${{ steps.git-sha.outputs.sha }}
