@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-container:
+  build-ai-container:
     runs-on: ubuntu-20.04
 
     outputs:
