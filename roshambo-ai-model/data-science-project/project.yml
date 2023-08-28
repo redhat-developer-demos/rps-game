@@ -1,0 +1,27 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+
+labels:
+  application: rps-ai-service
+
+metadata:
+  name: rps-ai-service-project
+
+parameters:
+  - name: PROJECT_NAME
+    value: "rps-ai-service"
+  - name: DISPLAY_NAME
+    value: "RPS AI Service"
+
+objects:
+  - apiVersion: project.openshift.io/v1
+    kind: Project
+    metadata:
+      name: ${PROJECT_NAME}
+      annotations:
+        openshift.io/description: ${DISPLAY_NAME}
+        openshift.io/display-name: ${DISPLAY_NAME}
+      labels:
+        kubernetes.io/metadata.name: serving-demo-gitops
+        modelmesh-enabled: "true"
+        opendatahub.io/dashboard: "true"

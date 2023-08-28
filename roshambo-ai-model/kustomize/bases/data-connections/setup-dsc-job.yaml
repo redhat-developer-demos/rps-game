@@ -1,0 +1,76 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-ds-connections
+spec:
+  selector: {}
+  template:
+    spec:
+      serviceAccount: demo-setup
+      serviceAccountName: demo-setup
+      containers:
+        - name: create-ds-connections
+          image: image-registry.openshift-image-registry.svc:5000/openshift/tools:latest
+          imagePullPolicy: IfNotPresent
+          command: [ "/bin/bash" ]
+          args:
+            - -ec
+            - |-
+              echo -n 'Waiting for minio route'
+              while ! oc get route minio-s3 2>/dev/null | grep -qF minio-s3; do
+                echo -n .
+                sleep 5
+              done; echo
+
+              echo -n 'Waiting for minio root user secret'
+              while ! oc get secret minio-root-user 2>/dev/null | grep -qF minio-root-user; do
+                echo -n .
+                sleep 5
+              done; echo
+
+              MINIO_ROOT_USER=$(oc get secret minio-root-user -o template --template '{{.data.MINIO_ROOT_USER}}')
+              MINIO_ROOT_PASSWORD=$(oc get secret minio-root-user -o template --template '{{.data.MINIO_ROOT_PASSWORD}}')
+              MINIO_HOST=https://$(oc get route minio-s3 -o template --template '{{.spec.host}}')
+
+              cat << EOF | oc apply -f-
+              apiVersion: v1
+              kind: Secret
+              metadata:
+                annotations:
+                  opendatahub.io/connection-type: s3
+                  openshift.io/display-name: My Storage
+                labels:
+                  opendatahub.io/dashboard: "true"
+                  opendatahub.io/managed: "true"
+                name: aws-connection-my-storage
+              data:
+                AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER}
+                AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
+              stringData:
+                AWS_DEFAULT_REGION: us-east-1
+                AWS_S3_BUCKET: my-storage
+                AWS_S3_ENDPOINT: ${MINIO_HOST}
+              type: Opaque
+              EOF
+              cat << EOF | oc apply -f-
+              apiVersion: v1
+              kind: Secret
+              metadata:
+                annotations:
+                  opendatahub.io/connection-type: s3
+                  openshift.io/display-name: Pipeline Artifacts
+                labels:
+                  opendatahub.io/dashboard: "true"
+                  opendatahub.io/managed: "true"
+                name: aws-connection-pipeline-artifacts
+              data:
+                AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER}
+                AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD}
+              stringData:
+                AWS_DEFAULT_REGION: us-east-1
+                AWS_S3_BUCKET: pipeline-artifacts
+                AWS_S3_ENDPOINT: ${MINIO_HOST}
+              type: Opaque
+              EOF
+      restartPolicy: Never

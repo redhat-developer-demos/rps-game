@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-MY_ROUTE=https://roshambo-ai-chris-example-project.apps.rhods-internal.61tk.p1.openshiftapps.com
+MY_ROUTE=https://ai-service-rps-ai-service.apps.rhods-internal.61tk.p1.openshiftapps.com
 MY_IMAGE='rock1.jpg'
 
 

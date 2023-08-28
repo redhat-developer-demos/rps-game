@@ -1,0 +1,68 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-minio-buckets
+spec:
+  selector: {}
+  template:
+    spec:
+      serviceAccount: demo-setup
+      serviceAccountName: demo-setup
+      initContainers:
+        - name: wait-for-minio
+          image: image-registry.openshift-image-registry.svc:5000/openshift/tools:latest
+          imagePullPolicy: IfNotPresent
+          command: [ "/bin/bash" ]
+          args:
+            - -ec
+            - |-
+              echo -n 'Waiting for minio root user secret'
+              while ! oc get secret minio-root-user 2>/dev/null | grep -qF minio-root-user; do
+              echo -n .
+              sleep 5
+              done; echo
+
+              echo -n 'Waiting for minio deployment'
+              while ! oc get deployment minio 2>/dev/null | grep -qF minio; do
+                echo -n .
+                sleep 5
+              done; echo
+              oc wait --for=condition=available --timeout=60s deployment/minio
+              sleep 10
+      containers:
+        - name: create-buckets
+          image: image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-generic-data-science-notebook:2023.1
+          imagePullPolicy: IfNotPresent
+          command: [ "/bin/bash" ]
+          args:
+            - -ec
+            - |-
+              curl -LO https://github.com/TreeinRandomForest/rps_demo/raw/main/saved_models/rps_latest.onnx
+              oc get secret minio-root-user
+              env | grep MINIO
+
+              cat << 'EOF' | python3
+              import boto3, os
+
+              s3 = boto3.client("s3",
+                                endpoint_url="http://minio:9000",
+                                aws_access_key_id=os.getenv("MINIO_ROOT_USER"),
+                                aws_secret_access_key=os.getenv("MINIO_ROOT_PASSWORD"))
+              bucket = 'pipeline-artifacts'
+              print('creating pipeline-artifacts bucket')
+              if bucket not in [bu["Name"] for bu in s3.list_buckets()["Buckets"]]:
+                s3.create_bucket(Bucket=bucket)
+
+              bucket = 'my-storage'
+              print('creating my-storage bucket')
+              if bucket not in [bu["Name"] for bu in s3.list_buckets()["Buckets"]]:
+                s3.create_bucket(Bucket=bucket)
+
+              with open("rps_latest.onnx", "rb") as f:
+                s3.upload_fileobj(f, bucket, f"rps_models/github-latest/1/model.onnx")
+              EOF
+          envFrom:
+            - secretRef:
+                name: minio-root-user
+      restartPolicy: Never
