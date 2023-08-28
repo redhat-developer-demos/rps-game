@@ -1,0 +1,8 @@
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: aiconfig
+data:
+  grpc_host: modelmesh-serving
+  grpc_port: "8033"
+  model_name: rps

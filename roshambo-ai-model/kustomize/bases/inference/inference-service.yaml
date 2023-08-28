@@ -1,0 +1,22 @@
+﻿---
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  annotations:
+    openshift.io/display-name: rps
+    serving.kserve.io/deploymentMode: ModelMesh
+  name: rps
+  labels:
+    name: rps
+    opendatahub.io/dashboard: 'true'
+spec:
+  predictor:
+    model:
+      modelFormat:
+        name: onnx
+        version: '1'
+      runtime: model-server
+      storage:
+        key: aws-connection-my-storage
+        path: rps_models/github-latest
+
