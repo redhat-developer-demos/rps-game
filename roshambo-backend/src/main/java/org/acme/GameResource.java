@@ -152,7 +152,7 @@ public class GameResource {
                 String imageBase64 = imageDataPortions[1];
 
                 if (uploadToS3) {
-                    s3.uploadImage(imageBase64);
+                    s3.uploadImage(imageBase64, image.startsWith("data:image/png;base64,") ? "png" : "jpeg");
                 }
 
                 final Shape shape = shapeDetectorService.detect(imageBase64);

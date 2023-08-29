@@ -28,7 +28,7 @@ public class S3Uploader {
     this.logger = logger;
   }
 
-  public void uploadImage (String image) {
+  public void uploadImage (String image, String ext) {
     String imageName = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
 
     S3Client s3 = S3Client.builder()
@@ -38,7 +38,7 @@ public class S3Uploader {
     PutObjectRequest objectRequest = PutObjectRequest.builder()
     // TODO: might need to parse the file type from the base64
     .bucket(bucketName)
-    .key(imageName + ".png")
+    .key(imageName + "." + ext)
     .build();
 
     try {
