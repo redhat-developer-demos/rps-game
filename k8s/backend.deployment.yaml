@@ -21,7 +21,7 @@ spec:
           imagePullPolicy: Always
           env:
             - name: ROSHAMBO_ENABLE_CAMERA
-              value: 'false'
+              value: 'true'
           ports:
             - containerPort: 8080
           resources:
