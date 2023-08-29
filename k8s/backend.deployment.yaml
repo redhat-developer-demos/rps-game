@@ -19,9 +19,6 @@ spec:
         - name: roshambo-backend
           image: quay.io/rhdevelopers/roshambo-backend
           imagePullPolicy: Always
-          env:
-            - name: ROSHAMBO_ENABLE_CAMERA
-              value: 'false'
           ports:
             - containerPort: 8080
           resources:
