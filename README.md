@@ -73,8 +73,6 @@ Once the Operator is ready you can find the link to Argo CD (provided and manage
         path: k8s/overlays/development
         repoURL: 'https://github.com/redhat-developer-demos/rps-game'
         targetRevision: HEAD
-        directory:
-          recurse: true
       project: default
       syncPolicy:
         automated:
