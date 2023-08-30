@@ -70,7 +70,7 @@ Once the Operator is ready you can find the link to Argo CD (provided and manage
         namespace: rps-game
         server: 'https://kubernetes.default.svc'
       source:
-        path: k8s
+        path: k8s/overlays/development
         repoURL: 'https://github.com/redhat-developer-demos/rps-game'
         targetRevision: HEAD
         directory:

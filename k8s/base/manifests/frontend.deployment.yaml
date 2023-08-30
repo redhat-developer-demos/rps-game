@@ -8,7 +8,7 @@ metadata:
     app: roshambo-frontend
     app.openshift.io/runtime: nginx
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: roshambo-frontend
@@ -29,7 +29,7 @@ spec:
           resources:
             requests:
               memory: "128Mi"
-              cpu: "250m"
+              cpu: "100m"
             limits:
               memory: "256Mi"
-              cpu: "500m"
+              cpu: "250m"
