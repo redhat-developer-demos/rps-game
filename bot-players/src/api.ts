@@ -2,11 +2,13 @@ import { readFileSync } from "fs"
 import log from "./log"
 import { request } from 'undici'
 
-export default function getApiWrapper (baseUrl: string): ApiWrapper {
+export type ImageType = 'jpeg'|'png'
+
+export default function getApiWrapper (baseUrl: string, imageType: ImageType = 'jpeg'): ApiWrapper {
   const shapeBase64: Record<Shape, string> = {
-    'PAPER': readFileSync('./shape-images/paper-base64.txt', 'utf-8'),
-    'SCISSORS': readFileSync('./shape-images/scissors-base64.txt', 'utf-8'),
-    'ROCK': readFileSync('./shape-images/rock-base64.txt', 'utf-8')
+    'PAPER': readFileSync(`./shape-images/paper-base64.${imageType}.txt`, 'utf-8'),
+    'SCISSORS': readFileSync(`./shape-images/scissors-base64.${imageType}.txt`, 'utf-8'),
+    'ROCK': readFileSync(`./shape-images/rock-base64.${imageType}.txt`, 'utf-8')
   }
 
   async function initAndAssign (): Promise<{ config: Config, assignment: UserAssignment }> {
@@ -23,24 +25,26 @@ export default function getApiWrapper (baseUrl: string): ApiWrapper {
     return { config, assignment }
   }
 
-  async function selectShape (params: { team: TeamNumber, userId: number, shape: Shape, useImages: boolean }): Promise<void> {
-    const path = params.useImages ? `/game/detect/shot/${params.team}/${params.userId}` : `/game/detect/button/${params.team}/${params.userId}/${params.shape}`
+  async function selectShape (params: SelectShapeParams): Promise<void> {
+    const path = params.imageType ? `/game/detect/shot/${params.team}/${params.userId}` : `/game/detect/button/${params.team}/${params.userId}/${params.shape}`
     const url = new URL(path, baseUrl).toString()
 
     try {
-      const { statusCode } = await request(url, {
+      const { statusCode, body } = await request(url, {
+        throwOnError: false,
         method: 'POST',
         headers: {
           'content-type': 'text/plain'
         },
-        body: params.useImages ? shapeBase64[params.shape] : undefined
+        body: params.imageType ? shapeBase64[params.shape] : undefined
       })
 
       if (statusCode !== 200) {
-        throw new Error(`received status code ${statusCode}`)
+        log.error(`received status code ${statusCode}`)
       }
     } catch (e) {
-      log.error('error performing shape selection:', e)
+      log.error('error performing shape selection:')
+      log.error(e)
     }
   }
 
@@ -50,9 +54,16 @@ export default function getApiWrapper (baseUrl: string): ApiWrapper {
   }
 }
 
+export type SelectShapeParams = {
+  team: TeamNumber
+  userId: number
+  shape: Shape
+  imageType?: ImageType
+}
+
 export type ApiWrapper = {
   initAndAssign (): Promise<{ config: Config, assignment: UserAssignment }>,
-  selectShape (params: { team: TeamNumber, userId: number, shape: Shape, useImages: boolean }): Promise<void>
+  selectShape (params: SelectShapeParams): Promise<void>
 }
 
 export type TeamNumber = 1|2

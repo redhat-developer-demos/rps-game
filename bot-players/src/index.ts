@@ -11,14 +11,14 @@ async function main() {
 
   const {
     GAME_SERVER_URL,
-    GAME_UPLOAD_IMAGES,
+    GAME_IMAGE_TYPE,
     CLOSE_WITH_GRACE_DELAY,
     NODE_TLS_REJECT_UNAUTHORIZED
   } = config
 
   const sse = getServerSentEventSource(GAME_SERVER_URL, NODE_TLS_REJECT_UNAUTHORIZED)
   const api = getApiWrapper(GAME_SERVER_URL)
-  const botMachine = getBotsMachine(sse, api, GAME_UPLOAD_IMAGES)
+  const botMachine = getBotsMachine(sse, api, GAME_IMAGE_TYPE)
 
   const app = await startServer(botMachine);
 

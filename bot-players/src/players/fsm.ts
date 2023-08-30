@@ -1,12 +1,12 @@
 import { assign, createMachine, interpret } from 'xstate';
 import { randomUUID } from 'crypto'
-import { ApiWrapper, Config, MoveProcessResponse, Shape, UserAssignment } from '../api';
+import { ApiWrapper, Config, ImageType, MoveProcessResponse, Shape, UserAssignment } from '../api';
 import log from '../log';
 import { SSEContentDisable, SSEContentEnable, SSEContentEnd } from '../sse';
 
 const shapes = [Shape.Rock, Shape.Paper, Shape.Scissors]
 
-export default function createPlayerMachine (api: ApiWrapper, useImages: boolean) {
+export default function createPlayerMachine (api: ApiWrapper, imageType?: ImageType) {
   const playerMachine = createMachine({
     /** @xstate-layout N4IgpgJg5mDOIC5QAoC2BDAxgCwJYDswBKAOgNwBdd0AbXWAqAYggHtCz8A3VgazBJoseQqXJVa9RggI9M6KuwDaABgC6qtYlAAHVg0X5tIAB6IATADYA7CQAsKgMyWArM4CcKy47uXLAGhAAT0QARkcXEm8XO1CXc08ADlDE92sAX3TAoRwCYk5KajoGfGYwACdy1nKSHRoFADNq1EEMXNECiWLpWVZ5Q01NYz0DXHZjMwRLUJJQ93dzOb9rFXdQyytAkIRk+2s1vxtHR3c7eMzstpF8zHZCTAoAFVYAZReAURZ2AV7+VuE8qRbvh7k9Xh8ZNw+goxvhBuphvpCuMkKYLDZ7E5XB4vD4-FsLO5HCQYpZEtZvHZrOYYo4LiActcgXcwA9nm9PhUqjU6o1mv92jcWWzwe9IXIYcp1ENUSNkUZUZNprN5ot3MtVutNsELCcSCcvOZrNT3IkEuT6YzASQAO7oQqlJjvAByAEEAEIAGXeMt0SMME0QPjsJHMJxciUS8Uc5MSVIJCBjliiKjiliSYescRclqu1tgYBorIoL2w6B0YC+HF+AitHQLRYepfLYHF0IG0oRsv9sMDCCstgczjc6dxvgCOoQdkcti8LlCoS8nnWpzpWQZefrheLzYrTC51Vq9QoTXKLTr+QbO7LFbb-Vh8K03dGKNAkwHmOHOMp+MndjjJLmCoiQnJYTgrE4mTrvgrAQHAxgXkQiIvgqb6IAAtKECboZYuYAh04hFFIpTIfKfbxpO4TEkS-7uC4EbpjSdh4YKzIgsW7IfKRAaKogFHbAkMxxtEfjTs4KgZOuiG2vaVAkc+ZG8VOdEkNYLgqBpkaJBJxrmAmoRZiQwELpYdhhjOEbuCxTIkFeTY3mA3G9kpMQkOq5LqSBFIpBSCaxCoRmuIunhqf+VhQekQA */
     tsTypes: {} as import("./fsm.typegen").Typegen0,
@@ -86,13 +86,13 @@ export default function createPlayerMachine (api: ApiWrapper, useImages: boolean
         // Add random delay to simulate a player "considering" their choice
         await delay(shapeDelay)
 
-        log.info(`player ${user.id} (${user.name}) on team ${user.team} submitting shape ${shape} ${useImages ? 'as an image' : 'as a button selection'}`)
+        log.info(`player ${user.id} (${user.name}) on team ${user.team} submitting shape ${shape} ${imageType ? `as a ${imageType} image` : 'as a button selection'}`)
 
         await api.selectShape({
           userId: user.id,
           team: user.team,
           shape,
-          useImages
+          imageType
         })
 
         log.info(`player ${user.id} (${user.name}) on team ${user.team} shape was accepted`)
