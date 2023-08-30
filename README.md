@@ -71,7 +71,7 @@ Once the Operator is ready you can find the link to Argo CD (provided and manage
         server: 'https://kubernetes.default.svc'
       source:
         path: k8s
-        repoURL: 'https://github.com/evanshortiss/rps-game'
+        repoURL: 'https://github.com/redhat-developer-demos/rps-game'
         targetRevision: HEAD
         directory:
           recurse: true
