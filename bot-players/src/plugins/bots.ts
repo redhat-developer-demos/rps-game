@@ -9,9 +9,9 @@ export type BotPluginOps = {
 }
 
 const botPlugin: FastifyPluginCallbackTypebox<BotPluginOps> = async (server, options, done) => {
-  const PQueue = (await import('p-queue')).default
+  const PQueue = await import('p-queue')
 
-  const queue = new PQueue({
+  const queue = new PQueue.default({
     // Only wait 1000ms for a queue item to process before throwing an error
     timeout: 1000,
 

@@ -4,6 +4,7 @@
     "outDir": "build",
     "target": "es2018",
     "lib": ["es2018"],
-    "declaration": false
+    "declaration": false,
+    "moduleResolution": "NodeNext"
   }
 }
