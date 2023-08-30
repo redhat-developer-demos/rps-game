@@ -3,13 +3,14 @@ import fp from 'fastify-plugin';
 import { BotMachine } from '../players';
 import { FastifyPluginCallbackTypebox } from '@fastify/type-provider-typebox'
 import { Type } from '@sinclair/typebox'
-import PQueue from 'p-queue';
 
 export type BotPluginOps = {
   botMachine: BotMachine
 }
 
-const botPlugin: FastifyPluginCallbackTypebox<BotPluginOps> = (server, options, done) => {
+const botPlugin: FastifyPluginCallbackTypebox<BotPluginOps> = async (server, options, done) => {
+  const PQueue = (await import('p-queue')).default
+
   const queue = new PQueue({
     // Only wait 1000ms for a queue item to process before throwing an error
     timeout: 1000,
