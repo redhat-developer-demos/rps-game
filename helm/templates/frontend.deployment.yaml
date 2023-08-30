@@ -23,7 +23,7 @@ spec:
           imagePullPolicy: Always
           env:
             - name: RPS_BACKEND_HOST
-              value: 'http://roshambo-backend-service.{{ .Values.namespace }}.svc.cluster.local:8080'
+              value: 'http://roshambo-backend-service.{{ .Release.namespace }}.svc.cluster.local:8080'
           ports:
             - containerPort: 8080
           resources: {{ .Values.frontend.resources | toYaml | nindent 12 }}
