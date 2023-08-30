@@ -1,7 +1,7 @@
 resources:
-- ../backend.deployment.yaml
-- ../backend.service.yaml
-- ../frontend.route.yaml
-- ../backend.route.yaml
-- ../frontend.deployment.yaml
-- ../frontend.service.yaml
+- manifests/backend.deployment.yaml
+- manifests/backend.service.yaml
+- manifests/frontend.route.yaml
+- manifests/backend.route.yaml
+- manifests/frontend.deployment.yaml
+- manifests/frontend.service.yaml
