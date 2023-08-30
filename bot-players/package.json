@@ -34,6 +34,7 @@
     "fluent-json-schema": "^4.1.0",
     "humanize-duration": "^3.28.0",
     "observable-fns": "^0.6.1",
+    "p-queue": "^7.4.0",
     "pino": "^8.14.1",
     "xstate": "^4.37.2"
   }

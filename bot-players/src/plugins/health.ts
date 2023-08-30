@@ -23,7 +23,8 @@ const healthPlugin: FastifyPluginCallback<HealthPluginOptions> = (
         botCount: botMachine.getBotCount(),
         uptime: humanize(uptime() * 1000),
         serverTime: new Date().toJSON(),
-        version: version
+        version: version,
+        memory: process.memoryUsage()
       };
     }
   });
