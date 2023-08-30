@@ -22,6 +22,5 @@ objects:
         openshift.io/description: ${DISPLAY_NAME}
         openshift.io/display-name: ${DISPLAY_NAME}
       labels:
-        kubernetes.io/metadata.name: serving-demo-gitops
         modelmesh-enabled: "true"
         opendatahub.io/dashboard: "true"
