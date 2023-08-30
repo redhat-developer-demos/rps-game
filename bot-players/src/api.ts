@@ -30,7 +30,7 @@ export default function getApiWrapper (baseUrl: string, imageType: ImageType = '
     const url = new URL(path, baseUrl).toString()
 
     try {
-      const { statusCode, body } = await request(url, {
+      const { statusCode } = await request(url, {
         throwOnError: false,
         method: 'POST',
         headers: {

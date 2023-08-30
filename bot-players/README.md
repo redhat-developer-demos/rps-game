@@ -19,16 +19,21 @@ and manage various Node.js versions.
 
 ```bash
 # Clone the repository and change to the bot directory
-git clone https://github.com:/edhat-developer-demos/rps-game rps-game
+git clone https://github.com/redhat-developer-demos/rps-game rps-game
 cd rps-game/bot-players
 
 # Install and switch to the Node.js version required by this project
 nvm install
 nvm use
 
+# Install deps
+npm ci
+npm run build
+
 # Specify the game server URL. Use the nginx Route replicate real game
 # routing behaviours
-GAME_SERVER_URL=https://chage-to.nginx-route.openshiftapps.com npm run dev
+export GAME_SERVER_URL=https://chage-to.nginx-route.openshiftapps.com
+npm start
 ```
 
 Once the server is running, use the `POST /bot` endpoint to create a bot
