@@ -1,4 +1,7 @@
 backend:
+  # Change this to latest-camera to enable the camera feature flag.
+  # Alternatively, set ROSHAMBO_ENABLE_CAMERA=true in the environment
+  # for the backend deployment while still using the latest tag.
   image: quay.io/rhdevelopers/roshambo-backend:latest
   # Do not change. Backend is not designed to scale horizontally.
   repicas: 1
