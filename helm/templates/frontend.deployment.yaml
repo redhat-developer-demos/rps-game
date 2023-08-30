@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: roshambo-frontend
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"roshambo-backend"}]'
+  labels:
+    app: roshambo-frontend
+    app.openshift.io/runtime: nginx
+spec:
+  replicas: {{ .Values.frontend.replicas }}
+  selector:
+    matchLabels:
+      app: roshambo-frontend
+  template:
+    metadata:
+      labels:
+        app: roshambo-frontend
+    spec:
+      containers:
+        - name: roshambo-frontend
+          image: {{ .Values.frontend.image }}
+          imagePullPolicy: Always
+          env:
+            - name: RPS_BACKEND_HOST
+              value: 'http://roshambo-backend-service.{{ .Values.namespace }}.svc.cluster.local:8080'
+          ports:
+            - containerPort: 8080
+          resources: {{ .Values.frontend.resources | toYaml | nindent 12 }}
