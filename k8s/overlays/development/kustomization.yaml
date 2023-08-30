@@ -4,7 +4,6 @@ bases:
 commonLabels:
   env: development
 
-# Increase the base deployment replica count, and use a fixed image tag
 patches:
   - target:
       kind: Deployment
@@ -15,7 +14,7 @@ patches:
         value: 256Mi
       - op: replace
         path: /spec/template/spec/containers/0/resources/requests/cpu
-        value: 125m
+        value: 250m
       - op: replace
         path: /spec/template/spec/containers/0/resources/limits/memory
         value: 512Mi

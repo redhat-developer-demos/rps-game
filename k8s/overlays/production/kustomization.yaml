@@ -4,7 +4,6 @@ bases:
 commonLabels:
   env: production
 
-# Increase the base deployment replica count, and use a fixed image tag
 patches:
   - target:
       kind: Deployment
