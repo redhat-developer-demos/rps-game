@@ -8,7 +8,10 @@ import { HealthPluginOptions } from './plugins/health';
 const { version } = require('../package.json');
 
 export default async function startServer(botMachine: BotMachine) {
-  const app = fastify({ logger: config.NODE_ENV !== 'prod' });
+  const app = fastify({
+    ignoreTrailingSlash: true,
+    logger: config.NODE_ENV !== 'prod'
+  });
 
   // Provides a health endpoint to check
   app.register(require('./plugins/health'), {

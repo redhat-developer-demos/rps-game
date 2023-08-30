@@ -22,7 +22,7 @@ const botPlugin: FastifyPluginCallbackTypebox<BotPluginOps> = (server, options, 
 
   server.post('/bot', {
     schema: {
-      body: Type.Object({
+      querystring: Type.Object({
         count: Type.Number({
           default: 1,
           minimum: 1,
@@ -35,7 +35,7 @@ const botPlugin: FastifyPluginCallbackTypebox<BotPluginOps> = (server, options, 
       log.warn('received a request to create bots, but bot queue has existing items')
       reply.status(503).send('Bot creation in progress. Try again later')
     } else {
-      const { count } = req.body
+      const { count } = req.query
       const botIds: string[] = []
 
       for (let i = 0; i < count; i++) {

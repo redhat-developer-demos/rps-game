@@ -46,14 +46,21 @@ curl -X POST http://localhost:8181/bot
 The response to this request will contain the unique bot ID:
 
 ```json
-{"botId":"player-machine-b083d5f5-f248-4095-b657-bcf0a204b859"}
+{"botIds":["player-machine-c14f3e17-b932-4f89-b2a3-fddac13b2c1a"]}
 ```
 
-The endpoint can be called multiple times if multiple bot players need to be
+A `count` query parameter can be included if multiple bot players need to be
 created, e.g:
 
 ```bash
-for i in {1..25}; do curl -X POST -s 'http://localhost:8181/bot' | jq ; done
+curl -X POST 'http://localhost:8181/bot?count=2'
+
+{
+  "botIds": [
+    "player-machine-83fc0770-89f6-43dd-a466-30c75a0b729d",
+    "player-machine-7b9fa044-7849-4c46-8fc8-9ac4923eae65"
+  ]
+}
 ```
 
 Bots will automatically play the game when it starts.
