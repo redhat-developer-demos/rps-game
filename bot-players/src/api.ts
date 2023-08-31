@@ -83,9 +83,11 @@ export type UserAssignment = {
 }
 
 export type Config = {
-  numberOfRounds: number,
-  roundTimeInSeconds: number,
-  timeBetweenRoundsInSeconds: number
+  configuration: {
+    numberOfRounds: number,
+    roundTimeInSeconds: number,
+    timeBetweenRoundsInSeconds: number
+  }
 }
 
 export type ScoreData = {

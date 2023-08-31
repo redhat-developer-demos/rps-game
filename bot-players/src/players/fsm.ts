@@ -86,7 +86,7 @@ export default function createPlayerMachine (api: ApiWrapper, imageType?: ImageT
 
         // Send delay is always 3 seconds less than the end of round time. This
         // avoids sending the pay load too late for processing.
-        const sendDelay = Math.random() * ((config.roundTimeInSeconds - 3) * 1000)
+        const sendDelay = Math.random() * ((config.configuration.roundTimeInSeconds - 3) * 1000)
 
         // There should be at least a two second delay before a player sends
         // data. This replicates a real-world scenario where a player has to
