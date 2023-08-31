@@ -5,6 +5,9 @@ import jakarta.inject.Inject;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.jboss.logging.Logger;
 
 @Interceptor
@@ -14,22 +17,20 @@ public class CounterInterceptor {
     @Inject
     Logger logger;
 
-    private static int counter = 0;
+    private static AtomicInteger counter = new AtomicInteger(0);
 
     @AroundInvoke
     public Object intercept(InvocationContext context) throws Exception {
-        counter++;
-        logger.infof("concurrent shape detections increased to %d", counter);
+        logger.infof("concurrent shape detections increased to %d", counter.incrementAndGet());
 
         try {
             return context.proceed();
         } finally {
-            counter--;
-            logger.infof("concurrent shape detections decreased to %d", counter);
+            logger.infof("concurrent shape detections decreased to %d", counter.decrementAndGet());
         }
     }
 
     public static int getCounter() {
-        return counter;
+        return counter.get();
     }
 }
