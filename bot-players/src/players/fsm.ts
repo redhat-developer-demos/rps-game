@@ -61,6 +61,10 @@ export default function createPlayerMachine (api: ApiWrapper, imageType?: ImageT
         on: { START: 'selectShape', STOP: 'waiting', END: 'gameOver' }
       },
       selectShape: {
+        on: {
+          'STOP': 'waiting',
+          'END': 'gameOver'
+        },
         invoke: {
           src: 'selectShape',
           onDone: {

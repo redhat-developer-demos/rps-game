@@ -5,6 +5,8 @@ import { request } from 'undici'
 export type ImageType = 'jpeg'|'png'
 
 export default function getApiWrapper (baseUrl: string, imageType: ImageType = 'jpeg'): ApiWrapper {
+  let requestsInFlight = 0
+
   const shapeBase64: Record<Shape, string> = {
     'PAPER': readFileSync(`./shape-images/paper-base64.${imageType}.txt`, 'utf-8'),
     'SCISSORS': readFileSync(`./shape-images/scissors-base64.${imageType}.txt`, 'utf-8'),
@@ -26,9 +28,12 @@ export default function getApiWrapper (baseUrl: string, imageType: ImageType = '
   }
 
   async function selectShape (params: SelectShapeParams): Promise<void> {
+    requestsInFlight++
+    log.info(`number of detection requests in flight (increased): ${requestsInFlight}`)
+
     const path = params.imageType ? `/game/detect/shot/${params.team}/${params.userId}` : `/game/detect/button/${params.team}/${params.userId}/${params.shape}`
     const url = new URL(path, baseUrl).toString()
-
+    
     try {
       const { statusCode } = await request(url, {
         throwOnError: false,
@@ -45,6 +50,9 @@ export default function getApiWrapper (baseUrl: string, imageType: ImageType = '
     } catch (e) {
       log.error('error performing shape selection:')
       log.error(e)
+    } finally {
+      requestsInFlight--
+      log.info(`number of detection requests in flight (decreased): ${requestsInFlight}`)
     }
   }
 
