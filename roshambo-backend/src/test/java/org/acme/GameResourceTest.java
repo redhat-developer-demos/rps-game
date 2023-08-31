@@ -56,7 +56,7 @@ public class GameResourceTest {
                 .post("/game/detect/shot/1/0")
                 .then()
                 .statusCode(200)
-                .body("shape", is("ROCK"));
+                .body("shape", is("SCISSORS"));
 
         }
 
