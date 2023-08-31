@@ -81,14 +81,17 @@ export default function createPlayerMachine (api: ApiWrapper, imageType?: ImageT
     }
   }, {
     services: {
-      selectShape: async ({ user }) => {
-
+      selectShape: async ({ user, config }) => {
         const shape = shapes[Math.round(Math.random() * (shapes.length - 1))]
-        const shapeDelay = Math.random() * 8000
-        
-        // It's not realistic that all player shapes arrive at the same time.
-        // Add random delay to simulate a player "considering" their choice
-        await delay(shapeDelay)
+
+        // Send delay is always 3 seconds less than the end of round time. This
+        // avoids sending the pay load too late for processing.
+        const sendDelay = Math.random() * ((config.roundTimeInSeconds - 3) * 1000)
+
+        // There should be at least a two second delay before a player sends
+        // data. This replicates a real-world scenario where a player has to
+        // spend time taking a picture or deciding on their move selection
+        await delay(Math.max(2000, sendDelay))
 
         log.info(`player ${user.id} (${user.name}) on team ${user.team} submitting shape ${shape} ${imageType ? `as a ${imageType} image` : 'as a button selection'}`)
 

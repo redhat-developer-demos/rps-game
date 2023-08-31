@@ -27,7 +27,7 @@ const botPlugin: FastifyPluginCallbackTypebox<BotPluginOps> = async (server, opt
         count: Type.Number({
           default: 1,
           minimum: 1,
-          maximum: 100
+          maximum: 500
         })
       })
     }
