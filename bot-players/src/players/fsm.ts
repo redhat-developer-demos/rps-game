@@ -117,8 +117,8 @@ export default function createPlayerMachine (api: ApiWrapper, imageType?: ImageT
   return interpret(playerMachine)
 }
 
-async function delay (ms: number) {
+function delay (ms: number): Promise<void> {
   return new Promise((resolve) => {
-    setTimeout(resolve, ms)
-  })
+    setTimeout(() => resolve(), ms)
+  });
 }
