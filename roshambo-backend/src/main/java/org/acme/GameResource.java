@@ -1,6 +1,11 @@
 package org.acme;
 
 import io.quarkus.runtime.LaunchMode;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.time.Duration;
 import java.util.UUID;
 
@@ -24,6 +29,7 @@ import io.smallrye.mutiny.Multi;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.interceptor.InterceptorBinding;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.validation.constraints.Max;
@@ -141,6 +147,7 @@ public class GameResource {
     @POST
     @Path("/detect/shot/{team}/{userId}")
     @Consumes(MediaType.TEXT_PLAIN)
+    @Counted
     public RestResponse<Object> shot(@PathParam("userId") int userId, @Min(1) @Max(2) @PathParam("team") int team, String image) {
         if (enableCamera) {
             long responseTime = calculateResponseTime();
