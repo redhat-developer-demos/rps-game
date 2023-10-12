@@ -1,5 +1,9 @@
 # RPS Game UI
 
+**NOTE:** This application uses XState for managing state. Install the [XState VS Code Plugin](https://marketplace.visualstudio.com/items?itemName=statelyai.stately-vscode)
+to ensure that the _StateMachine.typegen.ts_ file is automatically regenerated
+when _StateMachine.ts_ is modified.
+
 ## Local Development
 
 Requires Node.js 18.12.1 or later. Consider using 
@@ -30,8 +34,8 @@ npm run dev -- --host
 
 ### Local Development for iOS Devices
 
-iOS disables access to the camera and accelerometer APIs when a site is not
-served via HTTPS.
+iOS disables camera and accelerometer API access when a site is not served over
+HTTPS.
 
 To serve the application in development mode with SSL/HTTPS enabled, use this
 command:
@@ -39,6 +43,9 @@ command:
 ```
 npm run dev:ssl -- --host
 ```
+
+You'll need to accept the self-signed certificate when you visit the
+application on your iOS device.
 
 ## Running with Podman/Docker
 
@@ -50,7 +57,8 @@ mvn clean package
 podman build . -f src/main/docker/Dockerfile.jvm -t rps-backend
 ```
 
-Run the backend container:
+Run the backend container, and optionally expose its port 8080 on host port
+8181:
 
 ```bash
 podman run --rm -p 8181:8080 --name rps-backend rps-backend
@@ -63,7 +71,7 @@ cd roshambo-ui
 podman build . -t rps-ui
 ```
 
-Start the frontend (making sure to pass the backend host):
+Start the frontend, making sure to pass the backend host and port:
 
 ```bash
 export BACKEND_IP=$(podman inspect --format='{{.NetworkSettings.IPAddress}}' rps-backend)
