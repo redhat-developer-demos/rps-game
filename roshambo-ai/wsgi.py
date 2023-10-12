@@ -5,20 +5,12 @@ import logging
 from flask import Flask, jsonify, request
 from prediction import predict
 
-log_level = os.getenv("LOG_LEVEL", "INFO").upper()
-
 application = Flask(__name__)
-
-formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-handler = logging.StreamHandler()
-handler.setFormatter(formatter)
-application.logger.addHandler(handler)
-application.logger.setLevel(log_level)
 
 @application.route('/')
 @application.route('/status')
 def status():
-    logging.debug('responding OK to /status check')
+    application.logger.debug('responding OK to /status check')
     return jsonify({'status': 'ok'})
 
 
