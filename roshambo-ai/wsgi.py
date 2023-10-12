@@ -9,10 +9,10 @@ application = Flask(__name__)
 
 log_level = os.getenv("LOG_LEVEL", "INFO").upper()
 
-formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-handler = logging.StreamHandler()
-handler.setFormatter(formatter)
-application.logger.addHandler(handler)
+//formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+//handler = logging.StreamHandler()
+//handler.setFormatter(formatter)
+//application.logger.addHandler(handler)
 application.logger.setLevel(log_level)
 
 @application.route('/')
