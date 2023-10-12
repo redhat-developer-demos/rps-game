@@ -10,10 +10,20 @@ function isMobileDevice () {
   return navigator.userAgent.match(/ipod|ipad|iphone|android/gi)
 }
 
+/**
+ * This component renders a video feed captured from the user's camera on screen
+ * using the <video> element in combination with the getUserMedia API. It also
+ * displays a button that can be used to capture the current frame. In other
+ * words this UI mimics a camera.
+ * 
+ * The captured image is written to a <canvas> element that is then shown in
+ * place of the video feed so the user can confirm it looks goof before sending
+ * it to the backend.
+ */
+
 const VideoCaptureComponent: React.FunctionComponent<VideoCaptureComponentProps> = ({ callback }) => {
   const [ imageData, setImageData ] = useState<string>()
   const videoRef = useRef<HTMLVideoElement|null>(null);
-  // const canvasRef = useRef<HTMLCanvasElement|null>(null);
   const [ stream, setStream ] = useState<MediaStream>()
 
   const stopStream = useCallback(() => {

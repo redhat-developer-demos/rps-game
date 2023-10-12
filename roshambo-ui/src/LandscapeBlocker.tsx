@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import RoshamboLogo from './assets/2023_Roshambo_UI__Roshambo_Logo_only.svg'
 
+/**
+ * The application is designed with portrait mode in mind. This component
+ * will render a message that instructs users to switch to portrait mode on
+ * mobile devices so they aren't presented with an ugly UI.
+ */
+
 const LandscapeBlocker: React.FC<{ children: JSX.Element }> = ({ children }) => {
   const [ active, setActive ] = useState<boolean>(false)
 
