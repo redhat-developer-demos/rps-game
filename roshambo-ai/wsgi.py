@@ -7,6 +7,10 @@ from prediction import predict
 
 log_level = os.getenv("LOG_LEVEL", "INFO").upper()
 logging.basicConfig(level=log_level)
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+handler = logging.StreamHandler()
+handler.setFormatter(formatter)
+logging.getLogger().addHandler(handler)
 
 application = Flask(__name__)
 
