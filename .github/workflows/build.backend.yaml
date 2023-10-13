@@ -86,7 +86,7 @@ jobs:
         script: |
           await github.rest.actions.createWorkflowDispatch({
             owner: 'redhat-developer-demos',
-            repo: 'rps-game',
+            repo: 'rps-game-manifests',
             workflow_id: 'update-backend-image.yaml',
             ref: 'main',
             inputs: {
