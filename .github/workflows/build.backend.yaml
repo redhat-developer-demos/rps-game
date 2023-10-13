@@ -61,3 +61,35 @@ jobs:
         tags: |
           quay.io/rhdevelopers/roshambo-backend:latest-camera
           quay.io/rhdevelopers/roshambo-backend:sha-${{ steps.git-sha.outputs.sha }}-camera
+
+    # https://github.com/orgs/community/discussions/26323#discussioncomment-3251454
+    # Use the GitHub API to make an authenticated call that triggers a workflow
+    # in the manifests repository. The targeted workflow opens a PR to use the
+    # new image that was pushed to quay.io. A personal access token (PAT) is
+    # required to make the API call. The PAT can be created by a member of the
+    # redhat-developer-demos org by visiting https://github.com/settings/personal-access-tokens/new
+    # and selecting "redhat-developer-demos" under resource owner dropdown.
+    # Select the rps repositories, and then add actions read/write permissions
+    # 
+    # Set the PAT_TOKEN at https://github.com/redhat-developer-demos/rps-game/settings/secrets/actions
+    # 
+    # You can manually trigger the action using curl
+    # curl -X POST \
+    # -H "Authorization: Bearer $PAT" \
+    # -H "Accept: application/vnd.github.v3+json" \
+    # https://api.github.com/repos/redhat-developer-demos/rps-game-manifests/actions/workflows/update-backend-image.yaml/dispatches \
+    # -d '{"ref":"main", "inputs": { "image": "foo" } }'
+    - name: Trigger update workflow in the manifests repository
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.PAT_TOKEN }}
+        script: |
+          await github.rest.actions.createWorkflowDispatch({
+            owner: 'redhat-developer-demos',
+            repo: 'rps-game',
+            workflow_id: 'update-backend-image.yaml',
+            ref: 'main',
+            inputs: {
+              image: 'quay.io/rhdevelopers/roshambo-backend:sha-${{ steps.git-sha.outputs.sha }}'
+            }
+          })
