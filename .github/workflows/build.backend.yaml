@@ -29,19 +29,22 @@ jobs:
       with:
         java-version: '17'
         distribution: 'adopt'
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
 
     - name: Build with Maven
       run: mvn package --no-transfer-progress --file ./roshambo-backend/pom.xml
 
     - name: Login to quay.io
-      uses: docker/login-action@v2
+      uses: docker/login-action@v3
       with:
         username: ${{ secrets.QUAY_USERNAME }}
         password: ${{ secrets.QUAY_PASSWORD }}
         registry: quay.io
 
     - name: Build and push images to quay.io
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v5
       with:
         context: ./roshambo-backend
         file: ./roshambo-backend/src/main/docker/Dockerfile.jvm
@@ -49,9 +52,11 @@ jobs:
         tags: |
           quay.io/rhdevelopers/roshambo-backend:latest
           quay.io/rhdevelopers/roshambo-backend:sha-${{ steps.git-sha.outputs.sha }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build and push (ROSHAMBO_ENABLE_CAMERA=true) images to quay.io
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v5
       with:
         context: ./roshambo-backend
         file: ./roshambo-backend/src/main/docker/Dockerfile.jvm
@@ -61,6 +66,8 @@ jobs:
         tags: |
           quay.io/rhdevelopers/roshambo-backend:latest-camera
           quay.io/rhdevelopers/roshambo-backend:sha-${{ steps.git-sha.outputs.sha }}-camera
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     # https://github.com/orgs/community/discussions/26323#discussioncomment-3251454
     # Use the GitHub API to make an authenticated call that triggers a workflow
