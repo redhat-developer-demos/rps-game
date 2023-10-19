@@ -56,19 +56,19 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
-    - name: Build and push (ROSHAMBO_ENABLE_CAMERA=true) images to quay.io
-      uses: docker/build-push-action@v5
-      with:
-        context: ./roshambo-backend
-        file: ./roshambo-backend/src/main/docker/Dockerfile.jvm
-        build-args: |
-          ROSHAMBO_ENABLE_CAMERA=true
-        push: true
-        tags: |
-          quay.io/rhdevelopers/roshambo-backend:latest-camera
-          quay.io/rhdevelopers/roshambo-backend:sha-${{ steps.git-sha.outputs.sha }}-camera
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+    #- name: Build and push (ROSHAMBO_ENABLE_CAMERA=true) images to quay.io
+    #  uses: docker/build-push-action@v5
+    #  with:
+    #    context: ./roshambo-backend
+    #    file: ./roshambo-backend/src/main/docker/Dockerfile.jvm
+    #    build-args: |
+    #      ROSHAMBO_ENABLE_CAMERA=true
+    #    push: true
+    #    tags: |
+    #      quay.io/rhdevelopers/roshambo-backend:latest-camera
+    #      quay.io/rhdevelopers/roshambo-backend:sha-${{ steps.git-sha.outputs.sha }}-camera
+    #    cache-from: type=gha
+    #    cache-to: type=gha,mode=max
 
     # https://github.com/orgs/community/discussions/26323#discussioncomment-3251454
     # Use the GitHub API to make an authenticated call that triggers a workflow
