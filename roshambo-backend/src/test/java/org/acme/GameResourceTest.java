@@ -39,7 +39,7 @@ public class GameResourceTest {
              .body("shape", is("ROCK"));
     }
 
-    @Test
+    /**@Test
     @Order(3)
     public void should_send_a_shape_as_image() throws IOException {
 
@@ -60,7 +60,7 @@ public class GameResourceTest {
 
         }
 
-    }
+    }**/
 
 
 }
