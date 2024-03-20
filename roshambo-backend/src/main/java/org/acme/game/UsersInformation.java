@@ -37,7 +37,7 @@ public class UsersInformation {
                     .stream()
                     .sorted(Map.Entry.<Integer, Duration>comparingByValue())
                     .limit(top)
-                    .map(e -> this.findUserById(e.getKey()))
+                    .map(e -> this.findUserById(e.getKey()).get())
                     .collect(Collectors.toList());
     }
 
@@ -45,7 +45,7 @@ public class UsersInformation {
         return playedTimes.get(id);
     }
 
-    public User findUserById(int id) {
+    public Optional<User> findUserById(int id) {
         Optional<User> user = currentUsers
             .values()
             .stream()
@@ -53,6 +53,6 @@ public class UsersInformation {
             .filter(Optional::isPresent)
             .map(Optional::get)
             .findAny();
-        return user.get();
+        return user;
     }
 }

@@ -71,6 +71,9 @@ public class GameResource {
     @ConfigProperty(name = "roshambo.enable.camera")
     boolean enableCamera;
 
+    @ConfigProperty(name = "roshambo.enable.bot", defaultValue = "false")
+    boolean enableBot;
+
     @Channel("next-round") Multi<String> nextRoundStream;
 
     @Channel("status") Emitter<String>  statusStream;
@@ -106,7 +109,7 @@ public class GameResource {
             logger.info("Random shape detector configured.");
             shapeDetectorService = new RandomShapeDetectorService();
         }
-
+        logger.infof("Bot enabled? %s", enableBot);
         logger.infof("Camera feature enabled? %s", enableCamera);
     }
 
@@ -131,6 +134,19 @@ public class GameResource {
         Configuration conf = new Configuration(roundTimeInSeconds.getSeconds(), timeBetweenRoundsInSeconds.getSeconds(), numberOfRounds,
             enableCamera, gameUUId);
         logger.infof("App Configured with Round Time: %d - Time Between Rounds: %d - Number of Rounds: %d - Manual next Round: %s - Camera Enabled: %s - Game UUID: %s", conf.roundTimeInSeconds, conf.roundTimeInSeconds, conf.numberOfRounds, manualRounds, conf.enableCamera, gameUUId);
+
+
+        if (enableBot) {
+
+            // Creates a bot user
+            User botUser = this.userGenerator.getUser();
+            botUser.id = User.BOT_ID;
+            if (usersInformation.findUserById(User.BOT_ID).isEmpty()) {
+                logger.infof("User Bot: %s registered at team: %d", botUser.name, botUser.team);
+                usersInformation.addUser(botUser);
+            }
+        }
+
         return new Initialization(conf, state);
     }
 
@@ -140,6 +156,8 @@ public class GameResource {
         User user = this.userGenerator.getUser();
         logger.infof("User: %s registered at team: %d", user.name, user.team);
         usersInformation.addUser(user);
+
+
         return user;
     }
 
@@ -153,20 +171,13 @@ public class GameResource {
             long responseTime = calculateResponseTime();
 
             if (image.startsWith("data:image/png;base64,") || image.startsWith("data:image/jpeg;base64,")) {
-                // Images are uploaded as base64 strings, e.g: data:image/png;base64,$DATA
-                // We need to strip the metadata before the comma, and convert to binary
-                String[] imageDataPortions = image.split(",");
-                String imageBase64 = imageDataPortions[1];
 
-                if (uploadToS3) {
-                    s3.uploadImage(imageBase64, image.startsWith("data:image/png;base64,") ? "png" : "jpeg");
+                if (enableBot) {
+                    generateBotResult();
                 }
 
-                final Shape shape = shapeDetectorService.detect(imageBase64);
-                logger.infof("Detected %s by team %d for the user %d", shape.name(), team, userId);
+                return detectImage(userId, team, image, responseTime);
 
-                this.afterDetection(shape, team, userId, responseTime);
-                return ResponseBuilder.create(200).entity(new ShotResult(responseTime, shape)).build();
             } else {
                 return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST)
                     .entity("expected a base64 encoded png image, e.g data:image/png;base64,$DATA")
@@ -179,26 +190,60 @@ public class GameResource {
         }
     }
 
+    private RestResponse<Object> detectImage(int userId, int team, String image, long responseTime) {
+        // Images are uploaded as base64 strings, e.g: data:image/png;base64,$DATA
+        // We need to strip the metadata before the comma, and convert to binary
+        String[] imageDataPortions = image.split(",");
+        String imageBase64 = imageDataPortions[1];
+
+        if (uploadToS3) {
+            s3.uploadImage(imageBase64, image.startsWith("data:image/png;base64,") ? "png" : "jpeg");
+        }
+
+        final Shape shape = shapeDetectorService.detect(imageBase64);
+        logger.infof("Detected %s by team %d for the user %d", shape.name(), team, userId);
+
+        this.afterDetection(shape, team, userId, responseTime);
+        return ResponseBuilder.create(200).entity(new ShotResult(responseTime, shape)).build();
+    }
+
     @POST
     @Path("/detect/button/{team}/{userId}/{shape}")
     public ShotResult click(@PathParam("userId") int userId, @Min(1) @Max(2) @PathParam("team") int team, @PathParam("shape") String shape) {
+
+        if (enableBot) {
+            generateBotResult();
+        }
+
+        return processButton(userId, team, shape);
+    }
+
+    private ShotResult processButton(int userId, int team, String shape) {
         long responseTime = calculateResponseTime();
-        
+
         Shape valueOfShape = Shape.valueOf(shape);
         logger.infof("Pushed %s by team %d for the user %d", shape, team, userId);
-        
         this.afterDetection(valueOfShape, team, userId, responseTime);
-        
+
         return new ShotResult(responseTime, valueOfShape);
     }
+
 
     private void afterDetection(Shape shape, int team, int userId, long responseTime) {
         this.scoreInformation.incrementShape(team, shape);
         this.usersInformation.increasePlayedTime(userId, Duration.ofMillis(responseTime));
 
-        final User u = this.usersInformation.findUserById(userId);
+        final User u = this.usersInformation.findUserById(userId).get();
         this.sendToAdmin(new ServerSideEventDTO("usershape", CurrentUserShapeDTO.of(u.name, shape)));
 
+    }
+
+
+    private void generateBotResult() {
+        User botUser = usersInformation.findUserById(User.BOT_ID).get();
+        // Store the generated result
+        RandomShapeDetectorService randomShapeDetectorService = new RandomShapeDetectorService();
+        processButton(botUser.id, botUser.team, randomShapeDetectorService.detect(null).name());
     }
 
     void sendToAdmin(ServerSideEventDTO serverSideEventDTO) {

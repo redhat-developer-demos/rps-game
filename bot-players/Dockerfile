@@ -12,4 +12,6 @@ RUN npm run build
 
 ENV GAME_SERVER_URL=https://chage-to.nginx-route.openshiftapps.com
 
+EXPOSE 8181
+
 CMD ["npm", "start"]

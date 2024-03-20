@@ -1,6 +1,9 @@
 package org.acme;
 
 public class User {
+
+    public static int BOT_ID = -1;
+
     public int id;
     public String name;
     public int team;
