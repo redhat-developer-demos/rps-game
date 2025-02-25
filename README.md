@@ -1,4 +1,4 @@
-# Rock Paper Scissors Game
+# Rock Paper Scissors Game for KubeCon EU 2025
 
 ![AI Build](https://github.com/redhat-developer-demos/rps-game/actions/workflows/build.ai.yaml/badge.svg)
 ![Backend Build](https://github.com/redhat-developer-demos/rps-game/actions/workflows/build.backend.yaml/badge.svg)
