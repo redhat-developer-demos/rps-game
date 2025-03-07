@@ -16,15 +16,8 @@ from train_model import train_model
 # Misc imports
 import os
 
-data_connection_secret_name = 'aws-connection-models'
+data_connection_secret_name = 'aws-connection-my-storage'
 roboflow = 'roboflow'
-
-#from fetch_data import fetch_data, fetch_data_from_dvc, fetch_data_from_feast
-#from data_validation import validate_data
-#from data_preprocessing import preprocess_data
-#from evaluate_model import evaluate_keras_model_performance, validate_onnx_model
-#from train_model import train_model, convert_keras_to_onnx
-#from save_model import push_to_model_registry
 
 # Create pipeline
 @dsl.pipeline(
@@ -38,7 +31,7 @@ def training_pipeline(model_name: str):
     #train_model_task = train_model()
     kubernetes.use_secret_as_env(
         fetch_data_task,
-        secret_name=data_connection_secret_name,
+        secret_name=roboflow,
         secret_key_to_env={
             'API_KEY': 'API_KEY',
         },
