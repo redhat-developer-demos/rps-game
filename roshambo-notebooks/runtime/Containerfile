@@ -1,0 +1,9 @@
+FROM quay.io/modh/runtime-images@sha256:8b962c575adfdb46a9aa3e3fc30fdbe470d049b0ff69f68c5c9f950496ae26c5
+
+USER 0
+
+RUN pip install "ultralytics<=8.3.40"
+RUN pip uninstall -y opencv-python
+RUN pip install opencv-python-headless
+
+USER 1001
