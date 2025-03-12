@@ -31,3 +31,20 @@ def fetch_data(
     version = project.version(14)
     data = version.download("yolov11")
     shutil.move(data.location, dataset.path)
+
+@component(base_image="python:3.11", packages_to_install=["GitPython"])
+def fetch_data_from_git(
+    dataset: Output[Dataset]
+):
+    from git import Repo
+    import shutil
+    import os
+
+    os.chdir("/tmp")
+
+    repo_url = "https://github.com/redhat-developer-demos/rps-game"
+    to_path = "data"
+    branch = "small-dataset"
+    Repo.clone_from(repo_url, to_path, branch=branch, depth=1)
+
+    shutil.move("data/roshambo-notebooks/data", dataset.path)

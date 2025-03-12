@@ -10,21 +10,23 @@ from kfp.dsl import (
     Artifact,
 )
 
-# @component(base_image="python:3.11", packages_to_install=[ "ultralytics<=8.3.40", "supervision==0.25.1", "roboflow==1.1.54", "opencv-python==4.11.0.86"])
-@component(base_image="python:3.11")
+@component(base_image="quay.io/rh-aiservices-bu/rps:0.2")
 def train_model(
-    dataset: Input[Dataset]
+    dataset: Input[Dataset],
+    model_artifact: Output[Model]
 ):
     import shutil
     import subprocess
-    print("hello")
+    import os
+    import requests
+    from ultralytics import YOLO
 
     loc = "/tmp"
     shutil.move(dataset.path, loc)
 
     subprocess.run(["ls", "-l", "/tmp"])
     subprocess.run(["ls", "-l", "/tmp/dataset"])
-    
+
     dataset_location = os.path.join(loc, "dataset")
 
     url = "https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11s.pt"
@@ -47,7 +49,7 @@ def train_model(
     model = YOLO(yolov11_orig_file_path)
     
     # Number of epochs to Train
-    epochs = 2
+    epochs = 1
     
     # Train the model
     results = model.train(
@@ -55,11 +57,8 @@ def train_model(
         epochs=epochs,
         imgsz=640,
         plots=True,
-        exist_ok=True
+        exist_ok=True,
     )
 
-
-
-
-
-
+    model_artifact.path += ".pt"
+    shutil.move("runs/detect/train/weights/best.pt", model_artifact.path)

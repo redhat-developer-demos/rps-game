@@ -9,8 +9,10 @@ from kfp.dsl import (
     Metrics,
 )
 from kfp import kubernetes
-from fetch_data import fetch_data
+from fetch_data import fetch_data_from_git
 from train_model import train_model
+from evaluate_model import evaluate
+from save_model import register_model
 
 
 # Misc imports
@@ -24,24 +26,36 @@ roboflow = 'roboflow'
   name='training-pipeline',
   description='We train an amazing model 🚂'
 )
-
 def training_pipeline(model_name: str):
-    fetch_data_task = fetch_data()
+    fetch_data_task = fetch_data_from_git()
 
-    #train_model_task = train_model()
+    train_model_task = train_model(
+        dataset=fetch_data_task.outputs["dataset"],
+    ).set_memory_limit('24Gi')
+
+    evaluate_task = evaluate(
+        dataset=fetch_data_task.outputs["dataset"],
+        model_artifact=train_model_task.outputs["model_artifact"],
+    )
+
+    register_model_task = register_model(
+        model_name=model_name,
+        model=train_model_task.outputs["model_artifact"],
+        metrics=evaluate_task.outputs["metrics"]
+    )
     kubernetes.use_secret_as_env(
-        fetch_data_task,
-        secret_name=roboflow,
+        register_model_task,
+        secret_name=data_connection_secret_name,
         secret_key_to_env={
-            'API_KEY': 'API_KEY',
+            'AWS_S3_ENDPOINT': 'AWS_S3_ENDPOINT',
+            'AWS_ACCESS_KEY_ID': 'AWS_ACCESS_KEY_ID',
+            'AWS_SECRET_ACCESS_KEY': 'AWS_SECRET_ACCESS_KEY',
+            'AWS_S3_BUCKET': 'AWS_S3_BUCKET',
+            'AWS_DEFAULT_REGION': 'AWS_DEFAULT_REGION',
         },
     )
-    
-    train_model_task = train_model(dataset = fetch_data_task.outputs["dataset"])
-
 
 if __name__ == '__main__':
-
     metadata = {
         "model_name": "yolov11",
     }
@@ -69,7 +83,7 @@ if __name__ == '__main__':
 
     client.create_run_from_pipeline_func(
         training_pipeline,
-        experiment_name="training",
+        experiment_name="kfp-training",
         arguments=metadata,
-        enable_caching=False
+        enable_caching=True
     )
