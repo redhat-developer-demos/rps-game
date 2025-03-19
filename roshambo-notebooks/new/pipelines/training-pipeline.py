@@ -26,7 +26,7 @@ roboflow = 'roboflow'
   name='training-pipeline',
   description='We train an amazing model 🚂'
 )
-def training_pipeline(model_name: str):
+def training_pipeline(model_name: str, user: str, version: str):
     fetch_data_task = fetch_data_from_git()
 
     train_model_task = train_model(
@@ -41,7 +41,10 @@ def training_pipeline(model_name: str):
     register_model_task = register_model(
         model_name=model_name,
         model=train_model_task.outputs["model_artifact"],
-        metrics=evaluate_task.outputs["metrics"]
+        metrics=evaluate_task.outputs["metrics"],
+        user=user,
+        version=version,
+        
     )
     kubernetes.use_secret_as_env(
         register_model_task,
@@ -58,6 +61,8 @@ def training_pipeline(model_name: str):
 if __name__ == '__main__':
     metadata = {
         "model_name": "yolov11",
+        "version": "v2",
+        "user": "user1"
     }
     namespace_file_path =\
         '/var/run/secrets/kubernetes.io/serviceaccount/namespace'
