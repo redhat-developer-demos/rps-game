@@ -19,12 +19,12 @@ from save_model import register_model
 import os
 
 data_connection_secret_name = 'aws-connection-my-storage'
-roboflow = 'roboflow'
+#roboflow = 'roboflow'
 
 # Create pipeline
 @dsl.pipeline(
   name='training-pipeline',
-  description='We train an amazing model 🚂'
+  description='We train an amazing rock paper scissors YOLO model 🚂'
 )
 def training_pipeline(model_name: str, user: str, version: str):
     fetch_data_task = fetch_data_from_git()
@@ -35,12 +35,12 @@ def training_pipeline(model_name: str, user: str, version: str):
 
     evaluate_task = evaluate(
         dataset=fetch_data_task.outputs["dataset"],
-        model_artifact=train_model_task.outputs["model_artifact"],
+        model_artifact=train_model_task.outputs["pt_model"],
     )
 
     register_model_task = register_model(
         model_name=model_name,
-        model=train_model_task.outputs["model_artifact"],
+        model=train_model_task.outputs["onnx_model"],
         metrics=evaluate_task.outputs["metrics"],
         user=user,
         version=version,
@@ -62,7 +62,7 @@ if __name__ == '__main__':
     metadata = {
         "model_name": "yolov11",
         "version": "v2",
-        "user": "user1"
+        "user": "user5"
     }
     namespace_file_path =\
         '/var/run/secrets/kubernetes.io/serviceaccount/namespace'
@@ -90,5 +90,5 @@ if __name__ == '__main__':
         training_pipeline,
         experiment_name="kfp-training",
         arguments=metadata,
-        enable_caching=True
+        enable_caching=False
     )

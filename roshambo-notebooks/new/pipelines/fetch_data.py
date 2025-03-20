@@ -22,7 +22,7 @@ def fetch_data_from_git(
 
     repo_url = "https://github.com/redhat-developer-demos/rps-game"
     to_path = "data"
-    branch = "small-dataset"
+    branch = "kubecon-eu-2025"
     Repo.clone_from(repo_url, to_path, branch=branch, depth=1)
 
     shutil.move("data/roshambo-notebooks/data", dataset.path)
