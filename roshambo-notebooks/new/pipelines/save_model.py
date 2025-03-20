@@ -76,7 +76,7 @@ def register_model(
 
     metadata = {key: str(value) for key, value in metrics.metadata.items() if key not in ["display_name", "store_session_info"]}
     # s3_path = f"s3://{s3_endpoint_url.split('https://')[-1]}{model_artifact_s3_path}"
-    s3_path_updated_format = utils.s3_uri_from(f"models/{model_object_prefix}-v1",
+    s3_path_updated_format = utils.s3_uri_from(f"models/{model_object_prefix}",
                                                bucket=s3_bucket_name,
                                                endpoint=s3_endpoint_url,
                                                region=s3_region)

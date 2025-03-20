@@ -23,6 +23,33 @@ def train_model(
     import subprocess
     import requests
     from ultralytics import YOLO
+
+    loc = "/tmp"
+    shutil.move(dataset.path, loc)
+
+    dataset_location = os.path.join(loc, "dataset")
+
+    url = "https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11s.pt"
+
+    yolov11_orig_file_path = os.path.join(dataset_location, os.path.basename(url))
+
+    dataset_path = f"{dataset_location}/data.yaml"
+    
+    # Load the Yolov11 Original Pretrained Model
+    model = YOLO(yolov11_orig_file_path)
+    
+    # Number of epochs to Train
+    epochs = 1
+    
+    # Train the model
+    results = model.train(
+        data=dataset_path,
+        epochs=epochs,
+        imgsz=640,
+        plots=True,
+        exist_ok=True,
+    )
+    
     def _download_file(url, destination_path):
         """Download a file and save it to the destination path."""
         response = requests.get(url, stream=True)
@@ -49,7 +76,7 @@ def train_model(
     # Ensure local directory for downloads
     local_dir = "/tmp/pretrained_models"
     os.makedirs(local_dir, exist_ok=True)
-
+    
     # Download models
     model_paths = {}
     for model_name, model_url in pretrained_models.items():
