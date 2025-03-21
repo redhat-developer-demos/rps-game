@@ -26,7 +26,7 @@ data_connection_secret_name = 'aws-connection-my-storage'
   name='training-pipeline',
   description='We train an amazing rock paper scissors YOLO model 🚂'
 )
-def training_pipeline(model_name: str, user: str, version: str):
+def training_pipeline(model_name: str, user: str, version: str, cluster_domain: str):
     fetch_data_task = fetch_data_from_git()
 
     train_model_task = train_model(
@@ -44,7 +44,7 @@ def training_pipeline(model_name: str, user: str, version: str):
         metrics=evaluate_task.outputs["metrics"],
         user=user,
         version=version,
-        
+        cluster_domain = cluster_domain,
     )
     kubernetes.use_secret_as_env(
         register_model_task,
@@ -62,7 +62,8 @@ if __name__ == '__main__':
     metadata = {
         "model_name": "yolov11",
         "version": "v2",
-        "user": "user5"
+        "user": "wksp-userX", # 👈 add your username here
+        "cluster_domain": "apps.cluster-xxxx.opentlc.com", # 👈 add your cluster domain here
     }
     namespace_file_path =\
         '/var/run/secrets/kubernetes.io/serviceaccount/namespace'

@@ -15,6 +15,7 @@ def register_model(
     metrics: Input[Metrics],
     user: str,
     version: str,
+    cluster_domain: str,
 ):
     from os import environ, path
     from model_registry import ModelRegistry, utils, exceptions
@@ -61,8 +62,8 @@ def register_model(
     with open(namespace_file_path, 'r') as namespace_file:
         namespace = namespace_file.read().strip()
 
-    server_address = "https://registry-rest.apps.prod.xxx.com"
-
+    server_address = f"https://registry-rest.{cluster_domain}"
+    
     registry = ModelRegistry(
         server_address=server_address,
         port=443,
