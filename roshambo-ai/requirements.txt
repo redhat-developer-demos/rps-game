@@ -4,3 +4,5 @@ numpy
 grpcio
 grpcio-tools
 opencv_python_headless
+requests
+matplotlib

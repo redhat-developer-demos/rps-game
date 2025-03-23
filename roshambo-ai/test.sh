@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-MY_ROUTE=https://ai-service-rps-ai-service.apps.rhods-internal.61tk.p1.openshiftapps.com
-MY_IMAGE='rock1.jpg'
+MY_ROUTE=http://localhost:8080
+MY_IMAGE=$1
 
 
 curl "${MY_ROUTE}/status"
