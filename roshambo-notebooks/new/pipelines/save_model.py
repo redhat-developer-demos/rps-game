@@ -52,7 +52,7 @@ def register_model(
         print(f'ONNX Model uploaded to "{object_name}"')
 
     # Correct S3 path for ONNX model
-    model_artifact_s3_path = f"models/{model_object_prefix}-v1/1/{_generate_artifact_name(f'{model_object_prefix}.onnx')}"
+    model_artifact_s3_path = f"models/{model_object_prefix}/1/{_generate_artifact_name(f'{model_object_prefix}.onnx')}"
     _do_upload(s3_client, model.path, model_artifact_s3_path, s3_bucket_name)
 
     ############ Register the ONNX Model in Model Registry ############
