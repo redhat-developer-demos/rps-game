@@ -46,7 +46,7 @@ def send_request(image, endpoint):
     """
     Sends a POST request to the KServe endpoint and retrieves the model's predictions.
     """
-    print("ENDPOINT" + endpoint)
+    print("ENDPOINT: " + endpoint)
     payload = _serialize(image)
     #print(payload)
     raw_response = requests.post(endpoint, json=payload)
@@ -84,7 +84,7 @@ def draw_bounding_box(img, class_id, confidence, x, y, x_plus_w, y_plus_h):
     cv2.putText(img, label, (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
 
 
-def postprocess(response, scale, original_image):
+def postprocess_fs(response, scale, original_image):
     """
     Processes the model response to extract bounding boxes and class predictions.
     """
@@ -108,7 +108,6 @@ def postprocess(response, scale, original_image):
             ]
             boxes.append(box)
             scores.append(maxScore)
-            print("Scores :" + scores)
             class_ids.append(maxClassIndex)
 
     result_boxes = cv2.dnn.NMSBoxes(boxes, scores, 0.1, 0.45, 0.5)
@@ -124,11 +123,20 @@ def postprocess(response, scale, original_image):
             "box": box,
             "scale": scale,
         }
-        print("Detection")
-        print("class_name: "+ rps_classes[class_ids[index]])
-        print("id "+rps_classes[class_ids[index]])
         detections.append(detection)
 
+    if len(scores) > 0:  # Check if there are any detections
+        max_index = np.argmax(scores)  # Find index of the highest confidence detection
+
+        detection = {
+            "class_id": class_ids[max_index],
+            "class_name": rps_classes[class_ids[max_index]],
+            "confidence": scores[max_index],
+            "box": boxes[max_index]
+        }
+
+        print("Highest Confidence Detection:")
+        print(detection)
 
         # Draw bounding boxes on image
         draw_bounding_box(
@@ -216,7 +224,7 @@ def process_image(image_path, endpoint):
     """
     preprocessed, scale, original_image = preprocess(image_path)
     response = send_request(preprocessed, endpoint)
-    new_image = postprocess(response, scale, original_image)
+    new_image = postprocess_fs(response, scale, original_image)
 
     return new_image
 
