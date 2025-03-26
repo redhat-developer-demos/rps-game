@@ -38,6 +38,9 @@ def preprocess(content, size=640):
 
 
     img = img.reshape(1,3,size,size)
+
+    img = img.astype(np.float32) / 255.0
+    img = np.expand_dims(img, axis=0)  # Add batch
     # print(path, img.shape, "; data range:",np.amin(img),":",np.amax(img))
     return img
 
