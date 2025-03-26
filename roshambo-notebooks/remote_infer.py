@@ -46,7 +46,9 @@ def send_request(image, endpoint):
     """
     Sends a POST request to the KServe endpoint and retrieves the model's predictions.
     """
+    print("ENDPOINT: " + endpoint)
     payload = _serialize(image)
+    #print(payload)
     raw_response = requests.post(endpoint, json=payload)
 
     # Handle errors
@@ -59,6 +61,7 @@ def send_request(image, endpoint):
     response = raw_response.json()
     try:
         model_output = response["outputs"]
+        #print(model_output)
     except KeyError:
         print(f"Unexpected response format: {response}")
         raise ValueError("Failed to extract model output.")
@@ -81,7 +84,7 @@ def draw_bounding_box(img, class_id, confidence, x, y, x_plus_w, y_plus_h):
     cv2.putText(img, label, (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
 
 
-def postprocess(response, scale, original_image):
+def postprocess_fs(response, scale, original_image):
     """
     Processes the model response to extract bounding boxes and class predictions.
     """
@@ -107,7 +110,7 @@ def postprocess(response, scale, original_image):
             scores.append(maxScore)
             class_ids.append(maxClassIndex)
 
-    result_boxes = cv2.dnn.NMSBoxes(boxes, scores, 0.25, 0.45, 0.5)
+    result_boxes = cv2.dnn.NMSBoxes(boxes, scores, 0.1, 0.45, 0.5)
 
     detections = []
     for i in range(len(result_boxes)):
@@ -122,6 +125,19 @@ def postprocess(response, scale, original_image):
         }
         detections.append(detection)
 
+    if len(scores) > 0:  # Check if there are any detections
+        max_index = np.argmax(scores)  # Find index of the highest confidence detection
+
+        detection = {
+            "class_id": class_ids[max_index],
+            "class_name": rps_classes[class_ids[max_index]],
+            "confidence": scores[max_index],
+            "box": boxes[max_index]
+        }
+
+        print("Highest Confidence Detection:")
+        print(detection)
+
         # Draw bounding boxes on image
         draw_bounding_box(
             original_image,
@@ -135,12 +151,89 @@ def postprocess(response, scale, original_image):
 
     return original_image
 
+def postprocess(response):
+    """
+    Processes the model response to extract bounding boxes and class predictions.
+    """
+    outputs = np.array([cv2.transpose(response[0])])
+    rows = outputs.shape[1]
+    print("Rows: "+ str(rows))
+
+    boxes = []
+    scores = []
+    class_ids = []
+    index = 0
+
+    # Extract bounding boxes and class IDs
+    for i in range(rows):
+        classes_scores = outputs[0][i][4:]
+        (_, maxScore, _, (_, maxClassIndex)) = cv2.minMaxLoc(classes_scores)
+        #print("maxScore: " + str(maxScore))
+        if maxScore > 0:
+            box = [
+                outputs[0][i][0] - (0.5 * outputs[0][i][2]),
+                outputs[0][i][1] - (0.5 * outputs[0][i][3]),
+                outputs[0][i][2],
+                outputs[0][i][3],
+            ]
+            boxes.append(box)
+            scores.append(maxScore)
+            #print("Scores :" + str(scores))
+            class_ids.append(maxClassIndex)
+
+    result_boxes = cv2.dnn.NMSBoxes(boxes, scores, 0.1, 0.45, 0.5)
+
+    detections = []
+    for i in range(len(result_boxes)):
+        index = result_boxes[i]
+        box = boxes[index]
+        detection = {
+            "class_id": class_ids[index],
+            "class_name": rps_classes[class_ids[index]],
+            "confidence": scores[index],
+            "box": box
+        }
+        #print("Detection")
+        #print("class_name: "+ rps_classes[class_ids[index]])
+        #print("confidence "+str(scores[index]))
+        detections.append(detection)
+
+
+    if len(scores) > 0:  # Check if there are any detections
+        max_index = np.argmax(scores)  # Find index of the highest confidence detection
+
+        detection = {
+            "class_id": class_ids[max_index],
+            "class_name": rps_classes[class_ids[max_index]],
+            "confidence": scores[max_index],
+            "box": boxes[max_index]
+        }
+
+        print("Highest Confidence Detection:")
+        print(detection)
+        return rps_classes[class_ids[max_index]]
+    else:
+        print("No detections found.")
+        return "repeat"
+
+    
+
 def process_image(image_path, endpoint):
     """
     Complete pipeline: preprocess, send request, postprocess results.
     """
     preprocessed, scale, original_image = preprocess(image_path)
     response = send_request(preprocessed, endpoint)
-    new_image = postprocess(response, scale, original_image)
+    new_image = postprocess_fs(response, scale, original_image)
 
     return new_image
+
+
+def send_image(image_path, endpoint):
+    """
+    Complete pipeline: preprocess, send request, postprocess results.
+    """
+    preprocessed, scale, original_image = preprocess(image_path)
+    response = send_request(preprocessed, endpoint)
+
+    return response
