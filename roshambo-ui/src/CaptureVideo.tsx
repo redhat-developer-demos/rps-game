@@ -38,9 +38,8 @@ const VideoCaptureComponent: React.FunctionComponent<VideoCaptureComponentProps>
       video: {
         // Forces landscape image, despite the application's portrait orientation
         aspectRatio: 3 / 4,
-        // On a laptop, use the camera that faces the user. On iOS and Android
-        // devices use the "selfie" camera
-        facingMode: isMobileDevice() ? 'environment' : 'user'
+        // Use always user for new model training dataset
+        facingMode: 'user'
       }
     })
     
