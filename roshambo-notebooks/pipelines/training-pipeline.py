@@ -19,7 +19,6 @@ from save_model import register_model
 import os
 
 data_connection_secret_name = 'aws-connection-my-storage'
-#roboflow = 'roboflow'
 
 # Create pipeline
 @dsl.pipeline(
@@ -62,7 +61,7 @@ if __name__ == '__main__':
     metadata = {
         "model_name": "yolov11",
         "version": "v2",
-        "user": "wksp-userX", # 👈 add your username here
+        "user": "userX", # 👈 add your username here
         "cluster_domain": "apps.cluster-xxxx.opentlc.com", # 👈 add your cluster domain here
     }
     namespace_file_path =\
