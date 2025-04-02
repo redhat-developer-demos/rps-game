@@ -67,7 +67,7 @@ def register_model(
     registry = ModelRegistry(
         server_address=server_address,
         port=443,
-        author=namespace,
+        author=user,
         is_secure=False
     )
 
